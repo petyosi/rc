@@ -1,0 +1,29 @@
+{
+  "tsserver.log": "verbose",
+  "eslint.filetypes": [
+    "typescript",
+    "typescriptreact",
+    "typescript.tsx",
+    "javascript",
+    "javascriptreact",
+    "javascript.jsx",
+    "html",
+    "Markdown",
+    "json"
+  ],
+  "eslint.autoFixOnSave": true,
+  "prettier.disableSuccessMessage": true,
+  "coc.preferences.formatOnSaveFiletypes": [
+    "Markdown",
+    "css",
+    "javascript",
+    "javascriptreact",
+    "json",
+    "Json",
+    "JSON",
+    "rust",
+    "scss",
+    "typescript",
+    "typescriptreact"
+  ]
+}

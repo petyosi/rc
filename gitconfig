@@ -1,0 +1,64 @@
+[user]
+    name = Petyo Ivanov
+    email = underlog@gmail.com
+    signingkey = CAC52C36
+
+[push]
+    default = tracking
+
+[color]
+    diff = auto
+    status = auto
+    branch = auto
+
+[core]
+    excludesfile = ~/.gitignore
+    autocrlf = false
+    whitespace = cr-at-eol
+    editor = nvim
+
+[format]
+    pretty = %Cblue%h%Creset %Cgreen[%cr]%Creset (%an) %s
+
+[alias]
+    c = commit -m
+    ch = cherry-pick
+    co = checkout
+    a = add
+    d = diff
+    dic = diff --cached
+    ps = push
+    s = status
+    out = log origin..HEAD
+    qpl = log --pretty=\"%Cblue%h%Creset %Cgreen[%cr]%Creset %s\" origin/production..origin/master
+    l = log --all --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset %Cblue%an%Creset' --abbrev-commit --date=relative
+    lol = log --pretty=oneline --abbrev-commit --graph --decorate
+    ci = commit
+    ca = commit --amend
+    eu = "!f() { git ls-files --unmerged | cut -f2 | sort -u ; }; vim `f`"
+    au = "!f() { git ls-files --unmerged | cut -f2 | sort -u ; }; git add `f`"
+    sync = "!git pull && git push"
+    sub = submodule update --init
+    pl = pull --rebase
+
+[branch]
+    autosetuprebase = always
+
+[merge]
+    tool = fugitive
+
+[mergetool "fugitive"]
+    cmd = nvim -f -c \"Gdiff\" \"$MERGED\"
+
+[mergetool]
+    keepBackup = false
+
+[diff]
+    algorithm = patience
+    comparisonHeuristic = true
+[filter "lfs"]
+    smudge = git-lfs smudge %f
+    required = true
+    clean = git-lfs clean %f
+[credential]
+	helper = osxkeychain
