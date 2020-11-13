@@ -21,3 +21,5 @@ ln -sf $PWD/coc-settings.json ~/.config/nvim/coc-settings.json
 ln -sf $PWD/zshrc ~/.zshrc
 ln -sf $PWD/gitconfig ~/.gitconfig
 ln -sf $PWD/inputrc ~/.inputrc
+
+touch ~/.hushlogin
