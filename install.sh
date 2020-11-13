@@ -1,13 +1,13 @@
 #!/bin/sh
-# brew bundle install
-# npm i -g pure-prompt
-# 
-# # setup tmux
-# ln -sf $PWD/.tmux/.tmux.conf ~/.tmux.conf
-# ln -sf $PWD/.tmux.conf.local ~/.tmux.conf.local
+brew bundle install
+npm i -g pure-prompt
 
-# # setup neovim
-# neovim Plug
+# setup tmux
+ln -sf $PWD/.tmux/.tmux.conf ~/.tmux.conf
+ln -sf $PWD/.tmux.conf.local ~/.tmux.conf.local
+
+# setup neovim
+neovim Plug
 sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 
