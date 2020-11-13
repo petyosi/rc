@@ -248,7 +248,7 @@ nmap <leader>rn <Plug>(coc-rename)
 
 " Remap for format selected region
 vmap <leader>f <Plug>(coc-format-selected)
-nmap <leader>f <Plug>(coc-format) 
+nmap <leader>f <Plug>(coc-format)
 
 augroup mygroup
   autocmd!
@@ -268,7 +268,7 @@ nmap <leader>ac  <Plug>(coc-codeaction)
 nmap <leader>qf  <Plug>(coc-fix-current)
 
 " Use `:Format` for format current buffer
-command! -nargs=0 Format call CocAction('format') 
+command! -nargs=0 Format call CocAction('format')
 command! -nargs=0 Prettier :CocCommand prettier.formatFile
 
 " Use `:Fold` for fold current buffer
