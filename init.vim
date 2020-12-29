@@ -13,7 +13,7 @@ set wildignore+=deploy/**,dist/**,release/**,*.min.js,*.js.map
 set hlsearch incsearch ignorecase smartcase
 
 " better colors
-set notermguicolors
+set termguicolors
 
 " Use modeline overrides
 set modeline modelines=10
@@ -172,7 +172,7 @@ nnoremap <M-e> :Buffers<CR>
 
 map , <Plug>(easymotion-prefix)
 
-let g:gruvbox_italic = 0
+let g:gruvbox_italic = 1
 let g:gruvbox_contrast_dark = 'hard'
 set background=dark
 " let g:jellybeans_overrides = {
