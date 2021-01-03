@@ -1,3 +1,6 @@
+export PATH="/opt/homebrew/bin:$PATH"
+fpath+=$HOME/.zsh/pure
+
 autoload -U colors && colors
 autoload -U zmv
 autoload -U compinit && compinit
@@ -24,6 +27,8 @@ setopt share_history
 HISTSIZE=1000
 SAVEHIST=1000
 HISTFILE=~/.history
+# 10ms for key sequences
+KEYTIMEOUT=1
 setopt APPEND_HISTORY
 
 export FZF_DEFAULT_COMMAND='ag -g ""'

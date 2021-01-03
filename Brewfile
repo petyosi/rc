@@ -3,12 +3,10 @@ tap "homebrew/cask"
 tap "homebrew/cask-fonts"
 tap "homebrew/core"
 brew "fzf"
-brew "neovim", args: ["HEAD"]
 brew "node"
 brew "python@3.9"
 brew "the_silver_searcher"
 brew "tmux", args: ["HEAD"]
-brew "git"
 brew "zsh"
 brew "reattach-to-user-namespace"
 brew "wget"
@@ -21,3 +19,6 @@ cask "google-chrome"
 cask "sizeup"
 cask "iterm2"
 cask "plex-media-server"
+# Does not work on M1, installed manually with rozetta
+# brew "neovim", args: ["HEAD"]
+# brew "git"

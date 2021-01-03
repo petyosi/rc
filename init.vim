@@ -139,6 +139,7 @@ Plug 'easymotion/vim-easymotion'
 
 Plug 'antoinemadec/coc-fzf'
 
+Plug 'bfontaine/Brewfile.vim'
 call plug#end()
 
 let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
@@ -168,7 +169,7 @@ nmap <leader>9 <Plug>AirlineSelectTab9
 
 let $FZF_DEFAULT_COMMAND = 'ag -g ""'
 nnoremap <leader>p :FZF<CR>
-nnoremap <M-e> :Buffers<CR>
+nnoremap <leader>o :Buffers<CR>
 
 map , <Plug>(easymotion-prefix)
 
@@ -199,7 +200,7 @@ nnoremap <Leader>s :setlocal spell! spell?<CR>
 nnoremap <Leader>gs :Gstatus<CR>
 nnoremap <Leader>gd :Gvdiff<CR>
 
-let g:coc_global_extensions = [ 'coc-snippets', 'coc-json',   'coc-rls', 'coc-eslint', 'coc-tsserver', 'coc-css', 'coc-stylelint', 'coc-prettier', 'coc-git' ]
+let g:coc_global_extensions = [ 'coc-snippets', 'coc-json',   'coc-rls', 'coc-eslint', 'coc-tsserver', 'coc-css', 'coc-stylelint', 'coc-prettier', 'coc-git' , 'coc-explorer']
 
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
@@ -274,17 +275,16 @@ command! -nargs=0 Prettier :CocCommand prettier.formatFile
 " Use `:Fold` for fold current buffer
 command! -nargs=? Fold :call     CocAction('fold', <f-args>)
 
-" Using CocList
 " Show all diagnostics
-nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+nnoremap <silent> <space>a  :<C-u>CocFzfList diagnostics<cr>
 " Manage extensions
-nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
-" Show commands
-nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+nnoremap <silent> <space>e  :<C-u>CocFzfList extensions<cr>
 " Find symbol of current document
-nnoremap <silent> <space>o  :<C-u>CocFzfListOutline<cr>
+nnoremap <silent> <space>l  :<C-u>CocFzfList outline<cr>
+" Show commands
+nnoremap <silent> <space>c  :<C-u>CocFzfList commands<cr>
 " Search workspace symbols
-nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+nnoremap <silent> <space>s  :<C-u>CocFzfList symbols<cr>
 " Do default action for next item.
 nnoremap <silent> <space>j  :<C-u>CocNext<CR>
 " Do default action for previous item.
