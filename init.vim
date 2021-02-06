@@ -140,6 +140,10 @@ Plug 'easymotion/vim-easymotion'
 Plug 'antoinemadec/coc-fzf'
 
 Plug 'bfontaine/Brewfile.vim'
+Plug 'mhinz/vim-startify'
+Plug 'evanleck/vim-svelte', {'branch': 'main'}
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'rescript-lang/vim-rescript'
 call plug#end()
 
 let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
@@ -176,10 +180,6 @@ map , <Plug>(easymotion-prefix)
 let g:gruvbox_italic = 1
 let g:gruvbox_contrast_dark = 'hard'
 set background=dark
-" let g:jellybeans_overrides = {
-" \    'background': { 'guibg': 'NONE' },
-" \}
-
 colorscheme gruvbox
 
 nnoremap <Leader>w :w<CR>
@@ -354,3 +354,11 @@ nmap [g <Plug>(coc-git-prevchunk)
 nmap ]g <Plug>(coc-git-nextchunk)
 " show chunk diff at current position
 nmap gs <Plug>(coc-git-chunkinfo)
+
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  highlight = {
+    enable = true,              -- false will disable the whole extension
+  },
+}
+EOF
