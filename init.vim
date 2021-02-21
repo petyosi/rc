@@ -89,6 +89,7 @@ Plug 'tpope/vim-git'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-rhubarb'
 Plug 'int3/vim-extradite'
+Plug 'rhysd/git-messenger.vim'
 " Plug 'airblade/vim-gitgutter'
 
 """"""""""""""""""""""""""""""""""""""
@@ -130,6 +131,8 @@ Plug 'crusoexia/vim-monokai'
 Plug 'tomasr/molokai'
 Plug 'morhetz/gruvbox'
 Plug 'nanotech/jellybeans.vim'
+Plug 'tomasiser/vim-code-dark'
+Plug 'chriskempson/base16-vim'
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'honza/vim-snippets'
@@ -140,10 +143,10 @@ Plug 'easymotion/vim-easymotion'
 Plug 'antoinemadec/coc-fzf'
 
 Plug 'bfontaine/Brewfile.vim'
-Plug 'mhinz/vim-startify'
 Plug 'evanleck/vim-svelte', {'branch': 'main'}
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'rescript-lang/vim-rescript'
+Plug 'takac/vim-hardtime' 
 call plug#end()
 
 let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
@@ -172,7 +175,7 @@ nmap <leader>8 <Plug>AirlineSelectTab8
 nmap <leader>9 <Plug>AirlineSelectTab9
 
 let $FZF_DEFAULT_COMMAND = 'ag -g ""'
-nnoremap <leader>p :FZF<CR>
+nnoremap <leader>p :GFiles<CR>
 nnoremap <leader>o :Buffers<CR>
 
 map , <Plug>(easymotion-prefix)
@@ -200,7 +203,7 @@ nnoremap <Leader>s :setlocal spell! spell?<CR>
 nnoremap <Leader>gs :Gstatus<CR>
 nnoremap <Leader>gd :Gvdiff<CR>
 
-let g:coc_global_extensions = [ 'coc-snippets', 'coc-json',   'coc-rls', 'coc-eslint', 'coc-tsserver', 'coc-css', 'coc-stylelint', 'coc-prettier', 'coc-git' , 'coc-explorer']
+let g:coc_global_extensions = [ 'coc-snippets', 'coc-json',   'coc-rls', 'coc-eslint', 'coc-tsserver', 'coc-css', 'coc-stylelint', 'coc-prettier', 'coc-git' , 'coc-explorer', 'coc-jest']
 
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
@@ -362,3 +365,13 @@ require'nvim-treesitter.configs'.setup {
   },
 }
 EOF
+
+" Run jest for current project
+command! -nargs=0 Jest :call  CocAction('runCommand', 'jest.projectTest')
+" Run jest for current file
+command! -nargs=0 JestCurrent :call  CocAction('runCommand', 'jest.fileTest', ['%'])
+" Run jest for current test
+nnoremap <leader>te :call CocAction('runCommand', 'jest.singleTest')<CR>
+
+" Hard time
+let g:hardtime_default_on = 1
