@@ -7,6 +7,7 @@ autoload -U compinit && compinit
 autoload -Uz zcalc
 autoload -U promptinit; promptinit
 prompt pure
+zstyle ':prompt:pure:prompt:*' color green
 
 # vi mode
 bindkey -v
