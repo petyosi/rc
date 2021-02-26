@@ -175,7 +175,7 @@ nmap <leader>8 <Plug>AirlineSelectTab8
 nmap <leader>9 <Plug>AirlineSelectTab9
 
 let $FZF_DEFAULT_COMMAND = 'ag -g ""'
-nnoremap <leader>p :GFiles<CR>
+nnoremap <leader>p :Files<CR>
 nnoremap <leader>o :Buffers<CR>
 
 map , <Plug>(easymotion-prefix)
