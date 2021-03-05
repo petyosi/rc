@@ -6,7 +6,7 @@ set nowrap tabstop=2 shiftwidth=2 softtabstop=2 expandtab smartindent nofixendof
 
 " Menu stuff
 set wildmode=list:full
-set wildignore+=*.d.ts,*.o,*.obj,.git,*.rbc,*.class,.svn,vendor/gems/*
+set wildignore+=*.o,*.obj,.git,*.rbc,*.class,.svn,vendor/gems/*
 set wildignore+=deploy/**,dist/**,release/**,*.min.js,*.js.map
 
 " Search
@@ -374,4 +374,4 @@ command! -nargs=0 JestCurrent :call  CocAction('runCommand', 'jest.fileTest', ['
 nnoremap <leader>te :call CocAction('runCommand', 'jest.singleTest')<CR>
 
 " Hard time
-let g:hardtime_default_on = 1
+let g:hardtime_default_on = 0
