@@ -1,19 +1,10 @@
 {
   "tsserver.log": "verbose",
-  "eslint.filetypes": [
-    "typescript",
-    "typescriptreact",
-    "typescript.tsx",
-    "javascript",
-    "javascriptreact",
-    "javascript.jsx",
-    "html",
-    "Markdown",
-    "json"
-  ],
   "eslint.autoFixOnSave": true,
+  "eslint.format.enable": true,
   "prettier.disableSuccessMessage": true,
   "jest.watchman": true,
+  "explorer.icon.enableVimDevicons": true,
   "coc.preferences.formatOnSaveFiletypes": [
     "Markdown",
     "css",

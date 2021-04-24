@@ -1,3 +1,4 @@
+if !exists('g:vscode')
 " Basics
 set hidden lazyredraw showmode novisualbell number ttyfast
 
@@ -133,6 +134,7 @@ Plug 'morhetz/gruvbox'
 Plug 'nanotech/jellybeans.vim'
 Plug 'tomasiser/vim-code-dark'
 Plug 'chriskempson/base16-vim'
+Plug 'joshdick/onedark.vim'
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'honza/vim-snippets'
@@ -146,7 +148,8 @@ Plug 'bfontaine/Brewfile.vim'
 Plug 'evanleck/vim-svelte', {'branch': 'main'}
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'rescript-lang/vim-rescript'
-Plug 'takac/vim-hardtime' 
+Plug 'takac/vim-hardtime'
+Plug 'ryanoasis/vim-devicons'
 call plug#end()
 
 let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
@@ -159,6 +162,7 @@ noremap <Leader>n :CocCommand explorer --sources file+,buffer+ --position left<C
 noremap <M-j> :CocCommand explorer --sources file+,buffer+ --position left<CR>
 
 let g:airline_powerline_fonts=1
+" let g:airline_theme = 'gruvbox'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#show_tabs = 1
 let g:airline#extensions#tabline#show_tab_nr = 0
@@ -181,11 +185,12 @@ nnoremap <leader>o :Buffers<CR>
 map , <Plug>(easymotion-prefix)
 
 let g:gruvbox_italic = 1
-let g:gruvbox_contrast_dark = 'hard'
+let g:gruvbox_contrast_dark = 'soft'
 set background=dark
 colorscheme gruvbox
+highlight Normal guibg=0 ctermbg=0
 
-nnoremap <Leader>w :w<CR>
+nnoremap <Leader>w :w!<CR>
 nnoremap <Leader>ev :e $MYVIMRC<cr>
 nnoremap <Leader>sv :so $MYVIMRC<cr>
 
@@ -203,7 +208,7 @@ nnoremap <Leader>s :setlocal spell! spell?<CR>
 nnoremap <Leader>gs :Gstatus<CR>
 nnoremap <Leader>gd :Gvdiff<CR>
 
-let g:coc_global_extensions = [ 'coc-snippets', 'coc-json',   'coc-rls', 'coc-eslint', 'coc-tsserver', 'coc-css', 'coc-stylelint', 'coc-prettier', 'coc-git' , 'coc-explorer', 'coc-jest']
+let g:coc_global_extensions = [ 'coc-snippets', 'coc-json',   'coc-rls', 'coc-eslint', 'coc-tsserver', 'coc-css', 'coc-stylelint', 'coc-prettier', 'coc-git' , 'coc-explorer', 'coc-jest', 'coc-yank']
 
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
@@ -360,6 +365,7 @@ nmap gs <Plug>(coc-git-chunkinfo)
 
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
+  ensure_installed = { "typescript", "tsx", "javascript", "json", "html", "css", "bash" },
   highlight = {
     enable = true,              -- false will disable the whole extension
   },
@@ -373,5 +379,24 @@ command! -nargs=0 JestCurrent :call  CocAction('runCommand', 'jest.fileTest', ['
 " Run jest for current test
 nnoremap <leader>te :call CocAction('runCommand', 'jest.singleTest')<CR>
 
+nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>
+
 " Hard time
 let g:hardtime_default_on = 0
+
+let g:AutoPairsFlyMode = 1
+
+" vscode
+else
+  let mapleader=" "
+  nnoremap <Leader>w :w!<CR>
+  nnoremap <Leader>ev :e $MYVIMRC<cr>
+  nnoremap <Leader>sv :so $MYVIMRC<cr>
+
+  cnoremap <C-n> <Up>
+
+  nnoremap <Tab> >>
+  nnoremap <S-Tab> <<
+  vnoremap <Tab> >gv
+  vnoremap <S-Tab> <gv
+endif

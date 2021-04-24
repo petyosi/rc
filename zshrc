@@ -15,6 +15,7 @@ stty -ixon
 
 # enable colored output from ls, etc
 export CLICOLOR=1
+export BAT_THEME=gruvbox-dark
 
 # expand functions in the prompt
 setopt prompt_subst
@@ -40,3 +41,12 @@ export EDITOR='nvim'
 export SUDO_EDITOR='nvim'
 alias vim='nvim'
 alias g='git'
+alias y='yarn'
+
+alias ls='exa'
+alias ll='exa -la --git --modified --header --group-directories-first'
+
+export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+export PUPPETEER_EXECUTABLE_PATH=`which chromium`
+
+[ -f ~/.stream-env.zsh ] && source ~/.stream-env.zsh
