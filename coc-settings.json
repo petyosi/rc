@@ -4,7 +4,8 @@
   "eslint.format.enable": true,
   "prettier.disableSuccessMessage": true,
   "jest.watchman": true,
-  "explorer.icon.enableVimDevicons": true,
+  "explorer.icon.enableNerdfont": true,
+  "explorer.icon.source": "vim-devicons",
   "coc.preferences.formatOnSaveFiletypes": [
     "Markdown",
     "css",

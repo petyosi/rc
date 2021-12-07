@@ -40,6 +40,7 @@
     sync = "!git pull && git push"
     sub = submodule update --init
     pl = pull --rebase
+    napalm ="!LC_ALL=en_GB git branch -vv | grep 'origin/.*: gone]' | awk '{print $1}' | xargs git branch -D && git prune"
 
 [branch]
     autosetuprebase = always

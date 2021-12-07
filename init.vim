@@ -1,4 +1,3 @@
-if !exists('g:vscode')
 " Basics
 set hidden lazyredraw showmode novisualbell number ttyfast
 
@@ -135,6 +134,7 @@ Plug 'nanotech/jellybeans.vim'
 Plug 'tomasiser/vim-code-dark'
 Plug 'chriskempson/base16-vim'
 Plug 'joshdick/onedark.vim'
+Plug 'projekt0n/github-nvim-theme'
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'honza/vim-snippets'
@@ -150,6 +150,8 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'rescript-lang/vim-rescript'
 Plug 'takac/vim-hardtime'
 Plug 'ryanoasis/vim-devicons'
+Plug 'reedes/vim-pencil'
+
 call plug#end()
 
 let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
@@ -334,16 +336,21 @@ function! s:goyo_enter()
   set noshowcmd
   set scrolloff=999
   Limelight
+  SoftPencil
   set wrap
   set linebreak
   " ...
 endfunction
+
+let g:limelight_conceal_ctermfg = 100
+let g:limelight_conceal_guifg = '#83a598'
 
 function! s:goyo_leave()
   set showmode
   set showcmd
   set scrolloff=5
   Limelight!
+  PencilOff
   set nowrap
   set nolinebreak
   " ...
@@ -383,20 +390,3 @@ nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>
 
 " Hard time
 let g:hardtime_default_on = 0
-
-let g:AutoPairsFlyMode = 1
-
-" vscode
-else
-  let mapleader=" "
-  nnoremap <Leader>w :w!<CR>
-  nnoremap <Leader>ev :e $MYVIMRC<cr>
-  nnoremap <Leader>sv :so $MYVIMRC<cr>
-
-  cnoremap <C-n> <Up>
-
-  nnoremap <Tab> >>
-  nnoremap <S-Tab> <<
-  vnoremap <Tab> >gv
-  vnoremap <S-Tab> <gv
-endif
