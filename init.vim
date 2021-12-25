@@ -135,8 +135,12 @@ Plug 'tomasiser/vim-code-dark'
 Plug 'chriskempson/base16-vim'
 Plug 'joshdick/onedark.vim'
 Plug 'projekt0n/github-nvim-theme'
+Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
+Plug 'rebelot/kanagawa.nvim'
+
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'rodrigore/coc-tailwind-intellisense', {'do': 'npm install'}
 Plug 'honza/vim-snippets'
 Plug 'joaohkfaria/vim-jest-snippets'
 
@@ -163,6 +167,7 @@ endif
 noremap <Leader>n :CocCommand explorer --sources file+,buffer+ --position left<CR>
 noremap <M-j> :CocCommand explorer --sources file+,buffer+ --position left<CR>
 
+let g:tokyonight_style = "storm"
 let g:airline_powerline_fonts=1
 " let g:airline_theme = 'gruvbox'
 let g:airline#extensions#tabline#enabled = 1
@@ -189,7 +194,7 @@ map , <Plug>(easymotion-prefix)
 let g:gruvbox_italic = 1
 let g:gruvbox_contrast_dark = 'soft'
 set background=dark
-colorscheme gruvbox
+colorscheme kanagawa
 highlight Normal guibg=0 ctermbg=0
 
 nnoremap <Leader>w :w!<CR>
@@ -390,3 +395,6 @@ nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>
 
 " Hard time
 let g:hardtime_default_on = 0
+
+nnoremap <Leader>gy :.GBrowse!<CR>
+xnoremap <Leader>gy :'<'>GBrowse!<CR>

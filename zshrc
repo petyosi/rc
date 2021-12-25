@@ -1,13 +1,14 @@
 export PATH="/opt/homebrew/bin:$PATH"
-fpath+=$HOME/.zsh/pure
+
+# fpath+=$HOME/.zsh/pure
 
 autoload -U colors && colors
 autoload -U zmv
 autoload -U compinit && compinit
 autoload -Uz zcalc
 autoload -U promptinit; promptinit
-prompt pure
-zstyle ':prompt:pure:prompt:*' color green
+# prompt pure
+# zstyle ':prompt:pure:prompt:*' color green
 
 # vi mode
 bindkey -v
@@ -65,3 +66,5 @@ export PATH=$PATH:$ANDROID_HOME/emulator
 export PATH=$PATH:$ANDROID_HOME/tools
 export PATH=$PATH:$ANDROID_HOME/tools/bin
 export PATH=$PATH:$ANDROID_HOME/platform-tools
+
+eval "$(starship init zsh)"
