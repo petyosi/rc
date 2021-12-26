@@ -22,3 +22,4 @@ ln -sf $PWD/gitconfig ~/.gitconfig
 ln -sf $PWD/inputrc ~/.inputrc
 
 touch ~/.hushlogin
+tic -x ./tmux.terminfo

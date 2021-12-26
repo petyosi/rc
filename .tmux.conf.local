@@ -335,6 +335,7 @@ bind-key -n M-9 select-window -t :9
 bind-key -n M-] next-window
 bind-key -n M-[ previous-window
 bind-key -n M-c new-window
+bind-key -n M-Tab last-window
 
 # replace C-b by C-a instead of using both prefixes
 # set -gu prefix2
@@ -370,3 +371,8 @@ bind-key -n M-c new-window
 #
 # "$@"
 # # /!\ do not remove the previous line
+
+# use italic
+set -g default-terminal "tmux-256color"
+# true color!!!
+set-option -ga terminal-overrides ",xterm-256color-italic:Tc"
