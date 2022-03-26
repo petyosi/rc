@@ -62,7 +62,6 @@ brew "scc"
 brew "starship"
 brew "the_silver_searcher"
 brew "tmux", args: ["HEAD"]
-brew "tree-sitter@0.18.3", link: false
 brew "vips"
 brew "watchman"
 brew "wget"
