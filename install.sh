@@ -1,6 +1,5 @@
 #!/bin/sh
 brew bundle install
-npm i -g pure-prompt
 
 # setup tmux
 ln -sf $PWD/.tmux/.tmux.conf ~/.tmux.conf
