@@ -41,6 +41,7 @@ alias tmux="tmux -2 -u"
 export EDITOR='nvim'
 export SUDO_EDITOR='nvim'
 alias vim='nvim'
+alias ivm='nvim'
 alias g='git'
 alias y='yarn'
 
@@ -53,6 +54,7 @@ export PUPPETEER_EXECUTABLE_PATH=`which chromium`
 [ -f ~/.stream-env.zsh ] && source ~/.stream-env.zsh
 
 export PATH="/opt/homebrew/opt/ruby/bin:/opt/homebrew/lib/ruby/gems/3.0.0/bin:$PATH"
+export PATH=/opt/homebrew/opt/python@3.9/libexec/bin:$PATH
 export LDFLAGS="-L/opt/homebrew/opt/ruby/lib"
 export CPPFLAGS="-I/opt/homebrew/opt/ruby/include"
 export PKG_CONFIG_PATH="/opt/homebrew/opt/ruby/lib/pkgconfig"
@@ -61,10 +63,18 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && . "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
 [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && . "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 
+# rust
+source $HOME/.cargo/env
+
+# android
 export ANDROID_HOME=$HOME/Library/Android/sdk
 export PATH=$PATH:$ANDROID_HOME/emulator
 export PATH=$PATH:$ANDROID_HOME/tools
 export PATH=$PATH:$ANDROID_HOME/tools/bin
 export PATH=$PATH:$ANDROID_HOME/platform-tools
 
+# prompt
 eval "$(starship init zsh)"
+
+#node
+export NODE_OPTIONS=--openssl-legacy-provider

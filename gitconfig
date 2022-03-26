@@ -16,6 +16,7 @@
     autocrlf = false
     whitespace = cr-at-eol
     editor = nvim
+	  pager = diff-so-fancy | less --tabs=4 -RFX
 
 [format]
     pretty = %Cblue%h%Creset %Cgreen[%cr]%Creset (%an) %s
@@ -64,5 +65,9 @@
 	process = git-lfs filter-process
 [credential]
 	helper = osxkeychain
+
 [init]
 	defaultBranch = master
+
+[interactive]
+	diffFilter = diff-so-fancy --patch

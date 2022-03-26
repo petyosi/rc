@@ -1,3 +1,6 @@
+if exists('g:vscode')
+    " VSCode extension
+else
 " Basics
 set hidden lazyredraw showmode novisualbell number ttyfast
 
@@ -62,6 +65,7 @@ Plug 'tpope/vim-commentary'
 Plug 'godlygeek/tabular'
 Plug 'tpope/vim-markdown'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
+Plug 'jxnblk/vim-mdx-js'
 
 """"""""""""""""""""""""""""""""""""""
 " Rust/toml
@@ -166,6 +170,7 @@ endif
 
 noremap <Leader>n :CocCommand explorer --sources file+,buffer+ --position left<CR>
 noremap <M-j> :CocCommand explorer --sources file+,buffer+ --position left<CR>
+nmap <Leader>er <Cmd>call CocAction('runCommand', 'explorer.doAction', 'closest', ['reveal:0'], [['relative', 0, 'file']])<CR>
 
 let g:tokyonight_style = "storm"
 let g:airline_powerline_fonts=1
@@ -194,7 +199,7 @@ map , <Plug>(easymotion-prefix)
 let g:gruvbox_italic = 1
 let g:gruvbox_contrast_dark = 'soft'
 set background=dark
-colorscheme kanagawa
+colorscheme gruvbox
 highlight Normal guibg=0 ctermbg=0
 
 nnoremap <Leader>w :w!<CR>
@@ -212,10 +217,10 @@ nnoremap <leader>d :bp<cr>:bd #<cr>
 nnoremap <Leader>h :nohlsearch<CR>
 nnoremap <Leader>s :setlocal spell! spell?<CR>
 
-nnoremap <Leader>gs :Gstatus<CR>
+nnoremap <Leader>gs :0G<CR>
 nnoremap <Leader>gd :Gvdiff<CR>
 
-let g:coc_global_extensions = [ 'coc-snippets', 'coc-json',   'coc-rls', 'coc-eslint', 'coc-tsserver', 'coc-css', 'coc-stylelint', 'coc-prettier', 'coc-git' , 'coc-explorer', 'coc-jest', 'coc-yank']
+let g:coc_global_extensions = [ 'coc-snippets', 'coc-json', 'coc-rls', 'coc-eslint', 'coc-tsserver', 'coc-css', 'coc-stylelint', 'coc-prettier', 'coc-git' , 'coc-explorer', 'coc-jest', 'coc-yank']
 
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
@@ -398,3 +403,4 @@ let g:hardtime_default_on = 0
 
 nnoremap <Leader>gy :.GBrowse!<CR>
 xnoremap <Leader>gy :'<'>GBrowse!<CR>
+endif
