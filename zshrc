@@ -64,7 +64,7 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && . "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 
 # rust
-source $HOME/.cargo/env
+# source $HOME/.cargo/env
 
 # android
 export ANDROID_HOME=$HOME/Library/Android/sdk
@@ -77,4 +77,4 @@ export PATH=$PATH:$ANDROID_HOME/platform-tools
 eval "$(starship init zsh)"
 
 #node
-export NODE_OPTIONS=--openssl-legacy-provider
+# export NODE_OPTIONS=--openssl-legacy-provider

@@ -27,5 +27,7 @@
       "filetypes": ["rescript"],
       "rootPatterns": ["bsconfig.json"]
     }
-  }
+  },
+  "stylelintplus.autoFixOnSave": true,
+  "stylelintplus.autoFixOnFormat": true
 }

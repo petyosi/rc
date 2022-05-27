@@ -159,6 +159,7 @@ Plug 'rescript-lang/vim-rescript'
 Plug 'takac/vim-hardtime'
 Plug 'ryanoasis/vim-devicons'
 Plug 'reedes/vim-pencil'
+Plug 'ap/vim-css-color'
 
 call plug#end()
 
@@ -220,7 +221,7 @@ nnoremap <Leader>s :setlocal spell! spell?<CR>
 nnoremap <Leader>gs :0G<CR>
 nnoremap <Leader>gd :Gvdiff<CR>
 
-let g:coc_global_extensions = [ 'coc-snippets', 'coc-json', 'coc-rls', 'coc-eslint', 'coc-tsserver', 'coc-css', 'coc-stylelint', 'coc-prettier', 'coc-git' , 'coc-explorer', 'coc-jest', 'coc-yank']
+let g:coc_global_extensions = [ 'coc-snippets', 'coc-json', 'coc-rls', 'coc-eslint', 'coc-tsserver', 'coc-css', 'coc-stylelintplus', 'coc-prettier', 'coc-git' , 'coc-explorer', 'coc-jest', 'coc-yank' ]
 
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
