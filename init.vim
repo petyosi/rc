@@ -7,6 +7,8 @@ set hidden lazyredraw showmode novisualbell number ttyfast
 " Whitespace configuration
 set nowrap tabstop=2 shiftwidth=2 softtabstop=2 expandtab smartindent nofixendofline
 
+set laststatus=3
+
 " Menu stuff
 set wildmode=list:full
 set wildignore+=*.o,*.obj,.git,*.rbc,*.class,.svn,vendor/gems/*
@@ -130,6 +132,7 @@ Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 
 Plug 'elzr/vim-json'
+Plug 'neoclide/jsonc.vim'
 
 Plug 'crusoexia/vim-monokai'
 Plug 'tomasr/molokai'
@@ -404,4 +407,7 @@ let g:hardtime_default_on = 0
 
 nnoremap <Leader>gy :.GBrowse!<CR>
 xnoremap <Leader>gy :'<'>GBrowse!<CR>
+
+autocmd FileType json setfiletype jsonc
+autocmd BufRead,BufNewFile *.json set filetype=jsonc
 endif
