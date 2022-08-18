@@ -4,6 +4,8 @@ else
 " Basics
 set hidden lazyredraw showmode novisualbell number ttyfast
 
+set laststatus=3
+
 " Whitespace configuration
 set nowrap tabstop=2 shiftwidth=2 softtabstop=2 expandtab smartindent nofixendofline
 
@@ -121,6 +123,7 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'cakebaker/scss-syntax.vim'
 Plug 'hail2u/vim-css3-syntax'
 Plug 'othree/html5.vim'
+Plug 'ap/vim-css-color'
 
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
@@ -142,7 +145,6 @@ Plug 'evanleck/vim-svelte', {'branch': 'main'}
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'ryanoasis/vim-devicons'
 Plug 'reedes/vim-pencil'
-Plug 'ap/vim-css-color'
 
 call plug#end()
 
@@ -398,7 +400,13 @@ let g:hardtime_default_on = 0
 
 nnoremap <Leader>gy :.GBrowse!<CR>
 xnoremap <Leader>gy :'<'>GBrowse!<CR>
-
 autocmd FileType json setfiletype jsonc
 autocmd BufRead,BufNewFile *.json set filetype=jsonc
+xnoremap <Leader>gm <Plug>(git-messenger)
+
+""highlighits "
+
+set cursorline 
+set winblend=0
+set pumblend=5
 endif
