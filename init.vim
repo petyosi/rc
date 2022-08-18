@@ -80,13 +80,8 @@ Plug 'cespare/vim-toml'
 """"""""""""""""""""""""""""""""""""""
 Plug 'leafgarland/typescript-vim'
 Plug 'peitalin/vim-jsx-typescript'
-
-
-""""""""""""""""""""""""""""""""""""""
-" JavaScript / tsx
-""""""""""""""""""""""""""""""""""""""
 Plug 'othree/yajs.vim'
-Plug 'mxw/vim-jsx'
+Plug 'mxw/vim-jsx' 
 
 """"""""""""""""""""""""""""""""""""""
 " Git
@@ -94,7 +89,6 @@ Plug 'mxw/vim-jsx'
 Plug 'tpope/vim-git'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-rhubarb'
-Plug 'int3/vim-extradite'
 Plug 'rhysd/git-messenger.vim'
 " Plug 'airblade/vim-gitgutter'
 
@@ -134,32 +128,18 @@ Plug 'junegunn/limelight.vim'
 Plug 'elzr/vim-json'
 Plug 'neoclide/jsonc.vim'
 
-Plug 'crusoexia/vim-monokai'
-Plug 'tomasr/molokai'
 Plug 'morhetz/gruvbox'
-Plug 'nanotech/jellybeans.vim'
-Plug 'tomasiser/vim-code-dark'
-Plug 'chriskempson/base16-vim'
-Plug 'joshdick/onedark.vim'
-Plug 'projekt0n/github-nvim-theme'
-Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
 Plug 'rebelot/kanagawa.nvim'
 
-
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'rodrigore/coc-tailwind-intellisense', {'do': 'npm install'}
 Plug 'honza/vim-snippets'
 Plug 'joaohkfaria/vim-jest-snippets'
-
-Plug 'easymotion/vim-easymotion'
 
 Plug 'antoinemadec/coc-fzf'
 
 Plug 'bfontaine/Brewfile.vim'
 Plug 'evanleck/vim-svelte', {'branch': 'main'}
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'rescript-lang/vim-rescript'
-Plug 'takac/vim-hardtime'
 Plug 'ryanoasis/vim-devicons'
 Plug 'reedes/vim-pencil'
 Plug 'ap/vim-css-color'
@@ -172,13 +152,7 @@ if executable('ag')
   let g:ackprg = 'ag --vimgrep'
 endif
 
-noremap <Leader>n :CocCommand explorer --sources file+,buffer+ --position left<CR>
-noremap <M-j> :CocCommand explorer --sources file+,buffer+ --position left<CR>
-nmap <Leader>er <Cmd>call CocAction('runCommand', 'explorer.doAction', 'closest', ['reveal:0'], [['relative', 0, 'file']])<CR>
-
-let g:tokyonight_style = "storm"
 let g:airline_powerline_fonts=1
-" let g:airline_theme = 'gruvbox'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#show_tabs = 1
 let g:airline#extensions#tabline#show_tab_nr = 0
@@ -202,8 +176,9 @@ map , <Plug>(easymotion-prefix)
 
 let g:gruvbox_italic = 1
 let g:gruvbox_contrast_dark = 'soft'
+
 set background=dark
-colorscheme gruvbox
+colorscheme kanagawa
 highlight Normal guibg=0 ctermbg=0
 
 nnoremap <Leader>w :w!<CR>
@@ -224,15 +199,12 @@ nnoremap <Leader>s :setlocal spell! spell?<CR>
 nnoremap <Leader>gs :0G<CR>
 nnoremap <Leader>gd :Gvdiff<CR>
 
-let g:coc_global_extensions = [ 'coc-snippets', 'coc-json', 'coc-rls', 'coc-eslint', 'coc-tsserver', 'coc-css', 'coc-stylelintplus', 'coc-prettier', 'coc-git' , 'coc-explorer', 'coc-jest', 'coc-yank' ]
+noremap <Leader>n :CocCommand explorer --sources file+,buffer+ --position left<CR>
+noremap <M-j> :CocCommand explorer --sources file+,buffer+ --position left<CR>
 
-" Use tab for trigger completion with characters ahead and navigate.
-" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+nmap <Leader>er <Cmd>call CocAction('runCommand', 'explorer.doAction', 'closest', ['reveal:0'], [['relative', 0, 'file']])<CR>
+
+let g:coc_global_extensions = [ 'coc-snippets', 'coc-json', 'coc-rls', 'coc-eslint', 'coc-tsserver', 'coc-css', 'coc-stylelintplus', 'coc-prettier', 'coc-git' , 'coc-explorer', 'coc-jest', 'coc-yank' ]
 
 function! s:check_back_space() abort
   let col = col('.') - 1
@@ -242,7 +214,19 @@ endfunction
 " Use <c-space> for trigger completion.
 inoremap <silent><expr> <c-space> coc#refresh()
 
-inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+hi CocSearch ctermfg=12 guifg=#18A3FF
+hi CocMenuSel ctermbg=109 guibg=#13354A
+
+inoremap <silent><expr> <TAB> 
+    \ coc#pum#visible() ? coc#pum#confirm() : 
+    \ <SID>check_back_space() ? "\<TAB>" :
+    \ coc#refresh()
+
+inoremap <silent><expr> <CR> 
+    \ coc#pum#visible() ? coc#pum#confirm() : 
+    \ "\<C-g>u\<CR>"
+
+inoremap <silent><expr> <C-x><C-z> coc#pum#visible() ? coc#pum#stop() : "\<C-x>\<C-z>"
 
 " Use `[c` and `]c` for navigate diagnostics
 nmap <silent> [c <Plug>(coc-diagnostic-prev)
@@ -314,15 +298,13 @@ nnoremap <silent> <space>j  :<C-u>CocNext<CR>
 " Do default action for previous item.
 nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 
-
 " Use <C-l> for trigger snippet expand.
 imap <C-l> <Plug>(coc-snippets-expand)
 
 " Use <C-j> for select text for visual placeholder of snippet.
 vmap <C-j> <Plug>(coc-snippets-select)
 
-" Use <C-j> for jump to next placeholder, it's default of coc.nvim
-let g:coc_snippet_next = '<c-j>'
+let g:coc_snippet_next = '<tab>'
 
 " Use <C-k> for jump to previous placeholder, it's default of coc.nvim
 let g:coc_snippet_prev = '<c-k>'
@@ -330,18 +312,27 @@ let g:coc_snippet_prev = '<c-k>'
 " Use <C-j> for both expand and jump (make expand higher priority.)
 imap <C-j> <Plug>(coc-snippets-expand-jump)
 
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? coc#_select_confirm() :
-      \ coc#expandableOrJumpable() ? coc#rpc#request('doKeymap', ['snippets-expand-jump','']) :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
 
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
+" Map function and class text objects
+" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
+xmap if <Plug>(coc-funcobj-i)
+omap if <Plug>(coc-funcobj-i)
+xmap af <Plug>(coc-funcobj-a)
+omap af <Plug>(coc-funcobj-a)
+xmap ic <Plug>(coc-classobj-i)
+omap ic <Plug>(coc-classobj-i)
+xmap ac <Plug>(coc-classobj-a)
+omap ac <Plug>(coc-classobj-a)
 
-let g:coc_snippet_next = '<tab>'
+" Remap <C-f> and <C-b> for scroll float windows/popups.
+if has('nvim-0.4.0') || has('patch-8.2.0750')
+  nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+  nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+  inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
+  inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
+  vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+  vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+endif
 
 let g:markdown_fenced_languages = ['ts=typescript', 'python', 'tsx=typescript', 'jsx=javascript.jsx']
 

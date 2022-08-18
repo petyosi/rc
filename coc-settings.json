@@ -2,7 +2,7 @@
   "tsserver.log": "verbose",
   "eslint.autoFixOnSave": true,
   "eslint.format.enable": true,
-  "prettier.disableSuccessMessage": true,
+  "suggest.noselect": false,
   "jest.watchman": true,
   "explorer.icon.enableNerdfont": true,
   "explorer.icon.source": "vim-devicons",
