@@ -23,7 +23,7 @@ export BAT_THEME=gruvbox-dark
 setopt prompt_subst
 
 # use incremental search
-bindkey '^R' history-incremental-search-backward
+# bindkey '^R' history-incremental-search-backward
 
 # ignore duplicate history entries
 setopt histignoredups
@@ -104,3 +104,8 @@ zstyle ':completion:*' matcher-list '' \
 # tabtab source for packages
 # uninstall by removing these lines
 [[ -f ~/.config/tabtab/zsh/__tabtab.zsh ]] && . ~/.config/tabtab/zsh/__tabtab.zsh || true
+
+# pnpm
+export PNPM_HOME="/Users/petyo/Library/pnpm"
+export PATH="$PNPM_HOME:$PATH"
+# pnpm end

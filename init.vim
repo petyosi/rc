@@ -180,7 +180,7 @@ let g:gruvbox_italic = 1
 let g:gruvbox_contrast_dark = 'soft'
 
 set background=dark
-colorscheme kanagawa
+colorscheme gruvbox
 highlight Normal guibg=0 ctermbg=0
 
 nnoremap <Leader>w :w!<CR>
@@ -219,10 +219,16 @@ inoremap <silent><expr> <c-space> coc#refresh()
 hi CocSearch ctermfg=12 guifg=#18A3FF
 hi CocMenuSel ctermbg=109 guibg=#13354A
 
-inoremap <silent><expr> <TAB> 
-    \ coc#pum#visible() ? coc#pum#confirm() : 
-    \ <SID>check_back_space() ? "\<TAB>" :
-    \ coc#refresh()
+inoremap <silent><expr> <TAB>
+      \ coc#pum#visible() ? coc#_select_confirm() :
+      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+      \ CheckBackSpace() ? "\<TAB>" :
+      \ coc#refresh()
+
+function! CheckBackSpace() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
 
 inoremap <silent><expr> <CR> 
     \ coc#pum#visible() ? coc#pum#confirm() : 
@@ -306,7 +312,7 @@ imap <C-l> <Plug>(coc-snippets-expand)
 " Use <C-j> for select text for visual placeholder of snippet.
 vmap <C-j> <Plug>(coc-snippets-select)
 
-let g:coc_snippet_next = '<tab>'
+let g:coc_snippet_next = '<c-j>'
 
 " Use <C-k> for jump to previous placeholder, it's default of coc.nvim
 let g:coc_snippet_prev = '<c-k>'
@@ -409,4 +415,8 @@ xnoremap <Leader>gm <Plug>(git-messenger)
 set cursorline 
 set winblend=0
 set pumblend=5
+
+let g:neovide_background_color = 'red'
+set guifont=BlexMono_Nerd_Font_Mono:Light:h12
+
 endif
