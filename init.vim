@@ -1,5 +1,14 @@
 if exists('g:vscode')
-    " VSCode extension
+" VSCode extension
+call plug#begin('~/.config/nvim/plugged')
+
+""""""""""""""""""""""""""""""""""""""
+" general
+""""""""""""""""""""""""""""""""""""""
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-unimpaired'
+
+call plug#end()
 else
 " Basics
 set hidden lazyredraw showmode novisualbell number ttyfast
@@ -144,8 +153,11 @@ Plug 'bfontaine/Brewfile.vim'
 Plug 'evanleck/vim-svelte', {'branch': 'main'}
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'ryanoasis/vim-devicons'
+Plug 'kyazdani42/nvim-web-devicons'
 Plug 'reedes/vim-pencil'
 
+Plug 'nvim-lua/plenary.nvim'
+Plug 'sindrets/diffview.nvim'
 call plug#end()
 
 let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }

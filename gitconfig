@@ -1,7 +1,7 @@
 [user]
     name = Petyo Ivanov
     email = underlog@gmail.com
-    signingkey = CAC52C36
+	signingkey = 2EC535DE
 
 [push]
     default = tracking
@@ -71,3 +71,7 @@
 
 [interactive]
 	diffFilter = diff-so-fancy --patch
+[gpg]
+	program = /opt/homebrew/bin/gpg
+[commit]
+	gpgsign = true

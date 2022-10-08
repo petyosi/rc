@@ -1,7 +1,5 @@
 export PATH="/opt/homebrew/bin:$PATH"
 
-# fpath+=$HOME/.zsh/pure
-
 autoload -U colors && colors
 autoload -U zmv
 autoload -U compinit && compinit
@@ -21,9 +19,6 @@ export BAT_THEME=gruvbox-dark
 
 # expand functions in the prompt
 setopt prompt_subst
-
-# use incremental search
-# bindkey '^R' history-incremental-search-backward
 
 # ignore duplicate history entries
 setopt histignoredups
@@ -48,9 +43,6 @@ alias y='yarn'
 
 alias ls='exa'
 alias ll='exa -la --git --modified --header --group-directories-first'
-
-export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
-export PUPPETEER_EXECUTABLE_PATH=`which chromium`
 
 [ -f ~/.stream-env.zsh ] && source ~/.stream-env.zsh
 
@@ -109,3 +101,5 @@ zstyle ':completion:*' matcher-list '' \
 export PNPM_HOME="/Users/petyo/Library/pnpm"
 export PATH="$PNPM_HOME:$PATH"
 # pnpm end
+
+export GPG_TTY=$(tty)
