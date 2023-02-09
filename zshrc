@@ -40,6 +40,7 @@ alias vim='nvim'
 alias ivm='nvim'
 alias g='git'
 alias y='yarn'
+alias p='pnpm'
 
 alias ls='exa'
 alias ll='exa -la --git --modified --header --group-directories-first'

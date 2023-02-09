@@ -111,7 +111,6 @@ Plug 'mileszs/ack.vim'
 """"""""""""""""""""""""""""""""""""""
 " No idea who needs these
 """"""""""""""""""""""""""""""""""""""
-Plug 'jiangmiao/auto-pairs'
 Plug 'ConradIrwin/vim-bracketed-paste'
 
 """"""""""""""""""""""""""""""""""""""
@@ -158,6 +157,7 @@ Plug 'reedes/vim-pencil'
 
 Plug 'nvim-lua/plenary.nvim'
 Plug 'sindrets/diffview.nvim'
+Plug 'github/copilot.vim'
 call plug#end()
 
 let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
@@ -213,12 +213,12 @@ nnoremap <Leader>s :setlocal spell! spell?<CR>
 nnoremap <Leader>gs :0G<CR>
 nnoremap <Leader>gd :Gvdiff<CR>
 
-noremap <Leader>n :CocCommand explorer --sources file+,buffer+ --position left<CR>
-noremap <M-j> :CocCommand explorer --sources file+,buffer+ --position left<CR>
+noremap <Leader>n :CocCommand explorer --sources file+,buffer+ --position right<CR>
+noremap <M-j> :CocCommand explorer --sources file+,buffer+ --position right<CR>
 
 nmap <Leader>er <Cmd>call CocAction('runCommand', 'explorer.doAction', 'closest', ['reveal:0'], [['relative', 0, 'file']])<CR>
 
-let g:coc_global_extensions = [ 'coc-snippets', 'coc-json', 'coc-rls', 'coc-eslint', 'coc-tsserver', 'coc-css', 'coc-stylelintplus', 'coc-prettier', 'coc-git' , 'coc-explorer', 'coc-jest', 'coc-yank' ]
+let g:coc_global_extensions = [ 'coc-snippets', 'coc-json', 'coc-rls', 'coc-eslint', 'coc-tsserver', 'coc-css', 'coc-stylelintplus', 'coc-prettier', 'coc-git' , 'coc-explorer', 'coc-jest', 'coc-yank', 'coc-pairs' ]
 
 function! s:check_back_space() abort
   let col = col('.') - 1
@@ -422,13 +422,7 @@ autocmd FileType json setfiletype jsonc
 autocmd BufRead,BufNewFile *.json set filetype=jsonc
 xnoremap <Leader>gm <Plug>(git-messenger)
 
-""highlighits "
-
 set cursorline 
 set winblend=0
 set pumblend=5
-
-let g:neovide_background_color = 'red'
-set guifont=BlexMono_Nerd_Font_Mono:Light:h12
-
 endif
