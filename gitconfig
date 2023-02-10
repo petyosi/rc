@@ -58,6 +58,7 @@
 [diff]
     algorithm = patience
     comparisonHeuristic = true
+    tool = meld
 [filter "lfs"]
 	smudge = git-lfs smudge -- %f
     required = true

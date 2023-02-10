@@ -23,12 +23,13 @@ setopt prompt_subst
 # ignore duplicate history entries
 setopt histignoredups
 setopt share_history
+setopt APPEND_HISTORY
 HISTSIZE=1000
 SAVEHIST=1000
 HISTFILE=~/.history
+
 # 10ms for key sequences
 KEYTIMEOUT=1
-setopt APPEND_HISTORY
 
 export FZF_DEFAULT_COMMAND='ag -g ""'
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -99,8 +100,9 @@ zstyle ':completion:*' matcher-list '' \
 [[ -f ~/.config/tabtab/zsh/__tabtab.zsh ]] && . ~/.config/tabtab/zsh/__tabtab.zsh || true
 
 # pnpm
-export PNPM_HOME="/Users/petyo/Library/pnpm"
-export PATH="$PNPM_HOME:$PATH"
+# export PNPM_HOME="/Users/petyo/Library/pnpm"
+# export PATH="$PNPM_HOME:$PATH"
 # pnpm end
 
 export GPG_TTY=$(tty)
+alias p="pnpm"

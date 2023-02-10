@@ -192,7 +192,7 @@ let g:gruvbox_italic = 1
 let g:gruvbox_contrast_dark = 'soft'
 
 set background=dark
-colorscheme gruvbox
+colorscheme kanagawa
 highlight Normal guibg=0 ctermbg=0
 
 nnoremap <Leader>w :w!<CR>
@@ -425,4 +425,7 @@ xnoremap <Leader>gm <Plug>(git-messenger)
 set cursorline 
 set winblend=0
 set pumblend=5
+
+imap <M-i> <Plug>(copilot-next)
+imap <M-u> <Plug>(copilot-previous)
 endif
