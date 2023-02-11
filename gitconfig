@@ -1,7 +1,7 @@
 [user]
     name = Petyo Ivanov
     email = underlog@gmail.com
-	signingkey = 2EC535DE
+    signingkey = FDB94580BC275E9D
 
 [push]
     default = tracking
