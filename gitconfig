@@ -73,6 +73,6 @@
 [interactive]
 	diffFilter = diff-so-fancy --patch
 [gpg]
-	program = /opt/homebrew/bin/gpg
+	program = gpg
 [commit]
 	gpgsign = true

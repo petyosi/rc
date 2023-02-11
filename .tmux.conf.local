@@ -219,7 +219,7 @@ tmux_conf_theme_right_separator_sub="\uE0B3"  #   PowerlineSymbols.otf font, see
 #     - #{username}
 #     - #{username_ssh}
 tmux_conf_theme_status_left=" ❐ #S | ↑#{?uptime_y, #{uptime_y}y,}#{?uptime_d, #{uptime_d}d,}#{?uptime_h, #{uptime_h}h,}#{?uptime_m, #{uptime_m}m,} "
-tmux_conf_theme_status_right=" #{prefix}#{pairing}#{synchronized}#{?battery_status,#{battery_status},}#{?battery_bar, #{battery_bar},}#{?battery_percentage, #{battery_percentage},} , %R , %d %b | #{username}#{root} | #{hostname} "
+tmux_conf_theme_status_right=" #{prefix}#{pairing}#{synchronized}#{?battery_status,#{battery_status},}#{?battery_bar, #{battery_bar},}#{?battery_percentage, #{battery_percentage},} , %R , %d %b | #{username}#{root} "
 
 # status left style
 tmux_conf_theme_status_left_fg="$tmux_conf_theme_colour_6,$tmux_conf_theme_colour_7,$tmux_conf_theme_colour_8"
@@ -332,10 +332,15 @@ bind-key -n M-6 select-window -t :6
 bind-key -n M-7 select-window -t :7
 bind-key -n M-8 select-window -t :8
 bind-key -n M-9 select-window -t :9
-bind-key -n M-S-] select-pane -R
-bind-key -n M-S-[ select-pane -L
+
 bind-key -n M-c new-window
 bind-key -n M-Tab last-window
+
+bind-key -n M-] select-pane -R
+bind-key -n M-[ select-pane -L
+
+bind-key -n M-\} next-window
+bind-key -n M-\{ previous-window
 
 # replace C-b by C-a instead of using both prefixes
 # set -gu prefix2
