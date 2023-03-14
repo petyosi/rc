@@ -22,5 +22,8 @@
   "languageserver": { },
   "tsserver.useLocalTsdk": true,
   "stylelintplus.autoFixOnSave": true,
-  "stylelintplus.autoFixOnFormat": true
+  "stylelintplus.autoFixOnFormat": true,
+  "snippets.ultisnips.enable": false,
+  "snippets.loadVSCodeProjectSnippets": false,
+  "snippets.excludePatterns": ["**/*jquery.snippets", "**/*redux.snippets", "**/*bemjson.snippets", "**/*jasmine.snippets", "**/*openui5.snippets"],
 }

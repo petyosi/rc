@@ -158,6 +158,7 @@ Plug 'reedes/vim-pencil'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'sindrets/diffview.nvim'
 Plug 'github/copilot.vim'
+Plug 'sainnhe/everforest'
 call plug#end()
 
 let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
@@ -190,9 +191,10 @@ map , <Plug>(easymotion-prefix)
 
 let g:gruvbox_italic = 1
 let g:gruvbox_contrast_dark = 'soft'
+let g:everforest_background = 'soft'
 
 set background=dark
-colorscheme kanagawa
+colorscheme everforest
 highlight Normal guibg=0 ctermbg=0
 
 nnoremap <Leader>w :w!<CR>
