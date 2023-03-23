@@ -217,6 +217,7 @@ nnoremap <Leader>gd :Gvdiff<CR>
 
 noremap <Leader>n :CocCommand explorer --sources file+,buffer+ --position right<CR>
 noremap <M-j> :CocCommand explorer --sources file+,buffer+ --position right<CR>
+noremap <leader>rt :CocCommand tsserver.restart<CR>
 
 nmap <Leader>er <Cmd>call CocAction('runCommand', 'explorer.doAction', 'closest', ['reveal:0'], [['relative', 0, 'file']])<CR>
 
