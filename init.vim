@@ -215,9 +215,10 @@ nnoremap <Leader>s :setlocal spell! spell?<CR>
 nnoremap <Leader>gs :0G<CR>
 nnoremap <Leader>gd :Gvdiff<CR>
 
-noremap <Leader>n :CocCommand explorer --sources file+,buffer+ --position right<CR>
-noremap <M-j> :CocCommand explorer --sources file+,buffer+ --position right<CR>
-noremap <leader>rt :CocCommand tsserver.restart<CR>
+noremap <Leader>n :CocCommand explorer --sources file+,buffer+ --position right --width 80<CR>
+noremap <M-j> :CocCommand explorer --sources file+,buffer+ --position right --width 80<CR>
+
+noremap <Leader>rt :CocCommand tsserver.restart<CR>
 
 nmap <Leader>er <Cmd>call CocAction('runCommand', 'explorer.doAction', 'closest', ['reveal:0'], [['relative', 0, 'file']])<CR>
 
@@ -292,10 +293,12 @@ augroup end
 
 " Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
 vmap <leader>a  <Plug>(coc-codeaction-selected)
+vmap <M-k>  <Plug>(coc-codeaction-selected)
 nmap <leader>a  <Plug>(coc-codeaction-selected)
 
 " Remap for do codeAction of current line
 nmap <leader>ac  <Plug>(coc-codeaction)
+nmap <M-k>  <Plug>(coc-codeaction)
 " Fix autofix problem of current line
 nmap <leader>qf  <Plug>(coc-fix-current)
 
