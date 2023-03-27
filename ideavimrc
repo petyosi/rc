@@ -4,21 +4,27 @@ set NERDTree
 set surround
 
 set clipboard+=unnamed
+set incsearch
+set ideajoin
+set ignorecase
+set smartcase
 
 map <Leader>ev :e ~/.ideavimrc<cr>
-map <Leader>sv :so ~/.ideavimrc<cr>
+map <Leader>iv :so ~/.ideavimrc<cr>
 
-map <Leader>f :action Javascript.Linters.EsLint.Fix<CR>
-map <Leader>p :action GotoFile<CR>
-map <Leader>s :action GotoSymbol<CR>
-map <Leader>d :action CloseContent<CR>
+map <Leader>gs  <Action>(ActivateCommitToolWindow)
+map <Leader>f  <Action>(Javascript.Linters.EsLint.Fix)
+map <Leader>p  <Action>(GotoFile)
+map <Leader>s  <Action>(GotoSymbol)
+map <Leader>d  <Action>(CloseContent)
+map <Leader>w  <Action>(SaveAll)
+map <Leader>k  <Action>(SearchEverywhere)
+map <Leader>n  <Action>(ActivateProjectToolWindow)
 
 " unimpaired shortcuts
-map [c :action GotoPreviousError<CR>
-map ]c :action GotoNextError<CR>
-map [b :action PreviousTab<CR>
-map ]b :action NextTab<CR>
+map [c <Action>(GotoPreviousError)
+map ]c <Action>(GotoNextError)
+map [b <Action>(PreviousTab)
+map ]b <Action>(NextTab)
 
-" nmap <a-j> :NERDTree<CR>
-
-
+nmap <a-j> :NERDTree<CR>
