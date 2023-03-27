@@ -1,0 +1,24 @@
+let mapleader=" "
+
+set NERDTree
+set surround
+
+set clipboard+=unnamed
+
+map <Leader>ev :e ~/.ideavimrc<cr>
+map <Leader>sv :so ~/.ideavimrc<cr>
+
+map <Leader>f :action Javascript.Linters.EsLint.Fix<CR>
+map <Leader>p :action GotoFile<CR>
+map <Leader>s :action GotoSymbol<CR>
+map <Leader>d :action CloseContent<CR>
+
+" unimpaired shortcuts
+map [c :action GotoPreviousError<CR>
+map ]c :action GotoNextError<CR>
+map [b :action PreviousTab<CR>
+map ]b :action NextTab<CR>
+
+" nmap <a-j> :NERDTree<CR>
+
+
