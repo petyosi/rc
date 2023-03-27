@@ -2,15 +2,14 @@ let mapleader=" "
 
 set NERDTree
 set surround
-
 set clipboard+=unnamed
 set incsearch
 set ideajoin
 set ignorecase
 set smartcase
 
-map <Leader>ev :e ~/.ideavimrc<cr>
-map <Leader>iv :so ~/.ideavimrc<cr>
+map <Leader>ev :e ~/.ideavimrc<CR>
+map <Leader>iv :so ~/.ideavimrc<CR>
 
 map <Leader>gs  <Action>(ActivateCommitToolWindow)
 map <Leader>f  <Action>(Javascript.Linters.EsLint.Fix)
