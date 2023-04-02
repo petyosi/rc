@@ -1,7 +1,7 @@
 [user]
     name = Petyo Ivanov
     email = underlog@gmail.com
-    signingkey = FDB94580BC275E9D
+	signingkey = ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDN2FvZTnbjM7sgoGeYZ0XMKRBLQ2TudUvXns0YyDPyeiHQBukFZjYUOoEdrj2hyata1Jkywae7vomEe7MDZzrmfsTEEF0z47nZgWDJSRLUNld9eYttb+b5Nhvliox/5jJVOk0n3p3cCvP+zcBBxcEh23x+PipfH02OEUDvQy65HZ6xEkmdhI4+cy8OLiXk6iPSOUmvxAlqAVwpJtKw1MEAV3Ud1rEGAhbfzkH7cpcwOaWjPa0Mf2Uth41iLTje2LPqlWGp2HobZyi8O97TK4E+AXbtlX54VXqqnwEnwwA+hGQQa7s1rGl7EtNyNSGWtRzB7JMpoEuLOzANOXF+D1e9ZSAyp2N2icm03libM6eyteZ5kpr/FBUpKyeGTs5C1BAmS0PLdov24q4ni14nUuq3rHrfWkWz9KB85fZdhGDyLmyUk1eKDylyLuyGQ9kZpsGE/iMSbBFAkXFfut0NF00xSdrg2ZtlnWCNfXIMPJH6hZGREc+RUhzFUW1ZM0HSqqD5dd3DSdcpQTo45ej+f4BLw4DwHzXDEzu4pNlsBe9h76nBgUfLzVtTq61BiP0YiSgKHm8F6HM7blU+vMYWDJaCiMBcWQ4weB0UteHaeCPiod+tJzAAtrqHUG6fgsXWjXVibWENxxHjRa7t+fCelEoWwdhtUOOfgsCNWLW6VARUUw==
 
 [push]
     default = tracking
@@ -74,5 +74,8 @@
 	diffFilter = diff-so-fancy --patch
 [gpg]
 	program = gpg
+	format = ssh
 [commit]
 	gpgsign = true
+[gpg "ssh"]
+	program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign

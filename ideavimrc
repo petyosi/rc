@@ -19,6 +19,7 @@ map <Leader>d  <Action>(CloseContent)
 map <Leader>w  <Action>(SaveAll)
 map <Leader>k  <Action>(SearchEverywhere)
 map <Leader>n  <Action>(ActivateProjectToolWindow)
+map <Leader>r  <Action>(RenameElement)
 
 " unimpaired shortcuts
 map [c <Action>(GotoPreviousError)
