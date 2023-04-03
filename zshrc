@@ -1,6 +1,8 @@
 export PATH="/opt/homebrew/bin:$PATH"
+export GPG_TTY=$(tty)
+export EDITOR='nvim'
+export SUDO_EDITOR='nvim'
 
-# if /opt/homebrew/ exists source antigen from there, if not, use /usr/local
 if [ -d "/opt/homebrew/share/antigen" ]; then
   source /opt/homebrew/share/antigen/antigen.zsh
 else
@@ -46,18 +48,13 @@ export FZF_DEFAULT_COMMAND='ag -g ""'
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 alias tmux="tmux -2 -u"
-export EDITOR='nvim'
-export SUDO_EDITOR='nvim'
 alias vim='nvim'
 alias ivm='nvim'
 alias g='git'
 alias y='yarn'
 alias p='pnpm'
-
 alias ls='exa'
 alias ll='exa -la --git --modified --header --group-directories-first'
-
-export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 
 zstyle ':completion:*' matcher-list '' \
   'm:{a-z\-}={A-Z\_}' \
@@ -67,11 +64,3 @@ zstyle ':completion:*' matcher-list '' \
 # tabtab source for packages
 # uninstall by removing these lines
 [[ -f ~/.config/tabtab/zsh/__tabtab.zsh ]] && . ~/.config/tabtab/zsh/__tabtab.zsh || true
-
-# pnpm
-# export PNPM_HOME="/Users/petyo/Library/pnpm"
-# export PATH="$PNPM_HOME:$PATH"
-# pnpm end
-
-export GPG_TTY=$(tty)
-alias p="pnpm"
