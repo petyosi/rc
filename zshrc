@@ -1,5 +1,12 @@
 export PATH="/opt/homebrew/bin:$PATH"
-source /opt/homebrew/share/antigen/antigen.zsh
+
+# if /opt/homebrew/ exists source antigen from there, if not, use /usr/local
+if [ -d "/opt/homebrew/share/antigen" ]; then
+  source /opt/homebrew/share/antigen/antigen.zsh
+else
+  source /usr/local/share/antigen/antigen.zsh
+fi
+
 export NVM_LAZY_LOAD=true
 antigen bundle lukechilds/zsh-nvm
 antigen apply
@@ -49,15 +56,6 @@ alias p='pnpm'
 
 alias ls='exa'
 alias ll='exa -la --git --modified --header --group-directories-first'
-
-[ -f ~/.stream-env.zsh ] && source ~/.stream-env.zsh
-
-export PATH="/opt/homebrew/opt/ruby/bin:/opt/homebrew/lib/ruby/gems/3.0.0/bin:$PATH"
-export PATH=/opt/homebrew/opt/python@3.9/libexec/bin:$PATH
-export LDFLAGS="-L/opt/homebrew/opt/ruby/lib"
-export CPPFLAGS="-I/opt/homebrew/opt/ruby/include"
-export PKG_CONFIG_PATH="/opt/homebrew/opt/ruby/lib/pkgconfig"
-
 
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 
