@@ -8,7 +8,7 @@
         "revision": "8c64c35a34b127bdb79348158412381004c45e58"
       },
       "homebrew/cask": {
-        "revision": "20151867dc0ba0a16df55f01cea67505dcfe721d"
+        "revision": "8a41398bb1c3fc8d0120247217d5e34bf5de04fd"
       },
       "homebrew/cask-drivers": {
         "revision": "15fa191abfcb8b413f0a705709d54c23d107387b"
@@ -17,7 +17,7 @@
         "revision": "50971cb65d8b9cf71c68ea86995742a03f13ad9e"
       },
       "homebrew/core": {
-        "revision": "ceb6f460128d3233b2f40e4d4d1be885465b965e"
+        "revision": "8d383ca43f9527475916cfede984ff44441cd7f1"
       },
       "khanhas/tap": {
         "revision": "261c2df1696797a731f4e3883da8ac4f457d3fce"
@@ -2049,7 +2049,7 @@
         }
       },
       "luajit": {
-        "version": "2.1.0-beta3-20230221.4",
+        "version": "HEAD-505e2c0",
         "bottle": {
           "rebuild": 0,
           "root_url": "https://ghcr.io/v2/homebrew/core",
@@ -2254,7 +2254,7 @@
         }
       },
       "neovim": {
-        "version": "0.8.3",
+        "version": "HEAD-84027f7",
         "bottle": {
           "rebuild": 0,
           "root_url": "https://ghcr.io/v2/homebrew/core",
@@ -2591,7 +2591,7 @@
         }
       },
       "ripgrep": {
-        "version": "HEAD-87b33c9",
+        "version": "HEAD-ced5b92",
         "bottle": {
           "rebuild": 1,
           "root_url": "https://ghcr.io/v2/homebrew/core",
@@ -2851,7 +2851,7 @@
         }
       },
       "tmux": {
-        "version": "HEAD-9d9445a",
+        "version": "HEAD-8ff3091",
         "bottle": {
           "rebuild": 0,
           "root_url": "https://ghcr.io/v2/homebrew/core",
@@ -3340,7 +3340,7 @@
         }
       },
       "google-chrome": {
-        "version": "111.0.5563.110",
+        "version": "111.0.5563.146",
         "options": {
           "full_name": "google-chrome"
         }
@@ -3394,7 +3394,7 @@
         }
       },
       "telegram": {
-        "version": "9.5.2,244826",
+        "version": "9.5.3,244855",
         "options": {
           "full_name": "telegram"
         }
@@ -3432,7 +3432,7 @@
         "HOMEBREW_PREFIX": "/opt/homebrew",
         "Homebrew/homebrew-core": "api",
         "CLT": "14.2.0.0.1.1668646533",
-        "Xcode": "14.1",
+        "Xcode": "14.2",
         "macOS": "13.2.1"
       }
     }
