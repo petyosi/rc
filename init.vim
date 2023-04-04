@@ -1,15 +1,3 @@
-if exists('g:vscode')
-" VSCode extension
-call plug#begin('~/.config/nvim/plugged')
-
-""""""""""""""""""""""""""""""""""""""
-" general
-""""""""""""""""""""""""""""""""""""""
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-unimpaired'
-
-call plug#end()
-else
 " Basics
 set hidden lazyredraw showmode novisualbell number ttyfast
 
@@ -434,4 +422,8 @@ set pumblend=5
 
 imap <M-i> <Plug>(copilot-next)
 imap <M-u> <Plug>(copilot-previous)
-endif
+
+" silence healthcheck warnings
+let g:loaded_perl_provider = 0
+let g:loaded_node_provider = 0
+let g:loaded_ruby_provider = 0
