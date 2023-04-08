@@ -306,7 +306,7 @@ nnoremap <silent> <space>l  :<C-u>CocFzfList outline<cr>
 " Show commands
 nnoremap <silent> <space>c  :<C-u>CocFzfList commands<cr>
 " Search workspace symbols
-nnoremap <silent> <space>s  :<C-u>CocFzfList symbols<cr>
+nnoremap <silent> <space>s  :<C-u>CocList symbols<cr>
 " Do default action for next item.
 nnoremap <silent> <space>j  :<C-u>CocNext<CR>
 " Do default action for previous item.
