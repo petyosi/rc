@@ -118,6 +118,7 @@ Plug 'vim-airline/vim-airline-themes'
 """"""""""""""""""""""""""""""""""""""
 Plug 'cakebaker/scss-syntax.vim'
 Plug 'hail2u/vim-css3-syntax'
+Plug 'alexlafroscia/postcss-syntax.vim'
 Plug 'othree/html5.vim'
 Plug 'ap/vim-css-color'
 
@@ -147,6 +148,7 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'sindrets/diffview.nvim'
 Plug 'github/copilot.vim'
 Plug 'sainnhe/everforest'
+
 call plug#end()
 
 let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
@@ -210,7 +212,7 @@ noremap <Leader>rt :CocCommand tsserver.restart<CR>
 
 nmap <Leader>er <Cmd>call CocAction('runCommand', 'explorer.doAction', 'closest', ['reveal:0'], [['relative', 0, 'file']])<CR>
 
-let g:coc_global_extensions = [ 'coc-snippets', 'coc-json', 'coc-rls', 'coc-eslint', 'coc-tsserver', 'coc-css', 'coc-stylelintplus', 'coc-prettier', 'coc-git' , 'coc-explorer', 'coc-jest', 'coc-yank', 'coc-pairs' ]
+let g:coc_global_extensions = [ 'coc-snippets', 'coc-json', 'coc-rls', 'coc-eslint', 'coc-tsserver', 'coc-css', 'coc-stylelintplus', 'coc-prettier', 'coc-git' , 'coc-explorer', 'coc-jest', 'coc-yank', 'coc-pairs', '@yaegassy/coc-tailwindcss3']
 
 function! s:check_back_space() abort
   let col = col('.') - 1
