@@ -56,6 +56,7 @@ alias p='pnpm'
 alias ls='exa'
 alias ll='exa -la --git --modified --header --group-directories-first'
 alias nr='npm run'
+alias n=npm
 
 zstyle ':completion:*' matcher-list '' \
   'm:{a-z\-}={A-Z\_}' \
