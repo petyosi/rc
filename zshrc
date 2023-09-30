@@ -53,8 +53,8 @@ alias ivm='nvim'
 alias g='git'
 alias y='yarn'
 alias p='pnpm'
-alias ls='exa'
-alias ll='exa -la --git --modified --header --group-directories-first'
+alias ls='eza --icons'
+alias ll='eza -la --git --modified --header --group-directories-first --icons'
 alias nr='npm run'
 alias n=npm
 
@@ -62,3 +62,4 @@ zstyle ':completion:*' matcher-list '' \
   'm:{a-z\-}={A-Z\_}' \
   'r:[^[:alpha:]]||[[:alpha:]]=** r:|=* m:{a-z\-}={A-Z\_}' \
   'r:|?=** m:{a-z\-}={A-Z\_}'
+export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
