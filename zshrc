@@ -3,16 +3,6 @@ export GPG_TTY=$(tty)
 export EDITOR='nvim'
 export SUDO_EDITOR='nvim'
 
-if [ -d "/opt/homebrew/share/antigen" ]; then
-  source /opt/homebrew/share/antigen/antigen.zsh
-else
-  source /usr/local/share/antigen/antigen.zsh
-fi
-
-export NVM_LAZY_LOAD=true
-antigen bundle lukechilds/zsh-nvm
-antigen apply
-
 autoload -U colors && colors
 autoload -U zmv
 autoload -U compinit && compinit
@@ -24,6 +14,7 @@ eval "$(starship init zsh)"
 
 # vi mode
 bindkey -v
+bindkey "^R" history-incremental-search-backward
 stty -ixon
 
 # enable colored output from ls, etc
@@ -44,7 +35,7 @@ HISTFILE=~/.history
 # 10ms for key sequences
 KEYTIMEOUT=1
 
-export FZF_DEFAULT_COMMAND='ag -g ""'
+export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix'
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 alias tmux="tmux -2 -u"
