@@ -33,7 +33,7 @@
     out = log origin..HEAD
     qpl = log --pretty=\"%Cblue%h%Creset %Cgreen[%cr]%Creset %s\" origin/production..origin/master
     l = log --all --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset %Cblue%an%Creset' --abbrev-commit --date=relative
-    lol = log --pretty=oneline --abbrev-commit --graph --decorate
+    lol = log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset %Cblue%an%Creset' --abbrev-commit --date=relative --abbrev-commit --graph --decorate
     ci = commit
     ca = commit --amend
     eu = "!f() { git ls-files --unmerged | cut -f2 | sort -u ; }; vim `f`"
