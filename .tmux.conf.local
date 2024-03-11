@@ -398,8 +398,8 @@ bind -n M-s display-popup -E "\
 set -g default-terminal "tmux-256color"
 
 # true color!!!
-set-option -ga terminal-overrides ",xterm-256color-italic:Tc"
-set-option -sa terminal-overrides ',xterm-256color:RGB'
+set-option -ga terminal-overrides ",tmux-256color-italic:Tc"
+set-option -sa terminal-overrides ',tmux-256color:RGB'
 
 # Undercurl
 set -g default-terminal "${TERM}"

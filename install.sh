@@ -11,3 +11,4 @@ ln -sf $PWD/inputrc ~/.inputrc
 touch ~/.hushlogin
 
 ln -sf $PWD/gitconfig ~/.gitconfig
+ln -sf $PWD/wezterm.lua ~/.wezterm.lua
