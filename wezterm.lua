@@ -3,8 +3,9 @@ local wezterm = require("wezterm")
 local config = wezterm.config_builder()
 
 config.enable_scroll_bar = false
-config.font = wezterm.font("CaskaydiaCove Nerd Font Mono")
-config.font_size = 14.0
+config.font = wezterm.font("CaskaydiaCove Nerd Font Mono", { weight = "Light", assume_emoji_presentation = true })
+config.line_height = 1.2
+config.font_size = 16.0
 config.enable_tab_bar = false
 config.window_decorations = "RESIZE"
 

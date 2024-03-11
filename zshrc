@@ -39,7 +39,7 @@ export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix'
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 alias tmux="tmux -2 -u"
-alias vim='nvim'
+alias vim='TERM=wezterm nvim'
 alias ivm='nvim'
 alias g='git'
 alias y='yarn'
