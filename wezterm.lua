@@ -3,10 +3,15 @@ local wezterm = require("wezterm")
 local config = wezterm.config_builder()
 
 config.enable_scroll_bar = false
-config.font = wezterm.font("CaskaydiaCove Nerd Font Mono", { weight = "Regular", assume_emoji_presentation = true })
+config.font = wezterm.font_with_fallback({
+	"CaskaydiaCove Nerd Font Mono",
+	"Apple Color Emoji",
+})
+
 config.line_height = 1.2
-config.font_size = 14.0
+config.font_size = 16.0
 config.enable_tab_bar = false
+config.color_scheme = "Tokyo Night"
 config.window_decorations = "RESIZE"
 config.window_padding = {
 	left = 0,
@@ -35,6 +40,11 @@ config.keys = {
 		key = "u",
 		mods = "CMD",
 		action = wezterm.action.EmitEvent("toggle-opacity"),
+	},
+	{
+		key = "6",
+		mods = "SHIFT",
+		action = wezterm.action.DisableDefaultAssignment,
 	},
 }
 
