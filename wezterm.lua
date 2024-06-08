@@ -9,7 +9,7 @@ config.font = wezterm.font_with_fallback({
 })
 
 config.line_height = 1.2
-config.font_size = 13.0
+config.font_size = 14.0
 config.enable_tab_bar = false
 config.color_scheme = "Monokai Remastered"
 config.window_decorations = "RESIZE"
