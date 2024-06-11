@@ -353,7 +353,7 @@ bind-key -n M-\} next-window
 bind-key -n M-\{ previous-window
 bind-key k kill-session
 
-bind-key k kill-session
+bind-key -n M-% split-window -h
 
 bind -n M-s display-popup -E "\
     tmux list-sessions -F '#{?session_attached,,#{session_name}}' |\

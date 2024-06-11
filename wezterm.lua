@@ -46,6 +46,11 @@ config.keys = {
 		mods = "SHIFT",
 		action = wezterm.action.DisableDefaultAssignment,
 	},
+	{
+		key = "s",
+		mods = "CMD",
+		action = wezterm.action.SendKey({ key = "s", mods = "CTRL" }),
+	},
 }
 
 return config
