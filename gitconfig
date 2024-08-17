@@ -1,81 +1,96 @@
 [user]
-    name = Petyo Ivanov
-    email = underlog@gmail.com
-    signingkey = ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDN2FvZTnbjM7sgoGeYZ0XMKRBLQ2TudUvXns0YyDPyeiHQBukFZjYUOoEdrj2hyata1Jkywae7vomEe7MDZzrmfsTEEF0z47nZgWDJSRLUNld9eYttb+b5Nhvliox/5jJVOk0n3p3cCvP+zcBBxcEh23x+PipfH02OEUDvQy65HZ6xEkmdhI4+cy8OLiXk6iPSOUmvxAlqAVwpJtKw1MEAV3Ud1rEGAhbfzkH7cpcwOaWjPa0Mf2Uth41iLTje2LPqlWGp2HobZyi8O97TK4E+AXbtlX54VXqqnwEnwwA+hGQQa7s1rGl7EtNyNSGWtRzB7JMpoEuLOzANOXF+D1e9ZSAyp2N2icm03libM6eyteZ5kpr/FBUpKyeGTs5C1BAmS0PLdov24q4ni14nUuq3rHrfWkWz9KB85fZdhGDyLmyUk1eKDylyLuyGQ9kZpsGE/iMSbBFAkXFfut0NF00xSdrg2ZtlnWCNfXIMPJH6hZGREc+RUhzFUW1ZM0HSqqD5dd3DSdcpQTo45ej+f4BLw4DwHzXDEzu4pNlsBe9h76nBgUfLzVtTq61BiP0YiSgKHm8F6HM7blU+vMYWDJaCiMBcWQ4weB0UteHaeCPiod+tJzAAtrqHUG6fgsXWjXVibWENxxHjRa7t+fCelEoWwdhtUOOfgsCNWLW6VARUUw==
+  name = Petyo Ivanov
+  email = underlog@gmail.com
+  signingkey = ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDN2FvZTnbjM7sgoGeYZ0XMKRBLQ2TudUvXns0YyDPyeiHQBukFZjYUOoEdrj2hyata1Jkywae7vomEe7MDZzrmfsTEEF0z47nZgWDJSRLUNld9eYttb+b5Nhvliox/5jJVOk0n3p3cCvP+zcBBxcEh23x+PipfH02OEUDvQy65HZ6xEkmdhI4+cy8OLiXk6iPSOUmvxAlqAVwpJtKw1MEAV3Ud1rEGAhbfzkH7cpcwOaWjPa0Mf2Uth41iLTje2LPqlWGp2HobZyi8O97TK4E+AXbtlX54VXqqnwEnwwA+hGQQa7s1rGl7EtNyNSGWtRzB7JMpoEuLOzANOXF+D1e9ZSAyp2N2icm03libM6eyteZ5kpr/FBUpKyeGTs5C1BAmS0PLdov24q4ni14nUuq3rHrfWkWz9KB85fZdhGDyLmyUk1eKDylyLuyGQ9kZpsGE/iMSbBFAkXFfut0NF00xSdrg2ZtlnWCNfXIMPJH6hZGREc+RUhzFUW1ZM0HSqqD5dd3DSdcpQTo45ej+f4BLw4DwHzXDEzu4pNlsBe9h76nBgUfLzVtTq61BiP0YiSgKHm8F6HM7blU+vMYWDJaCiMBcWQ4weB0UteHaeCPiod+tJzAAtrqHUG6fgsXWjXVibWENxxHjRa7t+fCelEoWwdhtUOOfgsCNWLW6VARUUw==
 
 [push]
-    default = tracking
+  default = tracking
 
 [color]
-    diff = auto
-    status = auto
-    branch = auto
+  diff = auto
+  status = auto
+  branch = auto
 
 [core]
-    excludesfile = ~/.gitignore
-    autocrlf = false
-    whitespace = cr-at-eol
-    editor = nvim
-	  pager = diff-so-fancy | less --tabs=4 -RFX
+  excludesfile = ~/.gitignore
+  autocrlf = false
+  whitespace = cr-at-eol
+  editor = nvim
+  pager = delta
 
 [format]
-    pretty = %Cblue%h%Creset %Cgreen[%cr]%Creset (%an) %s
+  pretty = %Cblue%h%Creset %Cgreen[%cr]%Creset (%an) %s
 
 [alias]
-    c = commit -m
-    ch = cherry-pick
-    co = checkout
-    a = add
-    d = diff
-    dic = diff --cached
-    ps = push
-    s = status
-    out = log origin..HEAD
-    qpl = log --pretty=\"%Cblue%h%Creset %Cgreen[%cr]%Creset %s\" origin/production..origin/master
-    l = log --all --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset %Cblue%an%Creset' --abbrev-commit --date=relative
-    lol = log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset %Cblue%an%Creset' --abbrev-commit --date=relative --abbrev-commit --graph --decorate
-    ci = commit
-    ca = commit --amend
-    eu = "!f() { git ls-files --unmerged | cut -f2 | sort -u ; }; vim `f`"
-    au = "!f() { git ls-files --unmerged | cut -f2 | sort -u ; }; git add `f`"
-    sync = "!git pull && git push"
-    sub = submodule update --init
-    pl = pull --rebase
-    cleanup-merged-branches = "!LC_ALL=en_GB git branch -vv | grep 'origin/.*: gone]' | awk '{print $1}' | xargs git branch -D && git prune"
+  c = commit -m
+  ch = cherry-pick
+  co = checkout
+  a = add
+  d = diff
+  dt = difftool
+  dic = diff --cached
+  ps = push
+  s = status
+  out = log origin..HEAD
+  qpl = log --pretty=\"%Cblue%h%Creset %Cgreen[%cr]%Creset %s\" origin/production..origin/master
+  l = log --all --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset %Cblue%an%Creset' --abbrev-commit --date=relative
+  lol = log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset %Cblue%an%Creset' --abbrev-commit --date=relative --abbrev-commit --graph --decorate
+  ci = commit
+  ca = commit --amend
+  eu = "!f() { git ls-files --unmerged | cut -f2 | sort -u ; }; vim `f`"
+  au = "!f() { git ls-files --unmerged | cut -f2 | sort -u ; }; git add `f`"
+  sync = "!git pull && git push"
+  sub = submodule update --init
+  pl = pull --rebase
+  cleanup-merged-branches = "!LC_ALL=en_GB git branch -vv | grep 'origin/.*: gone]' | awk '{print $1}' | xargs git branch -D && git prune"
 
 [branch]
-    autosetuprebase = always
+  autosetuprebase = always
 
 [merge]
-    tool = fugitive
-
-[mergetool "fugitive"]
-    cmd = nvim -f -c \"Gdiff\" \"$MERGED\"
+  tool = fugitive
 
 [mergetool]
-    keepBackup = false
-
-[diff]
-    algorithm = patience
-    comparisonHeuristic = true
-    tool = meld
-[filter "lfs"]
-	smudge = git-lfs smudge -- %f
-    required = true
-	clean = git-lfs clean -- %f
-	process = git-lfs filter-process
-[credential]
-	helper = osxkeychain
-
-[init]
-	defaultBranch = master
+  keepBackup = false
 
 [interactive]
-	diffFilter = diff-so-fancy --patch
+    diffFilter = delta --color-only
+
+[delta]
+    navigate = true    # use n and N to move between diff sections
+    side-by-side = true
+    line-numbers = true
+
+[merge]
+    conflictstyle = diff3
+
+[diff]
+  colorMoved = default
+  algorithm = patience
+  comparisonHeuristic = true
+
+[filter "lfs"]
+  smudge = git-lfs smudge -- %f
+  required = true
+  clean = git-lfs clean -- %f
+  process = git-lfs filter-process
+
+[credential]
+  helper = osxkeychain
+
+[init]
+  defaultBranch = master
+
 [gpg]
-	program = gpg
-	format = ssh
+  program = gpg
+  format = ssh
+
 [commit]
-	gpgsign = true
+  gpgsign = true
+
 [gpg "ssh"]
-	program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
+  program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
+
+[mergetool "fugitive"]
+  cmd = nvim -f -c \"Gdiff\" \"$MERGED\"
+
