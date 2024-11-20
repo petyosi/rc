@@ -39,7 +39,7 @@ export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix'
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 alias tmux="tmux -2 -u"
-alias vim='TERM=wezterm nvim'
+alias vim='nvim'
 alias ivm='nvim'
 alias g='git'
 alias y='yarn'
@@ -47,7 +47,7 @@ alias p='pnpm'
 alias ls='eza --icons'
 alias ll='eza -la --git --modified --header --group-directories-first --icons'
 alias nr='npm run'
-alias n=npm
+alias gotovo='say -v "Daria" готов си'
 
 zstyle ':completion:*' matcher-list '' \
   'm:{a-z\-}={A-Z\_}' \
@@ -55,3 +55,10 @@ zstyle ':completion:*' matcher-list '' \
   'r:|?=** m:{a-z\-}={A-Z\_}'
 export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
 export PATH="$(brew --prefix)/opt/python@3.12/libexec/bin:$PATH"
+
+alias nbe='nvim src/services/logfire-backend'
+alias ndb='nvim src/packages/logfire-db'
+alias nfe='cd src/services/logfire-frontend && nvim .'
+eval "$(fnm env --use-on-cd --shell zsh)"
+# This breaks FNM and does not work for the Python repo
+eval "$(direnv hook zsh)"
