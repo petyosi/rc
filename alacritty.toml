@@ -1,10 +1,12 @@
+[general]
 live_config_reload = true
 # Colors section of "Alacritty - TOML configuration file format"
 # https://github.com/alacritty/alacritty/blob/master/extra/man/alacritty.5.scd#colors
 
 [colors.primary]
 foreground = "#e0def4"
-background = "#191724"
+# background = "#191724"
+background = "#000000"
 dim_foreground = "#908caa"
 bright_foreground = "#e0def4"
 
@@ -82,23 +84,23 @@ white = "#e0def4"
 
 [font]
   size = 14.0
-  offset.y = 2
+  offset.y = 4
 
 [font.bold]
   family = "JetBrainsMono Nerd Font Propo"
-  style = "Regular"
+  style = "Light"
 
 [font.bold_italic]
   family = "JetBrainsMono Nerd Font Propo"
-  style = "Regular Italic"
+  style = "Light Italic"
 
 [font.italic]
   family = "JetBrainsMono Nerd Font Propo"
-  style = "Light Italic"
+  style = "ExtraLight Italic"
 
 [font.normal]
   family = "JetBrainsMono Nerd Font Propo"
-  style = "Light"
+  style = "ExtraLight"
 
 [keyboard]
 bindings = [ 

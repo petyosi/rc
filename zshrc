@@ -59,6 +59,21 @@ export PATH="$(brew --prefix)/opt/python@3.12/libexec/bin:$PATH"
 alias nbe='nvim src/services/logfire-backend'
 alias ndb='nvim src/packages/logfire-db'
 alias nfe='cd src/services/logfire-frontend && nvim .'
-eval "$(fnm env --use-on-cd --shell zsh)"
+eval "$(fnm env --use-on-cd --version-file-strategy=recursive --resolve-engines --shell zsh)"
 # This breaks FNM and does not work for the Python repo
-eval "$(direnv hook zsh)"
+# eval "$(direnv hook zsh)"
+
+# Function to display a macOS notification
+# Usage: notify "Message" "Title" "Subtitle"
+notify() {
+    local message="${1:-Notification}"
+    local title="${2:-Notification}"
+    local subtitle="${3:-}"
+
+    # If no subtitle is provided, display notification without subtitle
+    if [[ -z "$subtitle" ]]; then
+        osascript -e "display notification \"$message\" with title \"$title\""
+    else
+        osascript -e "display notification \"$message\" with title \"$title\" subtitle \"$subtitle\""
+    fi
+}

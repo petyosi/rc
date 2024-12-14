@@ -1,5 +1,5 @@
 #!/bin/sh
-brew bundle install
+# brew bundle install
 
 # Tmux
 ln -sf "$PWD"/.tmux/.tmux.conf ~/.tmux.conf
@@ -12,4 +12,4 @@ ln -sf "$PWD"/inputrc ~/.inputrc
 touch ~/.hushlogin
 
 ln -sf "$PWD"/gitconfig ~/.gitconfig
-ln -sf "$PWD"/wezterm.lua ~/.wezterm.lua
+ln -sf "$PWD"/alacritty.toml ~/.alacritty.toml
