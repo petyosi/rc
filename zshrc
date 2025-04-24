@@ -15,6 +15,7 @@ eval "$(starship init zsh)"
 # vi mode
 bindkey -v
 bindkey "^R" history-incremental-search-backward
+bindkey -M vicmd '/' history-incremental-search-backward
 stty -ixon
 
 # enable colored output from ls, etc
@@ -53,18 +54,17 @@ zstyle ':completion:*' matcher-list '' \
   'm:{a-z\-}={A-Z\_}' \
   'r:[^[:alpha:]]||[[:alpha:]]=** r:|=* m:{a-z\-}={A-Z\_}' \
   'r:|?=** m:{a-z\-}={A-Z\_}'
+
 export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
 export PATH="$(brew --prefix)/opt/python@3.12/libexec/bin:$PATH"
+export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
 
-alias nbe='nvim src/services/logfire-backend'
-alias ndb='nvim src/packages/logfire-db'
+alias nbe='uv run nvim src/services/logfire-backend'
+alias ndb='uv run nvim src/packages/logfire-db'
 alias nfe='cd src/services/logfire-frontend && nvim .'
 eval "$(fnm env --use-on-cd --version-file-strategy=recursive --resolve-engines --shell zsh)"
-# This breaks FNM and does not work for the Python repo
-# eval "$(direnv hook zsh)"
+eval "$(uv generate-shell-completion zsh)"
 
-# Function to display a macOS notification
-# Usage: notify "Message" "Title" "Subtitle"
 notify() {
     local message="${1:-Notification}"
     local title="${2:-Notification}"
@@ -77,3 +77,13 @@ notify() {
         osascript -e "display notification \"$message\" with title \"$title\" subtitle \"$subtitle\""
     fi
 }
+
+# pnpm
+export PNPM_HOME="/Users/petyo/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+
+[ -f ~/.llm-keys.sh ] && source ~/.llm-keys.sh
