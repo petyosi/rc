@@ -13,3 +13,4 @@ touch ~/.hushlogin
 ln -sf "$PWD"/gitconfig ~/.gitconfig
 mkdir -p ~/.config/ghostty
 ln -sf "$PWD"/ghostty-config ~/.config/ghostty/config
+ln -sf "$PWD"/zed ~/.config/zed
