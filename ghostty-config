@@ -6,7 +6,7 @@ background = #000000
 keybind = ctrl+m=text:\x0D
 adjust-cell-height=+2
 adjust-cell-width = -5%
-font-family = "JetBrainsMono Nerd Font Mono"
+font-family = "Maple Mono NF"
 font-size = 13
 background-opacity = 0.89
 mouse-hide-while-typing = true
