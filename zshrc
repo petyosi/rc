@@ -59,6 +59,9 @@ export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
 export PATH="$(brew --prefix)/opt/python@3.12/libexec/bin:$PATH"
 export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
 
+alias uvim='uv run nvim'
+# Enable file completion for "uv run"
+compdef '_files -g "*.py"' uv\ run
 alias nbe='uv run nvim src/services/logfire-backend'
 alias ndb='uv run nvim src/packages/logfire-db'
 alias nfe='cd src/services/logfire-frontend && nvim .'
