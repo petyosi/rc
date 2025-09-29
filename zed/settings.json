@@ -7,40 +7,43 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
-  "features": {
-    "edit_prediction_provider": "copilot"
-  },
-  "agent": {
-    "model_parameters": [],
-    "default_model": {
-      "provider": "anthropic",
-      "model": "claude-3-7-sonnet-latest"
-    },
-    "version": "2"
-  },
-  "edit_predictions": {
-    "mode": "subtle"
-  },
-  "ui_font_size": 13,
-  "buffer_font_size": 13,
-  "theme": {
-    "mode": "dark",
-    "light": "Gruvbox Light Hard",
-    "dark": "Zedokai Classic"
-  },
-  "vim_mode": true,
-  "formatter": {
-    "code_actions": {
-      // Use ESLint's --fix:
-      "source.fixAll.eslint": true
-    }
-  },
-  "terminal": {
-    "dock": "right",
-    "font_family": "JetBrainsMono Nerd Font Propo",
-    "font_weight": 100,
-    "font_size": 11
-  },
+	"features": {
+		"edit_prediction_provider": "copilot"
+	},
+	"agent": {
+		"model_parameters": [],
+		"default_model": {
+			"provider": "anthropic",
+			"model": "claude-3-7-sonnet-latest"
+		}
+	},
+	"edit_predictions": {
+		"mode": "eager"
+	},
+	"ui_font_size": 13,
+	"buffer_font_size": 13,
+	"theme": {
+		"mode": "dark",
+		"light": "Gruvbox Light Hard",
+		"dark": "Zedokai Classic"
+	},
+	"vim_mode": true,
+	"formatter": {
+		"code_actions": {
+			// Use ESLint's --fix:
+			"source.fixAll.eslint": true
+		}
+	},
+	"terminal": {
+	  "option_as_meta": true,
+		"dock": "right",
+		"font_family": "JetBrainsMono Nerd Font Propo",
+		"font_weight": 100,
+		"font_size": 14
+	},
 
-  "use_smartcase_search": true
+	"use_smartcase_search": true,
+	"lsp": {
+  	"biome": { "settings": { "require_config_file": true } }
+	}
 }

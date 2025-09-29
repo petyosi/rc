@@ -6,12 +6,13 @@ background = #000000
 keybind = ctrl+m=text:\x0D
 keybind = global:alt+grave_accent=toggle_quick_terminal
 
-font-family = "JetBrainsMono Nerd Font Mono"
+font-family = "JetBrainsMono Nerd Font Propo"
 adjust-cell-height=+5
 adjust-cell-width = -5%
 font-size = 14
 
-background-opacity = 0.89
+# background-opacity = 0.89
 mouse-hide-while-typing = true
 
+bell-features = no-system, no-attention
 theme=Kanagawa Wave
