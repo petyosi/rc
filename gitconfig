@@ -79,7 +79,7 @@
   helper = osxkeychain
 
 [init]
-  defaultBranch = master
+	defaultBranch = main
 
 [gpg]
   program = gpg

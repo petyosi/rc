@@ -90,3 +90,5 @@ esac
 # pnpm end
 
 [ -f ~/.llm-keys.sh ] && source ~/.llm-keys.sh
+
+export PRE_COMMIT_ALLOW_NO_CONFIG=1 
