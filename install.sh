@@ -14,3 +14,6 @@ ln -sf "$PWD"/gitconfig ~/.gitconfig
 
 mkdir -p ~/.config/ghostty
 ln -sf "$PWD"/ghostty-config ~/.config/ghostty/config
+
+mkdir -p ~/.claude
+ln -sf "$PWD"/claude/skills ~/.claude/skills
