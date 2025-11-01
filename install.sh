@@ -1,5 +1,5 @@
 #!/bin/sh
-# brew bundle install
+brew bundle install
 
 # Tmux
 ln -sf "$PWD"/.tmux/.tmux.conf ~/.tmux.conf
