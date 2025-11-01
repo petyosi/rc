@@ -16,4 +16,8 @@ mkdir -p ~/.config/ghostty
 ln -sf "$PWD"/ghostty-config ~/.config/ghostty/config
 
 mkdir -p ~/.claude
+
+ln -sf "$PWD"/PROFILE_CLAUDE.md ~/.claude/CLAUDE.md
 ln -sf "$PWD"/claude/skills ~/.claude/skills
+
+ln -sf "$PWD"/markdownlint.yaml ~/.markdownlint.yaml

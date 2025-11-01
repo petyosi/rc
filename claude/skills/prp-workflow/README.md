@@ -1,5 +1,9 @@
 # PRP Workflow Skill
 
+**Global Skill** - Works system-wide in all projects
+
+This skill is managed in an RC (run commands) configuration repository and symlinked to `~/.claude/skills/prp-workflow/` for global availability.
+
 This skill provides comprehensive Product Requirements Prompt (PRP) workflow capabilities for systematic feature implementation with proper context engineering.
 
 ## What This Skill Does
@@ -12,11 +16,16 @@ This skill combines three powerful workflows into one autonomous capability:
 
 ## Files in This Skill
 
+Location: `~/.claude/skills/prp-workflow/` (after installation)
+
 - `SKILL.md` - Main skill definition (Claude reads this)
 - `prp_template_reference.md` - Base PRP template structure
 - `README.md` - This file (human reference)
+- `INSTALLATION.md` - Installation and setup guide
 
 ## How It Works
+
+This is a **global skill** installed at `~/.claude/skills/prp-workflow/`. It works automatically across all projects and directories.
 
 ### Automatic Activation
 
@@ -205,10 +214,12 @@ If a project has `CLAUDE.md`, the skill will:
 
 ## Customization
 
-You can customize this skill by:
-1. Editing `SKILL.md` to adjust activation triggers in the description
-2. Modifying `prp_template_reference.md` for different template structure
-3. Adding additional reference files for specific domains
+You can customize this global skill by:
+1. Editing `~/.claude/skills/prp-workflow/SKILL.md` to adjust activation triggers
+2. Modifying `~/.claude/skills/prp-workflow/prp_template_reference.md` for different template structure
+3. Adding additional reference files to `~/.claude/skills/prp-workflow/` for specific domains
+
+Changes take effect when you start a new Claude Code conversation.
 
 ## Resources
 
