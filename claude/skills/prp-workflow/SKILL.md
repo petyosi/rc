@@ -10,6 +10,7 @@ This skill implements a comprehensive Product Requirements Prompt (PRP) workflow
 ## When to Use This Skill
 
 Activate this skill when the user:
+
 - Mentions implementing a new feature or component
 - Asks to create a PRP or use the PRP workflow
 - Needs a systematic approach to complex development tasks
@@ -57,6 +58,7 @@ Implement a feature using an existing PRP file.
 ### Input Requirements
 
 The user should provide:
+
 - Feature description (can be a file path or inline description)
 - Examples to follow (if available)
 - Documentation references (API docs, libraries, etc.)
@@ -67,6 +69,7 @@ The user should provide:
 Before generating the PRP, conduct thorough research:
 
 #### 1. Codebase Analysis
+
 - Search for similar features/patterns in the codebase using Grep and Glob
 - Identify files to reference in the PRP
 - Note existing conventions to follow (imports, structure, naming)
@@ -74,6 +77,7 @@ Before generating the PRP, conduct thorough research:
 - Run `tree` command to understand project structure
 
 #### 2. External Research
+
 - Search for similar features/patterns online using WebSearch
 - Find library documentation (include specific URLs)
 - Look for implementation examples (GitHub/StackOverflow/blogs)
@@ -81,7 +85,9 @@ Before generating the PRP, conduct thorough research:
 - Include version-specific gotchas
 
 #### 3. User Clarification (if needed)
+
 Use AskUserQuestion tool to clarify:
+
 - Specific patterns to mirror and where to find them
 - Integration requirements and dependencies
 - Authentication or configuration needs
@@ -91,7 +97,7 @@ Use AskUserQuestion tool to clarify:
 
 Create a comprehensive PRP using this structure:
 
-```yaml
+````yaml
 name: "[Feature Name] PRP"
 description: |
 
@@ -138,21 +144,24 @@ description: |
   section: [Specific section]
   critical: [Key insight that prevents common errors]
 
-- docfile: [PRPs/ai_docs/file.md]
+- docfile: [specs/ai_docs/file.md]
   why: [User-provided documentation]
-```
+````
 
 ### Current Codebase Tree
+
 ```bash
 [Output from tree command - shows current structure]
 ```
 
 ### Desired Codebase Tree
+
 ```bash
 [New files to be added with their responsibilities]
 ```
 
 ### Known Gotchas & Library Quirks
+
 ```python
 # CRITICAL: [Library name] requires [specific setup]
 # CRITICAL: [Framework] version [X] has [specific behavior]
@@ -162,9 +171,11 @@ description: |
 ## Implementation Blueprint
 
 ### Data Models and Structure
+
 [Define core data structures, Pydantic models, ORM models, etc.]
 
 ### List of Tasks
+
 ```yaml
 Task 1: [Task Name]
   MODIFY/CREATE [file path]:
@@ -180,6 +191,7 @@ Task N: [Final Task]
 ```
 
 ### Per Task Pseudocode
+
 ```python
 # Task 1: [Task Name]
 # High-level pseudocode showing CRITICAL details
@@ -191,6 +203,7 @@ def feature_function(param: Type) -> Result:
 ```
 
 ### Integration Points
+
 ```yaml
 DATABASE:
   - migration: [SQL or migration description]
@@ -208,6 +221,7 @@ ROUTES/ENDPOINTS:
 ## Validation Loop
 
 ### Level 1: Syntax & Style
+
 ```bash
 # Language-specific linting commands
 # Examples:
@@ -217,6 +231,7 @@ ROUTES/ENDPOINTS:
 ```
 
 ### Level 2: Unit Tests
+
 ```python
 # Define required test cases:
 # 1. Happy path test
@@ -230,12 +245,14 @@ ROUTES/ENDPOINTS:
 ```
 
 ### Level 3: Integration Test
+
 ```bash
 # Manual test commands
 # Example: curl commands, CLI commands, etc.
 ```
 
 ## Final Validation Checklist
+
 - [ ] All tests pass
 - [ ] No linting errors
 - [ ] No type errors
@@ -246,11 +263,13 @@ ROUTES/ENDPOINTS:
 ---
 
 ## Anti-Patterns to Avoid
+
 - ❌ Don't create new patterns when existing ones work
 - ❌ Don't skip validation steps
 - ❌ Don't ignore failing tests
 - ❌ Don't hardcode values that should be config
 - ❌ [Domain-specific anti-patterns]
+
 ```
 
 ### PRP Output
@@ -402,94 +421,120 @@ Internally create prioritized question queue (max 5 questions). **Do NOT output 
 - Exclude execution details (unless blocking)
 - Favor questions that reduce rework risk
 
-#### Step 4: Interactive Questioning
+#### Step 4: Interactive Questioning with Native UI
 
-Present questions **ONE AT A TIME** in interactive loop.
+Use the `AskUserQuestion` tool to present clarification questions using Claude's native questioning UI.
 
-**For Multiple-Choice Questions:**
+**Question Batch Preparation:**
 
-1. Analyze options and determine most suitable based on:
-   - Best practices for project type
-   - Common patterns in similar implementations
-   - Risk reduction (security, performance, maintainability)
-   - Alignment with project goals/constraints
+1. Prepare 1-4 questions from the prioritized queue (max 4 per batch due to tool limits)
+2. For each question, determine:
+   - Clear question text ending with "?"
+   - Short header (≤12 chars) for the chip/tag display
+   - 2-4 option choices (tool automatically adds "Other" for custom input)
+   - Whether multiSelect should be enabled (default: false for mutually exclusive choices)
 
-2. Present recommendation:
-   ```
-   **Recommended:** Option [X] - <1-2 sentence reasoning>
-   ```
+**Question Format Guidelines:**
 
-3. Show options table:
-   ```markdown
-   | Option | Description |
-   |--------|-------------|
-   | A | <Description> |
-   | B | <Description> |
-   | C | <Description> |
-   ```
-
-4. Add response instructions:
-   ```
-   Reply with:
-   - Option letter (e.g., "A", "B", "C")
-   - "yes", "recommended", "ok" to accept recommendation
-   - Your own short answer (≤5 words)
-   ```
-
-**For Short-Answer Questions:**
-
-1. Provide suggested answer:
-   ```
-   **Suggested:** <answer> - <brief reasoning>
-   ```
-
-2. Add response instructions:
-   ```
-   Format: Short answer (≤5 words)
-
-   Reply with:
-   - "yes", "suggested", "ok" to accept
-   - Your own answer (≤5 words)
-   ```
+- **header**: Ultra-concise label (e.g., "Auth method", "Data store", "API style")
+- **question**: Full question text with context
+- **options**: Array of 2-4 choices, each with:
+  - **label**: Short choice name (1-5 words)
+  - **description**: Explanation of what this choice means and its implications
+- **multiSelect**: Set to `true` only if choices are not mutually exclusive
 
 **Answer Processing:**
-- If "yes"/"recommended"/"suggested"/"ok" → use your recommendation
-- Otherwise validate: maps to option OR fits ≤5 word constraint
-- If ambiguous, ask disambiguation (doesn't count as new question)
-- Once satisfactory, record in memory and proceed to next
+
+- Tool returns user selections in `answers` object keyed by question text
+- If user selects "Other", they provide custom text input
+- All answers are automatically validated by the tool
+- Record each answer and proceed to integration step
+
+**Batching Strategy:**
+
+- Present up to 4 questions at once if they're independent
+- If answers to earlier questions affect later questions, batch accordingly
+- Respect 5-question total limit across all batches
+- After each batch, integrate answers before potentially asking more
 
 **Stop Conditions:**
-- All critical ambiguities resolved (remaining questions unnecessary)
-- User signals: "done", "good", "no more", "proceed", "stop"
-- 5 questions asked and answered
-- No more questions in queue
 
-**Never reveal future questions in advance.**
+- All critical ambiguities resolved (remaining questions unnecessary)
+- 5 questions total asked across all batches
+- No more questions in queue
+- User explicitly indicates completion via custom responses
+
+**Example Tool Usage:**
+
+```typescript
+AskUserQuestion({
+  questions: [
+    {
+      question: "Which authentication method should the system use?",
+      header: "Auth method",
+      multiSelect: false,
+      options: [
+        {
+          label: "OAuth 2.0 with JWT",
+          description: "Standard, secure, scalable for web/mobile apps. Stateless authentication."
+        },
+        {
+          label: "Session cookies",
+          description: "Traditional approach, requires session storage, good for server-rendered apps."
+        },
+        {
+          label: "API keys",
+          description: "Simple but less secure, suitable for service-to-service auth only."
+        }
+      ]
+    },
+    {
+      question: "What is the target API response latency at p95?",
+      header: "Latency",
+      multiSelect: false,
+      options: [
+        {
+          label: "<100ms",
+          description: "High performance, requires caching and optimization"
+        },
+        {
+          label: "<200ms",
+          description: "Standard for responsive web apps, balanced approach"
+        },
+        {
+          label: "<500ms",
+          description: "Acceptable for non-critical operations"
+        }
+      ]
+    }
+  ]
+})
+```
 
 #### Step 5: Incremental Integration
 
-After EACH accepted answer, update PRP immediately:
+After EACH batch of answers (from AskUserQuestion tool), update PRP immediately:
 
-1. **First answer only:** Ensure structure exists
+1. **First batch only:** Ensure structure exists
    - Create `## Clarifications` section (after overview/context)
    - Create `### Session YYYY-MM-DD` subheading
 
-2. **Record Q&A:**
-   - Append: `- Q: <question> → A: <answer>`
+2. **Record Q&A for each answer in batch:**
+   - Append: `- Q: <question> → A: <answer>` for each question/answer pair
 
 3. **Apply clarification to appropriate sections:**
 
-   | Type | Target Section | Action |
-   |------|----------------|--------|
-   | Functional ambiguity | Success Criteria / Requirements | Add/update specific capability |
-   | User interaction | User Stories / Workflows | Add clarified role/constraint/scenario |
-   | Data model | Data Models and Structure | Add fields, types, relationships |
-   | Non-functional | Success Criteria | Add measurable criteria (vague→metric) |
-   | Edge case | Known Gotchas / Edge Cases | Add bullet or subsection |
-   | Terminology | Throughout | Normalize term, add "(formerly X)" once |
-   | Security/privacy | Implementation Blueprint / Gotchas | Add auth/data protection rules |
-   | Performance | Success Criteria / Gotchas | Add latency/throughput/capacity targets |
-   | Integration | Integration Points / Context | Add service details, failure modes |
+   | Type                 | Target Section                     | Action                                  |
+   | -------------------- | ---------------------------------- | --------------------------------------- |
+   | Functional ambiguity | Success Criteria / Requirements    | Add/update specific capability          |
+   | User interaction     | User Stories / Workflows           | Add clarified role/constraint/scenario  |
+   | Data model           | Data Models and Structure          | Add fields, types, relationships        |
+   | Non-functional       | Success Criteria                   | Add measurable criteria (vague→metric)  |
+   | Edge case            | Known Gotchas / Edge Cases         | Add bullet or subsection                |
+   | Terminology          | Throughout                         | Normalize term, add "(formerly X)" once |
+   | Security/privacy     | Implementation Blueprint / Gotchas | Add auth/data protection rules          |
+   | Performance          | Success Criteria / Gotchas         | Add latency/throughput/capacity targets |
+   | Integration          | Integration Points / Context       | Add service details, failure modes      |
 
 4. **Handle contradictions:**
    - Replace invalidated statements (don't duplicate)
@@ -497,7 +542,7 @@ After EACH accepted answer, update PRP immediately:
    - No contradictory text remains
 
 5. **Write to disk:**
-   - Save PRP after EACH integration (atomic)
+   - Save PRP after EACH batch integration (atomic)
    - Preserve formatting (don't reorder)
    - Keep heading hierarchy intact
    - Keep insertions minimal and testable
@@ -505,6 +550,7 @@ After EACH accepted answer, update PRP immediately:
 #### Step 6: Validation
 
 After each write, verify:
+
 - [ ] Clarifications section has one bullet per answer (no duplicates)
 - [ ] Total questions ≤ 5
 - [ ] No lingering vague placeholders in updated sections
@@ -518,31 +564,34 @@ After each write, verify:
 After questioning ends, provide:
 
 **Session Summary:**
+
 - Questions asked & answered
 - Path to updated PRP
 - Sections touched (list names)
 
 **Coverage Summary Table:**
 
-| Category | Status | Notes |
-|----------|--------|-------|
-| Functional Scope | Resolved/Clear/Deferred/Outstanding | Brief note if not Clear |
-| Domain & Data Model | ... | ... |
-| Interaction & UX Flow | ... | ... |
-| Non-Functional Attributes | ... | ... |
-| Integration & Dependencies | ... | ... |
-| Edge Cases & Failures | ... | ... |
-| Constraints & Tradeoffs | ... | ... |
-| Terminology | ... | ... |
-| Completion Signals | ... | ... |
+| Category                   | Status                              | Notes                   |
+| -------------------------- | ----------------------------------- | ----------------------- |
+| Functional Scope           | Resolved/Clear/Deferred/Outstanding | Brief note if not Clear |
+| Domain & Data Model        | ...                                 | ...                     |
+| Interaction & UX Flow      | ...                                 | ...                     |
+| Non-Functional Attributes  | ...                                 | ...                     |
+| Integration & Dependencies | ...                                 | ...                     |
+| Edge Cases & Failures      | ...                                 | ...                     |
+| Constraints & Tradeoffs    | ...                                 | ...                     |
+| Terminology                | ...                                 | ...                     |
+| Completion Signals         | ...                                 | ...                     |
 
 **Status Definitions:**
+
 - **Resolved**: Was Partial/Missing, now addressed
 - **Clear**: Already sufficient
 - **Deferred**: Exceeds quota OR better for execution phase
 - **Outstanding**: Still Partial/Missing but low impact
 
 **Recommendations:**
+
 - If high-impact Outstanding/Deferred remain: flag and suggest re-run or proceed with caution
 - Suggest next step:
   - "Proceed to execution (Mode 3)" if sufficient clarity
@@ -552,57 +601,91 @@ After questioning ends, provide:
 ### Clarification Behavior Rules
 
 **Early Exit:**
+
 - **No ambiguities**: Report "No critical ambiguities detected" and suggest proceeding
 - **PRP missing**: Instruct to generate PRP first (Mode 1)
 
 **Constraints:**
-- Never exceed 5 questions (disambiguation retries don't count)
+
+- Never exceed 5 questions total across all batches
+- Present up to 4 questions per batch (tool limitation)
 - Avoid tech stack questions unless blocking functional clarity
-- Respect early termination signals
 - If no questions due to full coverage, output compact summary (all Clear)
 - If quota reached with unresolved high-impact items, flag under Deferred with rationale
+- Batch independent questions together for efficiency
+- Process answers and integrate into PRP after each batch
 
 ### Example Clarification Scenarios
 
-**Scenario 1: Authentication Method Unclear**
+**Scenario 1: Authentication & Performance Batch**
 
+```typescript
+AskUserQuestion({
+  questions: [
+    {
+      question: "Which authentication method should the system use?",
+      header: "Auth method",
+      multiSelect: false,
+      options: [
+        { label: "OAuth 2.0 with JWT", description: "Standard, secure, scalable for web/mobile. Stateless auth." },
+        { label: "Session cookies", description: "Traditional, requires session storage, good for SSR apps." },
+        { label: "API keys", description: "Simple but less secure, for service-to-service only." },
+        { label: "SSO (SAML/OIDC)", description: "Enterprise integration, complex setup." }
+      ]
+    },
+    {
+      question: "What is the target API response latency at p95?",
+      header: "Latency",
+      multiSelect: false,
+      options: [
+        { label: "<100ms", description: "High performance, requires caching and optimization" },
+        { label: "<200ms", description: "Standard for responsive web apps, balanced approach" },
+        { label: "<500ms", description: "Acceptable for non-critical operations" }
+      ]
+    }
+  ]
+})
 ```
-Question:
-**Recommended:** Option B (OAuth 2.0 with JWT) - Standard, secure, scalable for web/mobile
 
-| Option | Description |
-|--------|-------------|
-| A | Username/password with session cookies |
-| B | OAuth 2.0 with JWT tokens |
-| C | API key authentication |
-| D | SSO integration (SAML/OIDC) |
-
-Reply with option letter, "yes"/"recommended", or short answer.
-```
-
-**User:** "B"
+**User selects:** "OAuth 2.0 with JWT" and "<200ms"
 
 **Integration:**
-- Clarifications: `- Q: Authentication method? → A: OAuth 2.0 with JWT`
+
+After receiving answers:
+- Clarifications:
+  - `- Q: Authentication method? → A: OAuth 2.0 with JWT`
+  - `- Q: Target API latency? → A: <200ms p95`
 - Known Gotchas: `# CRITICAL: Use OAuth 2.0 with JWT for stateless auth`
 - Data Models: Add User entity with OAuth provider fields
+- Success Criteria: Add "[ ] API responds <200ms at p95 under normal load"
 
-**Scenario 2: Performance Target Vague**
+**Scenario 2: Multi-Select for Features**
 
+```typescript
+AskUserQuestion({
+  questions: [
+    {
+      question: "Which optional features should be included in the initial release?",
+      header: "Features",
+      multiSelect: true,
+      options: [
+        { label: "Email notifications", description: "Send alerts via email, requires SMTP setup" },
+        { label: "Export to CSV", description: "Allow users to download data as CSV files" },
+        { label: "Dark mode", description: "Theme toggle for UI, affects all components" },
+        { label: "Audit logging", description: "Track all user actions, increases storage needs" }
+      ]
+    }
+  ]
+})
 ```
-Question:
-**Suggested:** <200ms p95 latency - Industry standard for responsive web apps
 
-Format: Short answer (≤5 words)
-
-Reply with "yes"/"suggested"/"ok", or your own answer.
-```
-
-**User:** "yes"
+**User selects:** "Email notifications", "Export to CSV", "Dark mode"
 
 **Integration:**
-- Clarifications: `- Q: Target API latency? → A: <200ms p95`
-- Success Criteria: Add "[ ] API responds <200ms at p95 under normal load"
+
+- Clarifications: `- Q: Optional features? → A: Email notifications, Export to CSV, Dark mode`
+- Success Criteria: Add checkboxes for each selected feature
+- Implementation Blueprint: Add tasks for each feature
 
 ## Mode 3: PRP Execution
 
@@ -611,12 +694,14 @@ Reply with "yes"/"suggested"/"ok", or your own answer.
 When executing a PRP to implement a feature:
 
 #### 1. Load PRP
+
 - Read the specified PRP file completely (from `specs` directory)
 - Understand all context and requirements
 - Note all success criteria and validation gates
 - Identify any gaps that need additional research
 
 #### 2. ULTRATHINK & Plan
+
 **CRITICAL: Think deeply before executing**
 
 - Create a comprehensive implementation plan
@@ -626,12 +711,14 @@ When executing a PRP to implement a feature:
 - Plan validation strategy for each component
 
 #### 3. Additional Research (if needed)
+
 - Perform web searches for any unclear concepts
 - Explore codebase for additional context
 - Read referenced documentation thoroughly
 - Clarify ambiguities with user using AskUserQuestion
 
 #### 4. Execute Implementation
+
 - Work through tasks systematically
 - Update TodoWrite status as you progress
 - Follow patterns from PRP and existing code
@@ -639,12 +726,14 @@ When executing a PRP to implement a feature:
 - Keep exactly ONE task in_progress at a time
 
 #### 5. Validate Continuously
+
 - Run validation commands from PRP after each major step
 - Fix any failures immediately
 - Re-run until validation passes
 - Don't proceed to next task if validation fails
 
 #### 6. Final Validation
+
 - Run complete validation suite from PRP
 - Verify all success criteria are met
 - Run all tests (unit, integration, manual)
@@ -652,6 +741,7 @@ When executing a PRP to implement a feature:
 - Re-read the PRP to confirm everything is implemented
 
 #### 7. Complete & Report
+
 - Mark all tasks as completed
 - Report completion status to user
 - Highlight what was built
@@ -660,6 +750,7 @@ When executing a PRP to implement a feature:
 ### Validation Loop Philosophy
 
 **CRITICAL**: If validation fails, never skip or ignore:
+
 1. Read the error message carefully
 2. Understand the root cause
 3. Fix the underlying issue (don't just patch)
@@ -669,6 +760,7 @@ When executing a PRP to implement a feature:
 ### PRP Reference
 
 Throughout execution, you can always:
+
 - Re-read the PRP for clarity
 - Reference specific sections
 - Use it as source of truth for requirements
@@ -676,6 +768,7 @@ Throughout execution, you can always:
 ## Best Practices
 
 ### For PRP Generation
+
 1. **Be thorough in research** - More context = better success
 2. **Include specific file paths and line numbers** when referencing patterns
 3. **Make validation gates executable** - Provide exact commands
@@ -683,6 +776,7 @@ Throughout execution, you can always:
 5. **Think about the AI executor** - What would you need to implement this?
 
 ### For PRP Execution
+
 1. **Read the entire PRP first** - Don't skip ahead
 2. **Use TodoWrite from the start** - Track progress visibly
 3. **Follow patterns exactly** - Don't introduce new patterns
@@ -691,6 +785,7 @@ Throughout execution, you can always:
 6. **Mark tasks completed promptly** - Update status after each task
 
 ### Context Engineering Principles
+
 1. **More is more** - Over-context rather than under-context
 2. **Show, don't tell** - Include code examples, not just descriptions
 3. **Be specific** - "Use pattern from file.py:123" not "follow similar patterns"
@@ -700,6 +795,7 @@ Throughout execution, you can always:
 ## Common Pitfalls to Avoid
 
 ### During Generation
+
 - ❌ Assuming the executor knows your codebase conventions
 - ❌ Skipping research phase to save time
 - ❌ Writing vague task descriptions
@@ -707,6 +803,7 @@ Throughout execution, you can always:
 - ❌ Not specifying exact file paths
 
 ### During Execution
+
 - ❌ Skipping the planning phase (ULTRATHINK)
 - ❌ Not using TodoWrite to track progress
 - ❌ Implementing without understanding the full PRP
@@ -717,6 +814,7 @@ Throughout execution, you can always:
 ## Integration with Project Rules
 
 If the project contains a `CLAUDE.md` file:
+
 1. Read it at the start of the session
 2. Follow all rules specified there
 3. Reference it in the PRP under "Core Principles"
@@ -725,6 +823,7 @@ If the project contains a `CLAUDE.md` file:
 ## Success Metrics
 
 A successful PRP workflow achieves:
+
 - ✅ Working code on first execution pass
 - ✅ All tests passing
 - ✅ No linting or type errors
@@ -735,6 +834,7 @@ A successful PRP workflow achieves:
 ## Example Usage Patterns
 
 ### Pattern 1: User provides feature file
+
 ```
 User: "I have a feature request in INITIAL.md, can you implement it using the PRP workflow?"
 
@@ -747,6 +847,7 @@ AI: [Activates this skill]
 ```
 
 ### Pattern 2: User provides inline requirements
+
 ```
 User: "Build an async web scraper using BeautifulSoup that extracts product data, handles rate limiting, and stores in PostgreSQL"
 
@@ -760,6 +861,7 @@ AI: [Activates this skill]
 ```
 
 ### Pattern 3: User wants to clarify PRP
+
 ```
 User: "Clarify the PRP in specs/002-api-integration.md"
 OR
@@ -768,13 +870,14 @@ User: "Review the requirements in specs/002-api-integration.md for ambiguities"
 AI: [Activates this skill in clarification mode]
      1. Reads specs/002-api-integration.md completely
      2. Analyzes coverage across all taxonomy categories
-     3. Generates prioritized question queue
-     4. Asks questions one at a time (max 5)
-     5. Updates PRP incrementally after each answer
+     3. Generates prioritized question queue (max 5 total)
+     4. Uses AskUserQuestion tool to present questions in batches (up to 4 per batch)
+     5. Updates PRP incrementally after each batch of answers
      6. Provides coverage summary and next step recommendation
 ```
 
 ### Pattern 4: User has existing PRP
+
 ```
 User: "Execute the PRP in specs/003-web-scraper.md"
 
@@ -790,6 +893,7 @@ AI: [Activates this skill in execution mode]
 This skill should activate when user says things like:
 
 **For PRP Generation (Mode 1):**
+
 - "Create a PRP for [feature]"
 - "Generate a comprehensive implementation plan for [feature]"
 - "Use the PRP workflow to build [feature]"
@@ -797,6 +901,7 @@ This skill should activate when user says things like:
 - "Help me implement [feature] systematically"
 
 **For PRP Clarification (Mode 2):**
+
 - "Clarify the PRP in [file]"
 - "Review [PRP file] for ambiguities"
 - "Check if [PRP file] has unclear requirements"
@@ -805,6 +910,7 @@ This skill should activate when user says things like:
 - "Are there any gaps in [PRP file]?"
 
 **For PRP Execution (Mode 3):**
+
 - "Execute PRP [filename]"
 - "Implement the feature described in [file]"
 - "Build from [PRP file]"
@@ -813,6 +919,7 @@ This skill should activate when user says things like:
 ## Output Format
 
 ### When Generating PRP (Mode 1)
+
 1. Announce: "I'll generate a comprehensive PRP for [feature]"
 2. Show research findings as you discover them
 3. Ask clarifying questions if needed
@@ -821,14 +928,16 @@ This skill should activate when user says things like:
 6. Ask if user wants to clarify or execute immediately
 
 ### When Clarifying PRP (Mode 2)
+
 1. Announce: "I'll analyze [PRP file] for ambiguities and missing decision points"
 2. Load and analyze PRP against coverage taxonomy
-3. Present questions one at a time (max 5)
-4. Update PRP after each answer
+3. Use AskUserQuestion tool to present questions in batches (up to 4 per batch, max 5 total)
+4. Update PRP after each batch of answers
 5. Provide coverage summary table
 6. Recommend next step (execute, re-clarify, or review)
 
 ### When Executing PRP (Mode 3)
+
 1. Announce: "I'll implement this feature using the PRP workflow"
 2. Create TodoWrite task list
 3. Update progress as you work

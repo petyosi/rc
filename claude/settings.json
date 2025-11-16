@@ -1,0 +1,19 @@
+{
+  "model": "sonnet[1m]",
+  "alwaysThinkingEnabled": false,
+  "feedbackSurveyState": {
+    "lastShownTime": 1755160633604
+  },
+  "hooks": {
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "osascript -e 'display notification \"Claude needs your input\" with title \"Claude Code\"'"
+          }
+        ]
+      }
+    ]
+  }
+}

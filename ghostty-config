@@ -3,14 +3,17 @@ macos-option-as-alt = true
 macos-titlebar-style = hidden
 background = #000000
 
-keybind = ctrl+m=text:\x0D
 
 adjust-cell-height=+5
 font-family = "Berkeley Mono"
-font-size = 12 
+font-size = 14 
 
 background-opacity = 1
 mouse-hide-while-typing = true
 
-bell-features = no-system, no-attention
-theme=Kanagawa Wave
+bell-features = system, attention
+
+theme=Kanagawabones
+
+keybind = shift+enter=text:\x1b\r
+keybind = ctrl+m=text:\x0D
