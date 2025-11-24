@@ -1,9 +1,5 @@
 {
   "model": "sonnet[1m]",
-  "alwaysThinkingEnabled": false,
-  "feedbackSurveyState": {
-    "lastShownTime": 1755160633604
-  },
   "hooks": {
     "Notification": [
       {
@@ -15,5 +11,20 @@
         ]
       }
     ]
+  },
+  "alwaysThinkingEnabled": true,
+  "feedbackSurveyState": {
+    "lastShownTime": 1755160633604
+  },
+  "mcpServers": {
+    "serena": {
+      "command": "/opt/homebrew/bin/uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/oraios/serena",
+        "serena",
+        "start-mcp-server"
+      ]
+    }
   }
 }

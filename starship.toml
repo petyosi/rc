@@ -1,0 +1,20 @@
+# Get editor completions based on the config schema
+"$schema" = 'https://starship.rs/config-schema.json'
+
+[aws]
+disabled = true
+
+[python]
+disabled = false
+
+[rust]
+disabled = true
+
+[git_branch]
+disabled = false
+
+[package]
+disabled = true
+
+[gcloud]
+disabled = true
