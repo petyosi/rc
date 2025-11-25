@@ -1,7 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "WebFetch(domain:code.claude.com)"
+      "WebFetch(domain:code.claude.com)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:oraios.github.io)",
+      "WebFetch(domain:ohmyz.sh)",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []
