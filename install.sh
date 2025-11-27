@@ -41,4 +41,4 @@ ln -sfn "$PWD"/claude/settings.json ~/.claude/settings.json
 ln -sfn "$PWD"/markdownlint.yaml ~/.markdownlint.yaml
 
 # starship
-ln -sf starship.toml ~/.config/starship.toml
+ln -sfn "$PWD"/starship.toml ~/.config/starship.toml
