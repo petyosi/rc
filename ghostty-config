@@ -6,7 +6,7 @@ background = #000000
 
 adjust-cell-height=+5
 font-family = "Berkeley Mono"
-font-size = 14 
+font-size = 12 
 
 background-opacity = 1
 mouse-hide-while-typing = true
