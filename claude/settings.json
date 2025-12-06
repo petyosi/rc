@@ -1,5 +1,4 @@
 {
-  "model": "opus",
   "hooks": {
     "Notification": [
       {
@@ -12,7 +11,7 @@
       }
     ]
   },
-  "alwaysThinkingEnabled": true,
+  "alwaysThinkingEnabled": false,
   "feedbackSurveyState": {
     "lastShownTime": 1755160633604
   },
