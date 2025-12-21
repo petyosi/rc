@@ -4,7 +4,7 @@ macos-titlebar-style = hidden
 background = #000000
 
 
-adjust-cell-height=+5
+adjust-cell-height=+10
 font-family = "Berkeley Mono"
 font-size = 12 
 
