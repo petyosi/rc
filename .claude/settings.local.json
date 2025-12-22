@@ -5,7 +5,15 @@
       "WebFetch(domain:github.com)",
       "WebFetch(domain:oraios.github.io)",
       "WebFetch(domain:ohmyz.sh)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "WebSearch",
+      "Bash(terminal-notifier:*)",
+      "WebFetch(domain:custom.typingmind.com)",
+      "WebFetch(domain:registry.npmmirror.com)",
+      "Bash(curl:*)",
+      "WebFetch(domain:cdn.brandfetch.io)",
+      "WebFetch(domain:upload.wikimedia.org)",
+      "Bash(mkdir:*)"
     ],
     "deny": [],
     "ask": []

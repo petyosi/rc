@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "osascript -e 'display notification \"Claude needs your input\" with title \"Claude Code\"'"
+            "command": "terminal-notifier -title 'Claude Code' -message 'Claude Code needs your input' -activate com.mitchellh.ghostty -sound blow"
           }
         ]
       }
@@ -19,7 +19,8 @@
     "frontend-design@claude-plugins-official": true,
     "code-review@claude-plugins-official": true,
     "explanatory-output-style@claude-plugins-official": true,
-    "feature-dev@claude-plugins-official": true
+    "feature-dev@claude-plugins-official": true,
+    "plugin-dev@claude-plugins-official": true
   },
   "alwaysThinkingEnabled": true,
   "feedbackSurveyState": {
