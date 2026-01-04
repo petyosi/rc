@@ -62,6 +62,34 @@ Activate this skill when the user:
 - Deviation from existing codebase conventions
 - Missing or excessive comments
 
+### 5. UI/UX Consistency (Frontend Code)
+
+- Content parity between related UI elements (e.g., tooltip content matches trigger content)
+- Conditional rendering showing different data in different states
+- Accessibility: screen reader content matching visual content
+- Hover/focus states revealing consistent information
+
+### 6. Magic Numbers & Hardcoded Values
+
+- Unexplained numeric thresholds without named constants
+- Hardcoded strings that should be constants or i18n keys
+- Arbitrary limits without documented rationale
+- Heuristics based on assumptions that may not hold (e.g., character count as proxy for rendered width)
+
+### 7. Semantic Naming Accuracy
+
+- Variable/function names that misrepresent what the code actually does
+- Boolean names implying certainty when the check is heuristic/approximate
+- Names suggesting one behavior when implementing another
+- Misleading abstractions (e.g., `isNecessary` when it's actually `exceedsThreshold`)
+
+### 8. Test Coverage (When Tests Exist Nearby)
+
+- New components/functions without tests when sibling code has tests
+- Modified logic without corresponding test updates
+- Edge cases in new code that should have test coverage
+- Complex conditional logic lacking test verification
+
 ## Review Process
 
 ### Step 1: Identify Branch Context
@@ -133,6 +161,24 @@ For each category, systematically review:
 - Check naming conventions match project
 - Verify import organization
 - Look for formatting inconsistencies
+
+#### UI/UX Analysis (Frontend)
+
+- Verify tooltip/popover content matches trigger content
+- Check that conditional UI states show consistent information
+- Validate that heuristics for UI behavior account for rendering realities (gaps, padding, fonts)
+
+#### Constants & Naming Analysis
+
+- Flag unexplained magic numbers (suggest extracting to named constants)
+- Verify variable names accurately describe behavior (especially booleans and heuristics)
+- Check for misleading abstractions that could confuse future maintainers
+
+#### Test Coverage Analysis
+
+- Check if sibling files have tests (e.g., `Foo.test.ts` exists for `Bar.tsx`)
+- Flag new complex logic without corresponding tests
+- Verify modified logic has updated tests
 
 ### Step 5: Generate Report
 
