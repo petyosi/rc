@@ -18,27 +18,35 @@ else
   echo "zsh-autosuggestions already installed, skipping..."
 fi
 
+# ZSH
+ln -sf "$PWD"/zshrc ~/.zshrc
+ln -sf "$PWD"/inputrc ~/.inputrc
+touch ~/.hushlogin
+
 # Tmux
 ln -sf "$PWD"/.tmux/.tmux.conf ~/.tmux.conf
 ln -sf "$PWD"/.tmux.conf.local ~/.tmux.conf.local
 tic -x ./tmux.terminfo
 
-ln -sf "$PWD"/zshrc ~/.zshrc
-ln -sf "$PWD"/inputrc ~/.inputrc
-touch ~/.hushlogin
-
+# Github
 ln -sf "$PWD"/gitconfig ~/.gitconfig
 
+# Ghostty
 mkdir -p ~/.config/ghostty
 ln -sf "$PWD"/ghostty-config ~/.config/ghostty/config
 
+# Claude
 mkdir -p ~/.claude
-
 ln -sfn "$PWD"/PROFILE_CLAUDE.md ~/.claude/CLAUDE.md
 ln -sfn "$PWD"/claude/skills ~/.claude/skills
 ln -sfn "$PWD"/claude/settings.json ~/.claude/settings.json
 
+# Markdownlint
 ln -sfn "$PWD"/markdownlint.yaml ~/.markdownlint.yaml
 
 # starship
 ln -sfn "$PWD"/starship.toml ~/.config/starship.toml
+
+# opencode
+mkdir -p ~/.config/opencode
+ln -sfn "$PWD"/opencode.json ~/.config/opencode/opencode.json
