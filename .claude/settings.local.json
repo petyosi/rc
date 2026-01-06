@@ -13,7 +13,9 @@
       "Bash(curl:*)",
       "WebFetch(domain:cdn.brandfetch.io)",
       "WebFetch(domain:upload.wikimedia.org)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Skill(code-review)",
+      "Bash(git symbolic-ref:*)"
     ],
     "deny": [],
     "ask": []

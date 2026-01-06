@@ -5,8 +5,10 @@ background = #000000
 
 
 adjust-cell-height=+10
-font-family = "Berkeley Mono"
-font-size = 12 
+font-family = "Liga SFMono Nerd Font"
+# font-family = "Berkeley Mono"
+# font-family = "JetBrains NerdFont Propo"
+font-size = 12
 
 background-opacity = 0.99
 mouse-hide-while-typing = true

@@ -354,6 +354,7 @@ bind-key -n M-\{ previous-window
 bind-key k kill-session
 
 bind-key -n M-% split-window -h
+bind-key -n M-z resize-pane -Z
 
 bind -n M-s display-popup -E "\
     tmux list-sessions -F '#{?session_attached,,#{session_name}}' |\
@@ -402,5 +403,22 @@ set -as terminal-overrides ',*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{25
 set-option -ga terminal-overrides ",tmux-256color-italic:Tc"
 set-option -sa terminal-overrides ',tmux-256color:RGB'
 set-option -a terminal-features 'alacritty:RGB'
+
+# tmux.nvim
+# is_vim="ps -o state= -o comm= -t '#{pane_tty}' | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?\.?(view|n?vim?x?)(-wrapped)?(diff)?$'"
+#
+# bind-key -n 'C-h' if-shell "$is_vim" 'send-keys C-h' { if -F '#{pane_at_left}' '' 'select-pane -L' }
+# bind-key -n 'C-j' if-shell "$is_vim" 'send-keys C-j' { if -F '#{pane_at_bottom}' '' 'select-pane -D' }
+# bind-key -n 'C-k' if-shell "$is_vim" 'send-keys C-k' { if -F '#{pane_at_top}' '' 'select-pane -U' }
+# bind-key -n 'C-l' if-shell "$is_vim" 'send-keys C-l' { if -F '#{pane_at_right}' '' 'select-pane -R' }
+# bind-key -n 'C-n' if-shell "$is_vim" 'send-keys C-n' { if -F '#{window_end_flag}' '' 'select-window -n' }
+# bind-key -n 'C-p' if-shell "$is_vim" 'send-keys C-p' { if 'test #{window_index} -gt #{base-index}' 'select-window -p' }
+#
+# bind-key -T copy-mode-vi 'C-h' if -F '#{pane_at_left}' '' 'select-pane -L'
+# bind-key -T copy-mode-vi 'C-j' if -F '#{pane_at_bottom}' '' 'select-pane -D'
+# bind-key -T copy-mode-vi 'C-k' if -F '#{pane_at_top}' '' 'select-pane -U'
+# bind-key -T copy-mode-vi 'C-l' if -F '#{pane_at_right}' '' 'select-pane -R'
+# bind-key -T copy-mode-vi 'C-n' if -F '#{window_end_flag}' '' 'select-window -n'
+# bind-key -T copy-mode-vi 'C-p' if 'test #{window_index} -gt #{base-index}' 'select-window -p'
 
 # #     do not write below this line
