@@ -23,3 +23,9 @@ Write comments only when they explain _why_, not _what_. Do not add comments tha
 Good: `// Tolerance for floating point comparison due to browser rounding`
 Bad: `// Check if values are equal within tolerance`
 
+## NPM Package Installation
+
+When installing new npm packages, use `npm info <package> version` or `pnpm info <package> version` to determine the latest version. Do not rely on training data or web searches for package versions - they become stale quickly.
+
+Exception: Follow existing version constraints when a project's package.json, lockfile, or peer dependencies require specific versions.
+
