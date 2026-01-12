@@ -40,6 +40,7 @@ mkdir -p ~/.claude
 ln -sfn "$PWD"/PROFILE_CLAUDE.md ~/.claude/CLAUDE.md
 ln -sfn "$PWD"/claude/skills ~/.claude/skills
 ln -sfn "$PWD"/claude/settings.json ~/.claude/settings.json
+ln -sfn "$PWD"/claude/statusline.sh ~/.claude/statusline.sh
 
 # Markdownlint
 ln -sfn "$PWD"/markdownlint.yaml ~/.markdownlint.yaml

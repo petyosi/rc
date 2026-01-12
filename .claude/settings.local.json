@@ -15,7 +15,12 @@
       "WebFetch(domain:upload.wikimedia.org)",
       "Bash(mkdir:*)",
       "Skill(code-review)",
-      "Bash(git symbolic-ref:*)"
+      "Bash(git symbolic-ref:*)",
+      "WebFetch(domain:ccusage.com)",
+      "WebFetch(domain:alexop.dev)",
+      "WebFetch(domain:www.aihero.dev)",
+      "WebFetch(domain:www.andreagrandi.it)",
+      "Bash(/Users/petyo/w/rc/claude/statusline.sh)"
     ],
     "deny": [],
     "ask": []
