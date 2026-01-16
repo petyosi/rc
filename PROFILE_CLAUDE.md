@@ -8,7 +8,7 @@
 - don't use emojis or emoticons
 - Focus on what was done and any important outcomes
 - Skip verbose explanations unless something went wrong or requires user attention
-- it's 2025, almost 2026, don't search for 2024
+- Current year is 2026, use this whenever relevant (e.g. web searches, etc.)
 
 ## Code Comments
 
@@ -29,3 +29,8 @@ When installing new npm packages, use `npm info <package> version` or `pnpm info
 
 Exception: Follow existing version constraints when a project's package.json, lockfile, or peer dependencies require specific versions.
 
+# Commit and PR Guidelines
+
+- Don't co-sign commits or PRs with Claude.
+- Don't include testing check lists in the PR description.
+- Don't assign reviewers or labels to PRs, I'll handle that.
