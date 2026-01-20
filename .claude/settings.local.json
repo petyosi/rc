@@ -20,7 +20,8 @@
       "WebFetch(domain:alexop.dev)",
       "WebFetch(domain:www.aihero.dev)",
       "WebFetch(domain:www.andreagrandi.it)",
-      "Bash(/Users/petyo/w/rc/claude/statusline.sh)"
+      "Bash(/Users/petyo/w/rc/claude/statusline.sh)",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []
