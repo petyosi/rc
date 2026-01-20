@@ -12,97 +12,73 @@ description: |
 
 Three-phase workflow: **Generation** -> **Clarification** (recommended) -> **Execution**
 
+---
+
 ## Mode 1: PRP Generation
 
 Generate a comprehensive PRP from a feature request.
 
-### Input
+### Process
 
-User provides: feature description (file or inline), examples to follow, documentation references, constraints/gotchas.
+1. **Launch 2 parallel Opus agents** for research:
 
-### Research Process
+   **Agent #1 - Codebase Research**: Search for similar features/patterns in the codebase. Identify conventions (imports, naming, structure), test patterns, and architecture. Return a summary of patterns found and a list of 5-10 key files to read.
 
-1. **Codebase Analysis**
-   - Search for similar patterns using Grep/Glob
-   - Identify files to reference (imports, structure, naming conventions)
-   - Check test patterns for validation approach
-   - Run `tree` to understand project structure
+   **Agent #2 - External Research**: Search the web for library documentation, implementation examples, best practices, and known gotchas. Return URLs, version-specific details, and recommendations.
 
-2. **External Research**
-   - WebSearch for library docs, implementation examples, best practices
-   - Include specific URLs and version-specific gotchas
+2. **Read key files** identified by agents to build deep understanding
 
-3. **Clarification** - Use AskUserQuestion for:
-   - Patterns to mirror
-   - Integration requirements
-   - Auth/config needs
-   - Performance requirements
+3. **Clarify with user** (if needed) using AskUserQuestion for patterns to follow, integration requirements, constraints
 
-### Generate PRP
+4. **Generate PRP** using the template in [references/prp-template.md](references/prp-template.md)
 
-Use the template in [references/prp-template.md](references/prp-template.md).
+5. **Save** to `plans/{XXX}-{feature-name}.md`
+   - Auto-increment from highest number in `plans/`
+   - Filename: lowercase, hyphens, max 50 chars
 
-**Save location:** `plans/{XXX}-{feature-name}.md`
-- Auto-increment: find highest number in `plans/`, add 1
-- Filename: lowercase, hyphens, max 50 chars (e.g., `plans/003-user-authentication.md`)
-
-### Output
-
-1. Announce what you're generating
-2. Show research findings
-3. Present PRP location
-4. Score confidence (1-10)
-5. Ask: clarify or execute?
+6. **Report** confidence score (1-10) and ask: clarify or execute?
 
 ---
 
 ## Mode 2: PRP Clarification
 
-Identify and resolve underspecified areas BEFORE implementation to reduce rework risk.
+Identify and resolve underspecified areas BEFORE implementation.
 
 ### Process
 
 1. **Locate PRP** - Ask user or search `plans/*.md`
 
-2. **Coverage Analysis** - Analyze PRP against taxonomy in [references/clarification-taxonomy.md](references/clarification-taxonomy.md). Mark each category: Clear / Partial / Missing.
+2. **Launch an Opus agent** to analyze the PRP for ambiguities:
 
-3. **Generate Questions** - Create prioritized queue (max 5 total):
-   - Use (Impact × Uncertainty) heuristic
-   - Each question: multiple-choice (2-4 options) or short phrase
-   - Only include if materially impacts architecture, data model, tests, or UX
+   The agent should analyze the PRP against the coverage taxonomy in [references/clarification-taxonomy.md](references/clarification-taxonomy.md). Mark each category (Functional Scope, Data Model, UX Flow, Non-Functional, Integration, Edge Cases, Constraints, Terminology, Completion Signals) as Clear/Partial/Missing. Return a coverage summary table and up to 5 recommended clarification questions prioritized by (Impact × Uncertainty).
 
-4. **Ask Questions** - Use AskUserQuestion tool:
+3. **Present questions** to user using AskUserQuestion (max 5, up to 4 per batch):
    ```typescript
    AskUserQuestion({
      questions: [
        {
          question: "Which authentication method should the system use?",
-         header: "Auth",  // max 12 chars
+         header: "Auth",
          multiSelect: false,
          options: [
-           { label: "OAuth 2.0 + JWT", description: "Stateless, scalable for web/mobile" },
-           { label: "Session cookies", description: "Traditional, requires session storage" },
-           { label: "API keys", description: "Simple, for service-to-service only" }
+           { label: "OAuth 2.0 + JWT", description: "Stateless, scalable" },
+           { label: "Session cookies", description: "Traditional, requires storage" }
          ]
        }
      ]
    })
    ```
-   - Batch up to 4 questions per call
-   - Max 5 questions total across all batches
 
-5. **Integrate Answers** - After each batch:
+4. **Integrate answers** into PRP:
    - Add `## Clarifications` section with `### Session YYYY-MM-DD`
    - Record: `- Q: <question> → A: <answer>`
-   - Update appropriate PRP sections (see integration table in taxonomy reference)
-   - Remove contradictions, don't duplicate
+   - Update relevant PRP sections per integration table in taxonomy reference
 
-6. **Report** - Provide coverage summary table and recommend next step
+5. **Report** coverage summary and recommend next step
 
-### Early Exit Conditions
-
-- No ambiguities: "No critical ambiguities detected" -> proceed to execution
-- PRP missing: instruct to generate first (Mode 1)
+### Early Exit
+- No critical gaps: proceed to execution
+- PRP missing: generate first (Mode 1)
 
 ---
 
@@ -114,30 +90,19 @@ Implement a feature using an existing PRP.
 
 1. **Load PRP** - Read completely, note success criteria and validation gates
 
-2. **Plan** - Create TodoWrite task list:
-   - Break complex tasks into steps
-   - Identify patterns from existing code
-   - Plan validation for each component
+2. **Launch an Opus agent** to execute the implementation:
 
-3. **Research** (if needed) - Web searches, codebase exploration, AskUserQuestion
-
-4. **Execute**
-   - Work through tasks systematically
-   - Update TodoWrite status as you progress
-   - Keep exactly ONE task in_progress at a time
-   - Follow patterns from PRP and existing code
-
-5. **Validate Continuously**
+   The agent should:
+   - Create a TodoWrite task list from the PRP's implementation blueprint
+   - Work through tasks systematically, keeping ONE task in_progress at a time
+   - Follow patterns from PRP exactly (don't introduce new patterns)
    - Run validation commands after each major step
    - Fix failures immediately (don't accumulate)
-   - Don't proceed if validation fails
+   - Return: implementation summary, files modified, validation results, any deviations from PRP
 
-6. **Final Validation**
-   - Run complete validation suite
-   - Verify all success criteria met
-   - Re-read PRP to confirm everything implemented
+3. **Handle blockers** - If agent returns with issues, help resolve
 
-7. **Report** - Mark tasks complete, summarize what was built, note any deviations
+4. **Report** completion summary
 
 ### Validation Philosophy
 
@@ -157,10 +122,16 @@ If validation fails:
 - Template: [references/prp-template.md](references/prp-template.md)
 - Taxonomy: [references/clarification-taxonomy.md](references/clarification-taxonomy.md)
 
+### Agent Summary
+| Phase | Agents | Model |
+|-------|--------|-------|
+| Generation | 2 parallel (codebase + external research) | Opus |
+| Clarification | 1 (coverage analysis) | Opus |
+| Execution | 1 (implementation) | Opus |
+
 ### Key Constraints
-- Clarification: max 5 questions, 4 per batch
-- Always use TodoWrite during execution
-- One task in_progress at a time
+- Clarification: max 5 questions, 4 per AskUserQuestion batch
+- Execution: one task in_progress at a time
 - Validate after each major step
 - If CLAUDE.md exists, follow its rules
 
@@ -169,4 +140,3 @@ If validation fails:
 - Implementing without reading full PRP
 - Ignoring validation failures
 - Creating new patterns instead of following existing ones
-- Batching validation at the end
