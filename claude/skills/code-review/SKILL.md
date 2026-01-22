@@ -5,7 +5,9 @@ description: Pre-PR code review for branch changes. Use when user wants to revie
 
 # Code Review Skill
 
-Review code changes on a local branch before opening a PR. Uses multiple specialized agents with confidence-based scoring to minimize false positives.
+Review code changes on a local branch before opening a PR. Uses multiple specialized agents with confidence-based scoring to catch real bugs while minimizing false positives.
+
+**Philosophy**: It's better to flag a potential issue that turns out to be fine than to miss a real bug. Err on the side of caution for error handling, edge cases, and failure modes.
 
 ## When to Use
 
@@ -46,21 +48,27 @@ Use a Haiku agent to:
 2. Run `git log --oneline $(git merge-base HEAD origin/main)..HEAD`
 3. Return a summary of what these changes do
 
-### Step 4: Launch 5 Parallel Review Agents (Sonnet)
+### Step 4: Launch 7 Parallel Review Agents (Sonnet)
 
-Launch 5 parallel Sonnet agents to independently review the changes. Each returns a list of issues with reasons:
+Launch 7 parallel Sonnet agents to independently review the changes. Each returns a list of issues with reasons:
 
 **Agent #1: CLAUDE.md Compliance Audit**
 
 - Audit changes to ensure they comply with CLAUDE.md guidelines
 - Note: CLAUDE.md is guidance for writing code, so not all instructions apply during review
 
-**Agent #2: Shallow Bug Scan**
+**Agent #2: Multi-Depth Bug Scan**
 
-- Read the file changes and do a shallow scan for obvious bugs
-- Avoid reading extra context beyond the changes
-- Focus on large bugs, avoid small issues and nitpicks
-- Ignore likely false positives
+Scan for bugs at multiple depths:
+- **Surface level**: Typos, wrong variable names, missing returns, copy-paste errors
+- **Logic level**: Trace through conditionals and loops with concrete example inputs
+- **Failure level**: For each operation, ask "what if this fails?" - null returns, exceptions, promise rejections
+- **Edge case level**: Empty inputs, boundary values, malformed data, single-item collections
+
+For regex, parsers, or pattern-matching code:
+- Trace through with at least 3 concrete examples (happy path, edge case, malformed input)
+- Verify capture groups/parsed values are used correctly downstream
+- Check if all documented input formats are actually handled
 
 **Agent #3: Historical Context Analysis**
 
@@ -80,6 +88,22 @@ Launch 5 parallel Sonnet agents to independently review the changes. Each return
 - Ensure changes comply with guidance in existing comments
 - Check TODOs, FIXMEs, and documentation comments
 
+**Agent #6: Failure Mode Analysis**
+
+- For async operations: Is rejection/error handled? Could this cause unhandled promise rejection?
+- For external calls/APIs: What happens on timeout, network failure, or unexpected response?
+- For parsing code: What happens with malformed, truncated, or unexpected input?
+- For resource acquisition: Are resources properly released on error paths?
+- Ask: "If I were trying to break this code, what input would I use?"
+
+**Agent #7: Test Coverage Gaps**
+
+- For new code paths: Is there a test that exercises this specific path?
+- For conditional branches: Are both/all branches tested?
+- For error handling code: Are error paths tested, not just happy paths?
+- For edge cases in the code: Is there a corresponding test case?
+- For parsing/regex: Are all input format variations tested?
+
 ### Step 5: Confidence Scoring (Parallel Haiku Agents)
 
 For each issue found in Step 4, launch a parallel Haiku agent to score confidence (0-100):
@@ -96,7 +120,7 @@ For CLAUDE.md issues, the scoring agent must double-check that the CLAUDE.md act
 
 ### Step 6: Filter by Confidence
 
-Remove any issues with score < 80. If no issues meet this threshold, report that no significant issues were found.
+Remove any issues with score < 70. If no issues meet this threshold, report that no significant issues were found.
 
 ### Step 7: Generate Report
 
@@ -111,7 +135,7 @@ Output the review in this format:
 
 ### Issues Found
 
-{For each issue with score >= 80:}
+{For each issue with score >= 70:}
 
 **{N}. {Brief description}** (Score: {score})
 
@@ -143,7 +167,9 @@ Or if no issues found:
 No significant issues found. Checked for:
 
 - CLAUDE.md compliance
-- Obvious bugs
+- Logic bugs and edge cases
+- Failure modes (error handling, async rejections)
+- Test coverage gaps
 - Historical context violations
 - Code comment compliance
 
@@ -155,12 +181,23 @@ These should NOT be flagged (give to review agents):
 
 - Pre-existing issues not introduced in this branch
 - Something that looks like a bug but isn't
-- Pedantic nitpicks a senior engineer wouldn't flag
 - Issues linters/typecheckers/compilers catch (formatting, types, imports)
 - General code quality issues unless explicitly in CLAUDE.md
 - Issues called out in CLAUDE.md but silenced with lint ignore comments
 - Intentional functionality changes related to the broader change
 - Real issues on lines not modified in this branch
+- Pure style nitpicks unrelated to correctness
+
+## Issues to Flag Even If They Seem Minor
+
+These SHOULD be flagged even if they might seem like nitpicks:
+
+- Missing error handling for async operations (unhandled promise rejections can crash Node.js)
+- Missing edge case handling in parsing/validation code
+- Incorrect capture group usage in regex
+- Test coverage gaps for new code paths
+- Potential null/undefined access without guards
+- Resource leaks on error paths
 
 ## Notes
 
@@ -169,7 +206,9 @@ These should NOT be flagged (give to review agents):
 - Make a todo list first
 - Cite and link each issue (if referring to CLAUDE.md, reference it)
 - Focus on actionable issues that genuinely improve code quality
-- The goal is to catch real bugs, not to be pedantic
+- For complex logic (regex, parsers, state machines): DO perform deep semantic analysis
+- When in doubt about error handling or edge cases, flag it - false positives are acceptable
+- Reference: [Google's Code Review Guidelines](https://google.github.io/eng-practices/review/reviewer/looking-for.html)
 
 ## Git Commands Reference
 
