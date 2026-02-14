@@ -1,5 +1,4 @@
 {
-  "model": "opus",
   "hooks": {
     "Notification": [
       {
@@ -9,6 +8,30 @@
             "command": "terminal-notifier -title 'Claude Code' -message 'Claude Code needs your input' -activate com.mitchellh.ghostty -sound blow"
           }
         ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": []
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": []
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": []
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "matcher": "",
+        "hooks": []
       }
     ]
   },
@@ -26,9 +49,11 @@
     "feature-dev@claude-plugins-official": true,
     "plugin-dev@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true,
-    "document-skills@anthropic-agent-skills": true
+    "document-skills@anthropic-agent-skills": true,
+    "logfire-session-capture@pydantic-claude-code-logfire-plugin": false
   },
   "alwaysThinkingEnabled": true,
+  "autoUpdatesChannel": "latest",
   "feedbackSurveyState": {
     "lastShownTime": 1755160633604
   },
@@ -42,5 +67,6 @@
         "start-mcp-server"
       ]
     }
-  }
+  },
+  "effortLevel": "medium"
 }

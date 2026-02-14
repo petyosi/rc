@@ -3,14 +3,14 @@ name: prp-workflow
 description: |
   Product Requirements Prompt (PRP) workflow for systematic feature implementation. PRPs are PRDs engineered for AI - they include complete context, implementation blueprints, and validation gates for one-pass success.
 
-  Use when user: (1) wants to implement a complex feature systematically, (2) asks to "create/generate a PRP", (3) mentions "PRP workflow" or "context engineering", (4) has a feature file to implement, (5) asks to "clarify" or "review" a PRP for ambiguities, (6) asks to "execute" an existing PRP.
+  Use when user: (1) wants to implement a complex feature systematically, (2) asks to "create/generate a PRP", (3) mentions "PRP workflow" or "context engineering", (4) has a feature file to implement, (5) asks to "clarify" or "review" a PRP for ambiguities, (6) asks to "execute" an existing PRP, (7) asks to "verify" implementation against a PRP.
 
-  Three modes: Generation (create PRP from requirements), Clarification (resolve ambiguities before execution), Execution (implement from PRP with validation loops).
+  Four modes: Generation (create PRP from requirements), Clarification (resolve ambiguities before execution), Execution (implement from PRP with validation loops), Verification (validate implementation matches PRP).
 ---
 
 # PRP Workflow
 
-Three-phase workflow: **Generation** -> **Clarification** (recommended) -> **Execution**
+Four-phase workflow: **Generation** -> **Clarification** (recommended) -> **Execution** -> **Verification**
 
 ---
 
@@ -84,25 +84,21 @@ Identify and resolve underspecified areas BEFORE implementation.
 
 ## Mode 3: PRP Execution
 
-Implement a feature using an existing PRP.
+Implement a feature using an existing PRP. Run directly (no sub-agent).
 
 ### Process
 
 1. **Load PRP** - Read completely, note success criteria and validation gates
 
-2. **Launch an Opus agent** to execute the implementation:
+2. **Create task list** from the PRP's implementation blueprint using TodoWrite
 
-   The agent should:
-   - Create a TodoWrite task list from the PRP's implementation blueprint
-   - Work through tasks systematically, keeping ONE task in_progress at a time
+3. **Implement** - Work through tasks systematically:
+   - Keep ONE task in_progress at a time
    - Follow patterns from PRP exactly (don't introduce new patterns)
    - Run validation commands after each major step
    - Fix failures immediately (don't accumulate)
-   - Return: implementation summary, files modified, validation results, any deviations from PRP
 
-3. **Handle blockers** - If agent returns with issues, help resolve
-
-4. **Report** completion summary
+4. **Report** completion summary: files modified, validation results, any deviations from PRP
 
 ### Validation Philosophy
 
@@ -112,6 +108,50 @@ If validation fails:
 3. Fix underlying issue (don't patch)
 4. Re-run validation
 5. Repeat until passing
+
+---
+
+## Mode 4: PRP Verification
+
+Validate that implementation matches the PRP after execution completes.
+
+### Process
+
+1. **Locate PRP and changes** - Identify the PRP file and gather the git diff of changes made during execution
+
+2. **Launch an Opus agent** to perform verification:
+
+   The agent should:
+   - Read the PRP completely, extracting: success criteria, implementation blueprint tasks, data models, integration points, and validation checklist
+   - Run `git diff` (or `git diff <base-branch>...HEAD` if on a feature branch) to get all changes
+   - For each PRP requirement, verify it has a corresponding implementation in the diff
+   - For each change in the diff, verify it traces back to a PRP requirement (no undocumented additions)
+   - Check that validation commands from the PRP pass
+   - Return: verification matrix (requirement → implementation mapping), coverage percentage, any gaps or deviations, any extra changes not in PRP
+
+3. **Present findings** with three categories:
+   - **Implemented as specified**: Requirements fulfilled per PRP
+   - **Deviations**: Implementation differs from PRP (note if intentional/improved or problematic)
+   - **Gaps**: PRP requirements missing from implementation
+
+4. **Recommend action**:
+   - All green: Ready to commit/PR
+   - Minor deviations: Update PRP to reflect reality or adjust implementation
+   - Gaps: Return to execution mode to complete missing work
+
+### Verification Checklist
+
+The agent verifies against these PRP sections:
+- [ ] Success criteria met
+- [ ] All blueprint tasks completed
+- [ ] Data models match specification
+- [ ] Integration points connected correctly
+- [ ] Validation loop commands pass
+- [ ] No undocumented changes introduced
+
+### Early Exit
+- No PRP found: Ask user to locate or generate first
+- No changes detected: Nothing to verify
 
 ---
 
@@ -127,7 +167,8 @@ If validation fails:
 |-------|--------|-------|
 | Generation | 2 parallel (codebase + external research) | Opus |
 | Clarification | 1 (coverage analysis) | Opus |
-| Execution | 1 (implementation) | Opus |
+| Execution | direct (no sub-agent) | — |
+| Verification | 1 (plan-vs-diff analysis) | Opus |
 
 ### Key Constraints
 - Clarification: max 5 questions, 4 per AskUserQuestion batch
@@ -140,3 +181,5 @@ If validation fails:
 - Implementing without reading full PRP
 - Ignoring validation failures
 - Creating new patterns instead of following existing ones
+- Skipping verification after execution
+- Marking gaps as "minor" without user confirmation
