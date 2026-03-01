@@ -4,11 +4,11 @@ macos-titlebar-style = hidden
 background = #000000
 
 
-# adjust-cell-height=+10
-# font-family = "Berkeley Mono"
-font-family = "GohuFont 14 Nerd Font Mono"
+adjust-cell-height=+5
+font-family = "Berkeley Mono"
 font-size = 14
-font-thicken = false
+#font-family = "GohuFont 14 Nerd Font Mono"
+#font-thicken = false
 
 background-opacity = 0.99
 mouse-hide-while-typing = true

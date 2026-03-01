@@ -50,3 +50,4 @@ bindkey '^ ' autosuggest-accept
 
 # fnm
 eval "$(fnm env --use-on-cd --version-file-strategy=recursive --resolve-engines --shell zsh)"
+export PATH="$HOME/.local/bin:$PATH"
