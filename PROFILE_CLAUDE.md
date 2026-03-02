@@ -34,3 +34,4 @@ Exception: Follow existing version constraints when a project's package.json, lo
 - Don't co-sign commits or PRs with Claude.
 - Don't include testing check lists in the PR description.
 - Don't assign reviewers or labels to PRs, I'll handle that.
+- Never add "Generated with Claude Code" or similar attribution footers to PR descriptions.
