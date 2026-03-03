@@ -120,23 +120,14 @@
     "plugin-dev@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true,
     "document-skills@anthropic-agent-skills": true,
-    "logfire-session-capture@pydantic-claude-code-logfire-plugin": false
+    "logfire-session-capture@pydantic-claude-code-logfire-plugin": false,
+    "serena@claude-plugins-official": false
   },
   "alwaysThinkingEnabled": true,
   "autoUpdatesChannel": "latest",
   "feedbackSurveyState": {
     "lastShownTime": 1755160633604
   },
-  "mcpServers": {
-    "serena": {
-      "command": "/opt/homebrew/bin/uvx",
-      "args": [
-        "--from",
-        "git+https://github.com/oraios/serena",
-        "serena",
-        "start-mcp-server"
-      ]
-    }
-  },
+  "mcpServers": {},
   "effortLevel": "medium"
 }
