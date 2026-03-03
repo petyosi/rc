@@ -59,16 +59,20 @@ Launch 7 parallel Sonnet agents to independently review the changes. Each return
 
 **Agent #2: Multi-Depth Bug Scan**
 
-Scan for bugs at multiple depths:
+Read the full content of every changed file (not just the diff). Scan for bugs at multiple depths:
 - **Surface level**: Typos, wrong variable names, missing returns, copy-paste errors
 - **Logic level**: Trace through conditionals and loops with concrete example inputs
 - **Failure level**: For each operation, ask "what if this fails?" - null returns, exceptions, promise rejections
 - **Edge case level**: Empty inputs, boundary values, malformed data, single-item collections
+- **Cross-function level**: When a changed function calls another function in the same file or in a directly changed file, read that callee's implementation to verify: (a) the return value / error contract is handled by the caller; (b) async functions that return `false`/`null` on failure are not silently ignored; (c) any state the callee sets internally is not assumed to have propagated by the time the caller continues.
 
-For regex, parsers, or pattern-matching code:
-- Trace through with at least 3 concrete examples (happy path, edge case, malformed input)
-- Verify capture groups/parsed values are used correctly downstream
-- Check if all documented input formats are actually handled
+**Invisible communication channels**: Look for cases where one piece of code signals a result and the receiving side ignores it. Ask: does this function return a value that conveys success/failure? Is it checked? Does this async operation set state that a caller then reads immediately (before awaiting)? Are there event emitters with no listeners, or promises created but not awaited?
+
+**Incomplete coverage of a known input space**: When code handles a set of variants (regex patterns, switch/if-else chains, union type branches, event type handlers, HTTP status ranges), ask: what is the *complete* set of possible inputs at runtime, and does this code handle all of them? Common gaps: a text-processing regex that handles single-quoted strings but not double-quoted; a status-code handler that covers 4xx but not 5xx; a type union handler that handles two of three variants.
+
+**Guard correctness for the actual type space**: When you see a conditional guard, ask whether it correctly excludes every case the author intends to exclude, given how the language actually works. Common wrong assumptions: `typeof x === 'object'` also passes for `null` and arrays; `!value` rejects `0` and `""` as well as `null`/`undefined`; `x == null` catches both `null` and `undefined` (which can be intentional or a bug depending on context).
+
+**Refactoring regressions**: When code is structurally reorganized (component split, function extracted, call site changed), verify that specific non-default values — props with explicit values, config options set to non-defaults, thresholds, timeouts, limits — that were present in the old version still appear in the new version, or their absence is clearly intentional. The structural change is easy to verify correct; the dropped detail is easy to miss.
 
 **Agent #3: Historical Context Analysis**
 
@@ -88,13 +92,20 @@ For regex, parsers, or pattern-matching code:
 - Ensure changes comply with guidance in existing comments
 - Check TODOs, FIXMEs, and documentation comments
 
-**Agent #6: Failure Mode Analysis**
+**Agent #6: Failure Mode and Execution Scope Analysis**
 
 - For async operations: Is rejection/error handled? Could this cause unhandled promise rejection?
 - For external calls/APIs: What happens on timeout, network failure, or unexpected response?
 - For parsing code: What happens with malformed, truncated, or unexpected input?
 - For resource acquisition: Are resources properly released on error paths?
 - Ask: "If I were trying to break this code, what input would I use?"
+
+**Execution scope mismatch**: Ask "where does this code actually run?" for anything that looks like it might execute at a broader or earlier scope than intended:
+- Module-level code (outside functions/classes): does it instantiate workers, open connections, register globals, or make network requests? These fire for every importer unconditionally.
+- Code in component render bodies that should be inside `useMemo`/`useCallback` (recomputed every render).
+- Subscriptions or timers set up outside `useEffect` (no cleanup, run during SSR, etc.).
+- Constructors or class field initializers that perform I/O or expensive work that should be deferred to an explicit `init()` call.
+- Code that assumes it runs once but is placed where it can run multiple times (e.g. inside a loop or a callback that fires repeatedly).
 
 **Agent #7: Test Coverage Gaps**
 
