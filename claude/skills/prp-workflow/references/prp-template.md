@@ -1,167 +1,103 @@
 # PRP Template
 
-Use this template when generating PRPs. Adapt sections as needed for the specific feature.
-
-```yaml
-name: "[Feature Name] PRP"
-description: |
-
-## Purpose
-[What this PRP enables the AI to build]
-
-## Core Principles
-1. **Context is King**: Include ALL necessary documentation, examples, and caveats
-2. **Validation Loops**: Provide executable tests/lints the AI can run and fix
-3. **Information Dense**: Use keywords and patterns from the codebase
-4. **Progressive Success**: Start simple, validate, then enhance
-5. **Global rules**: Follow all rules in CLAUDE.md (if exists)
+Use this template when generating PRPs. Adapt sections to the feature — omit sections that don't apply.
 
 ---
 
 ## Goal
-[What needs to be built - be specific about the end state]
+
+[What needs to be built — specific end state]
 
 ## Why
-- [Business value and user impact]
-- [Integration with existing features]
+
+- [Business value / user impact]
 - [Problems this solves and for whom]
 
-## What
-[User-visible behavior and technical requirements]
+## Success Criteria
 
-### Success Criteria
 - [ ] [Specific measurable outcome 1]
 - [ ] [Specific measurable outcome 2]
 - [ ] [Specific measurable outcome 3]
 
-## All Needed Context
+## Context
 
-### Documentation & References
-```yaml
-# MUST READ - Include these in your context window
-- url: [Official API docs URL]
-  why: [Specific sections/methods you'll need]
+### Key Files
 
-- file: [path/to/example.py]
-  why: [Pattern to follow, gotchas to avoid]
+List files relevant to this feature, with WHY each matters:
 
-- doc: [Library documentation URL]
-  section: [Specific section]
-  critical: [Key insight that prevents common errors]
-```
+- `path/to/file.ts` — pattern to follow for X
+- `path/to/other.ts` — integration point, will need modification
+- `path/to/test.ts` — test pattern to follow
 
-### Current Codebase Tree
-```bash
-[Output from tree command - shows current structure]
-```
+### External References
 
-### Desired Codebase Tree
-```bash
-[New files to be added with their responsibilities]
-```
+- [Library docs URL] — specific section/API needed
+- [Example/guide URL] — relevant technique
 
-### Known Gotchas & Library Quirks
-```python
-# CRITICAL: [Library name] requires [specific setup]
-# CRITICAL: [Framework] version [X] has [specific behavior]
-# CRITICAL: [Common pitfall to avoid]
-```
+### Gotchas
+
+- [Library/framework] requires [specific setup] — without this, [consequence]
+- [API/service] has [constraint] that affects [aspect of implementation]
+- [Common pitfall] — do [correct approach] instead
 
 ## Implementation Blueprint
 
-### Data Models and Structure
-[Define core data structures, Pydantic models, ORM models, etc.]
+### Data Models
 
-### List of Tasks
+[Define core data structures if the feature introduces new ones. Skip if not applicable.]
+
+### Tasks
+
 ```yaml
 Task 1: [Task Name]
   MODIFY/CREATE [file path]:
     - [Specific action 1]
     - [Specific action 2]
-  PATTERN: [Reference to similar code]
+  PATTERN: [Reference to similar code, e.g. path/to/file.ts:42]
 
 Task 2: [Task Name]
   ...
 ```
 
-### Per Task Pseudocode
-```python
-# Task 1: [Task Name]
-def feature_function(param: Type) -> Result:
-    # PATTERN: Always validate input (see file:line)
-    # GOTCHA: This library requires X
-    # CRITICAL: API has rate limit of Y
-    pass
-```
-
 ### Integration Points
+
+[Where this feature connects to existing systems. Include file paths and the pattern to follow.]
+
 ```yaml
 DATABASE:
-  - migration: [SQL or migration description]
-  - index: [Index requirements]
+  - [migration/schema changes]
 
 CONFIG:
-  - add to: [config file path]
-  - pattern: [How to add config]
+  - [config file path] — [what to add]
 
 ROUTES/ENDPOINTS:
-  - add to: [router file]
-  - pattern: [How to register]
+  - [router file] — [registration pattern]
 ```
 
-## Validation Loop
+## Validation
 
-### Level 1: Syntax & Style
-```bash
-# Language-specific linting commands
-# Python: ruff check . --fix && mypy .
-# TypeScript: eslint . --fix && tsc --noEmit
-# Go: go fmt ./... && go vet ./...
-```
-
-### Level 2: Unit Tests
-```python
-# Define required test cases:
-# 1. Happy path test
-# 2. Edge case test
-# 3. Error handling test
-```
+List the project's validation commands to run after each major step:
 
 ```bash
-# Run command: pytest tests/ -v
+# Lint / type check
+[project-specific command]
+
+# Tests
+[project-specific command]
+
+# Integration / manual verification
+[curl commands, CLI invocations, or manual steps]
 ```
 
-### Level 3: Integration Test
-```bash
-# Manual test commands (curl, CLI, etc.)
-```
+### Required Test Coverage
 
-## Final Validation Checklist
-- [ ] All tests pass
-- [ ] No linting errors
-- [ ] No type errors
-- [ ] Manual test successful
-- [ ] Error cases handled
-- [ ] Documentation updated
+- [ ] [Happy path scenario]
+- [ ] [Key edge case]
+- [ ] [Error handling scenario]
 
----
+## Unknowns & Risks
 
-## Anti-Patterns to Avoid
-- Don't create new patterns when existing ones work
-- Don't skip validation steps
-- Don't ignore failing tests
-- Don't hardcode values that should be config
-- [Domain-specific anti-patterns]
-```
+- [Specific uncertainty that could affect implementation]
+- [Dependency or assumption that hasn't been verified]
 
-## PRP Quality Checklist
-
-Before finalizing, verify:
-- [ ] All necessary context included
-- [ ] Validation gates are executable
-- [ ] References existing patterns with file paths
-- [ ] Clear implementation path with specific tasks
-- [ ] Error handling documented
-- [ ] Success criteria are measurable
-
-Score the PRP confidence level (1-10) for one-pass implementation success.
+**Confidence: [1-10]** for one-pass implementation success.

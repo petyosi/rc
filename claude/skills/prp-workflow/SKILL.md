@@ -1,59 +1,57 @@
 ---
 name: prp-workflow
 description: |
-  Product Requirements Prompt (PRP) workflow for systematic feature implementation. PRPs are PRDs engineered for AI - they include complete context, implementation blueprints, and validation gates for one-pass success.
+  Product Requirements Prompt (PRP) workflow for systematic feature implementation. PRPs are implementation-ready plans with full context, task blueprints, and validation gates.
 
-  Use when user: (1) wants to implement a complex feature systematically, (2) asks to "create/generate a PRP", (3) mentions "PRP workflow" or "context engineering", (4) has a feature file to implement, (5) asks to "clarify" or "review" a PRP for ambiguities, (6) asks to "execute" an existing PRP, (7) asks to "verify" implementation against a PRP.
+  This skill should be used when the user wants to implement a complex feature systematically, asks to "create a PRP" or "generate a PRP", mentions "PRP workflow", asks to "clarify" or "review" a PRP for ambiguities, asks to "execute" an existing PRP, or asks to "verify" implementation against a PRP.
 
-  Four modes: Generation (create PRP from requirements), Clarification (resolve ambiguities before execution), Execution (implement from PRP with validation loops), Verification (validate implementation matches PRP).
+  Four modes: Generation (create PRP from requirements), Clarification (resolve ambiguities before execution), Execution (implement from PRP), Verification (validate implementation matches PRP).
 ---
 
 # PRP Workflow
 
 Four-phase workflow: **Generation** -> **Clarification** (recommended) -> **Execution** -> **Verification**
 
+**Scope check**: PRPs are for features that touch 4+ files, introduce new patterns, or have non-obvious integration points. For smaller changes, skip the PRP and implement directly.
+
 ---
 
 ## Mode 1: PRP Generation
 
-Generate a comprehensive PRP from a feature request.
+Generate a PRP from a feature request.
 
 ### Process
 
-1. **Launch 2 parallel Opus agents** for research:
+1. **Launch 2 parallel research agents**:
 
-   **Agent #1 - Codebase Research**: Search for similar features/patterns in the codebase. Identify conventions (imports, naming, structure), test patterns, and architecture. Return a summary of patterns found and a list of 5-10 key files to read.
+   **Agent #1 - Codebase** (`subagent_type: "Explore"`): Search for similar features, conventions, test patterns, and architecture. Read key files and return synthesized findings — patterns to follow, naming conventions, relevant abstractions, and how similar features are structured.
 
-   **Agent #2 - External Research**: Search the web for library documentation, implementation examples, best practices, and known gotchas. Return URLs, version-specific details, and recommendations.
+   **Agent #2 - External** (`subagent_type: "general-purpose"`): Use context7 MCP tools and web search for library documentation, version-specific APIs, best practices, and known gotchas. Return concrete details: correct API signatures, required config, version constraints.
 
-2. **Read key files** identified by agents to build deep understanding
+2. **Clarify with user** using AskUserQuestion for any decisions that emerged from research (patterns to follow, scope boundaries, integration approach)
 
-3. **Clarify with user** (if needed) using AskUserQuestion for patterns to follow, integration requirements, constraints
+3. **Generate PRP** using the template in [references/prp-template.md](references/prp-template.md)
 
-4. **Generate PRP** using the template in [references/prp-template.md](references/prp-template.md)
-
-5. **Save** to `plans/{XXX}-{feature-name}.md`
+4. **Save** to `plans/{XXX}-{feature-name}.md`
    - Auto-increment from highest number in `plans/`
    - Filename: lowercase, hyphens, max 50 chars
 
-6. **Report** confidence score (1-10) and ask: clarify or execute?
+5. **Report**: confidence score (1-10), list specific unknowns or risks, then ask user: clarify or execute?
 
 ---
 
 ## Mode 2: PRP Clarification
 
-Identify and resolve underspecified areas BEFORE implementation.
+Identify and resolve underspecified areas before implementation. Do this in the main context (no sub-agent) — the PRP and taxonomy fit easily, and you need conversational context with the user to formulate good questions.
 
 ### Process
 
-1. **Locate PRP** - Ask user or search `plans/*.md`
+1. **Read PRP** and the taxonomy in [references/clarification-taxonomy.md](references/clarification-taxonomy.md)
 
-2. **Launch an Opus agent** to analyze the PRP for ambiguities:
+2. **Analyze** the PRP against relevant taxonomy categories (skip categories that clearly don't apply to this feature's scale). Mark each relevant category as Clear / Partial / Missing. Prioritize gaps by (Impact x Uncertainty).
 
-   The agent should analyze the PRP against the coverage taxonomy in [references/clarification-taxonomy.md](references/clarification-taxonomy.md). Mark each category (Functional Scope, Data Model, UX Flow, Non-Functional, Integration, Edge Cases, Constraints, Terminology, Completion Signals) as Clear/Partial/Missing. Return a coverage summary table and up to 5 recommended clarification questions prioritized by (Impact × Uncertainty).
-
-3. **Present questions** to user using AskUserQuestion (max 5, up to 4 per batch):
-   ```typescript
+3. **Present questions** to user via AskUserQuestion (up to 4 per call):
+   ```
    AskUserQuestion({
      questions: [
        {
@@ -71,8 +69,8 @@ Identify and resolve underspecified areas BEFORE implementation.
 
 4. **Integrate answers** into PRP:
    - Add `## Clarifications` section with `### Session YYYY-MM-DD`
-   - Record: `- Q: <question> → A: <answer>`
-   - Update relevant PRP sections per integration table in taxonomy reference
+   - Record: `- Q: <question> -> A: <answer>`
+   - Update relevant PRP sections per the integration table in the taxonomy reference
 
 5. **Report** coverage summary and recommend next step
 
@@ -84,102 +82,61 @@ Identify and resolve underspecified areas BEFORE implementation.
 
 ## Mode 3: PRP Execution
 
-Implement a feature using an existing PRP. Run directly (no sub-agent).
+Implement a feature from an existing PRP. Run directly (no sub-agent).
 
 ### Process
 
-1. **Load PRP** - Read completely, note success criteria and validation gates
+1. **Read PRP completely** — note success criteria and validation commands
 
 2. **Create task list** from the PRP's implementation blueprint using TodoWrite
 
-3. **Implement** - Work through tasks systematically:
-   - Keep ONE task in_progress at a time
-   - Follow patterns from PRP exactly (don't introduce new patterns)
-   - Run validation commands after each major step
-   - Fix failures immediately (don't accumulate)
+3. **Implement** — work through tasks systematically, running validation commands after each major step
 
-4. **Report** completion summary: files modified, validation results, any deviations from PRP
+4. **If the plan needs updating**: when you discover something that contradicts or isn't covered by the PRP, pause, explain the issue to the user, update the PRP, then continue
 
-### Validation Philosophy
+5. **Report** completion summary: files modified, validation results, any deviations from PRP
 
-If validation fails:
-1. Read error carefully
-2. Understand root cause
-3. Fix underlying issue (don't patch)
-4. Re-run validation
-5. Repeat until passing
+### Session Resumption
+
+If a session ends mid-execution, the next session can resume by reading the PRP and checking TodoWrite + git status for progress.
 
 ---
 
 ## Mode 4: PRP Verification
 
-Validate that implementation matches the PRP after execution completes.
+Validate that implementation matches the PRP after execution.
 
 ### Process
 
-1. **Locate PRP and changes** - Identify the PRP file and gather the git diff of changes made during execution
+1. **Locate PRP and changes** — identify the PRP file and determine the diff scope (`git diff` for uncommitted, `git diff <base-branch>...HEAD` for a feature branch)
 
-2. **Launch an Opus agent** to perform verification:
+2. **Launch a verification agent** (`subagent_type: "general-purpose"`):
 
    The agent should:
-   - Read the PRP completely, extracting: success criteria, implementation blueprint tasks, data models, integration points, and validation checklist
-   - Run `git diff` (or `git diff <base-branch>...HEAD` if on a feature branch) to get all changes
-   - For each PRP requirement, verify it has a corresponding implementation in the diff
-   - For each change in the diff, verify it traces back to a PRP requirement (no undocumented additions)
-   - Check that validation commands from the PRP pass
-   - Return: verification matrix (requirement → implementation mapping), coverage percentage, any gaps or deviations, any extra changes not in PRP
+   - Read the PRP, extracting: success criteria, blueprint tasks, data models, integration points, and validation commands
+   - Review all changes via git diff
+   - For each PRP requirement, verify corresponding implementation exists
+   - Flag significant changes not traceable to PRP requirements
+   - Run validation commands from the PRP
+   - Return: requirement-to-implementation mapping, coverage percentage, gaps, and deviations
 
-3. **Present findings** with three categories:
-   - **Implemented as specified**: Requirements fulfilled per PRP
-   - **Deviations**: Implementation differs from PRP (note if intentional/improved or problematic)
+3. **Present findings** in three categories:
+   - **Implemented as specified**: requirements fulfilled per PRP
+   - **Deviations**: implementation differs from PRP (note if improved or problematic)
    - **Gaps**: PRP requirements missing from implementation
 
 4. **Recommend action**:
-   - All green: Ready to commit/PR
-   - Minor deviations: Update PRP to reflect reality or adjust implementation
-   - Gaps: Return to execution mode to complete missing work
-
-### Verification Checklist
-
-The agent verifies against these PRP sections:
-- [ ] Success criteria met
-- [ ] All blueprint tasks completed
-- [ ] Data models match specification
-- [ ] Integration points connected correctly
-- [ ] Validation loop commands pass
-- [ ] No undocumented changes introduced
+   - All green: ready to commit/PR
+   - Minor deviations: update PRP to reflect reality, or adjust implementation
+   - Gaps: return to execution mode to complete missing work
 
 ### Early Exit
-- No PRP found: Ask user to locate or generate first
-- No changes detected: Nothing to verify
+- No PRP found: ask user to locate or generate first
+- No changes detected: nothing to verify
 
 ---
 
-## Quick Reference
-
-### File Locations
+## File Locations
 - PRPs: `plans/{XXX}-{feature-name}.md`
 - Template: [references/prp-template.md](references/prp-template.md)
 - Taxonomy: [references/clarification-taxonomy.md](references/clarification-taxonomy.md)
-
-### Agent Summary
-| Phase | Agents | Model |
-|-------|--------|-------|
-| Generation | 2 parallel (codebase + external research) | Opus |
-| Clarification | 1 (coverage analysis) | Opus |
-| Execution | direct (no sub-agent) | — |
-| Verification | 1 (plan-vs-diff analysis) | Opus |
-
-### Key Constraints
-- Clarification: max 5 questions, 4 per AskUserQuestion batch
-- Execution: one task in_progress at a time
-- Validate after each major step
-- If CLAUDE.md exists, follow its rules
-
-### Anti-Patterns
-- Skipping research to save time
-- Implementing without reading full PRP
-- Ignoring validation failures
-- Creating new patterns instead of following existing ones
-- Skipping verification after execution
-- Marking gaps as "minor" without user confirmation

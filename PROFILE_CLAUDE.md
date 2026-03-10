@@ -35,3 +35,4 @@ Exception: Follow existing version constraints when a project's package.json, lo
 - Don't include testing check lists in the PR description.
 - Don't assign reviewers or labels to PRs, I'll handle that.
 - Never add "Generated with Claude Code" or similar attribution footers to PR descriptions.
+- Write commit messages and PR titles/descriptions that convey the **intent and motivation** of the change, not just the mechanical steps. Lead with _why_ the change matters or what it achieves for the user/codebase, then briefly mention _how_ if it's non-obvious. For example, prefer "Make load-more UI consistent across trace views" over "Extract shared primitives from load-more components".
