@@ -15,7 +15,9 @@
       "mcp__logfire__*",
       "mcp__playwright__*",
       "mcp__claude_ai_Slack__*",
-      "mcp__ide__*"
+      "mcp__ide__*",
+      "mcp__plugin_context7_context7__*",
+      "mcp__chrome-devtools__*"
     ],
     "deny": [
       "Bash(rm -rf *)",
@@ -43,9 +45,6 @@
       "Bash(chmod 777*)",
       "Bash(chmod -R 777*)",
       "Bash(chown -R *)",
-      "Bash(kill -9*)",
-      "Bash(killall *)",
-      "Bash(pkill *)",
       "Bash(shutdown*)",
       "Bash(reboot*)",
       "Bash(dd if=*)",
@@ -120,13 +119,23 @@
     "plugin-dev@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true,
     "document-skills@anthropic-agent-skills": true,
-    "logfire-session-capture@pydantic-claude-code-logfire-plugin": false,
-    "serena@claude-plugins-official": false
+    "logfire-session-capture@pydantic-claude-code-logfire-plugin": false
   },
   "alwaysThinkingEnabled": true,
+  "effortLevel": "medium",
   "autoUpdatesChannel": "latest",
+  "voiceEnabled": true,
   "feedbackSurveyState": {
     "lastShownTime": 1755160633604
   },
-  "mcpServers": {}
+  "mcpServers": {
+    "chrome-devtools": {
+      "command": "npx",
+      "args": [
+        "chrome-devtools-mcp@latest",
+        "--autoConnect",
+        "--channel=beta"
+      ]
+    }
+  }
 }
