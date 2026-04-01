@@ -78,30 +78,6 @@
           }
         ]
       }
-    ],
-    "SessionStart": [
-      {
-        "matcher": "",
-        "hooks": []
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "matcher": "",
-        "hooks": []
-      }
-    ],
-    "Stop": [
-      {
-        "matcher": "",
-        "hooks": []
-      }
-    ],
-    "PermissionRequest": [
-      {
-        "matcher": "",
-        "hooks": []
-      }
     ]
   },
   "statusLine": {
@@ -109,20 +85,27 @@
     "command": "~/.claude/statusline.sh"
   },
   "enabledPlugins": {
-    "frontend-design@claude-code-plugins": true,
     "typescript-lsp@claude-plugins-official": true,
     "context7@claude-plugins-official": true,
-    "frontend-design@claude-plugins-official": true,
     "code-review@claude-plugins-official": true,
     "explanatory-output-style@claude-plugins-official": true,
     "feature-dev@claude-plugins-official": true,
     "plugin-dev@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true,
     "document-skills@anthropic-agent-skills": true,
-    "logfire-session-capture@pydantic-claude-code-logfire-plugin": false
+    "logfire-session-capture@pydantic-claude-code-logfire-plugin": false,
+    "codex@openai-codex": true
+  },
+  "extraKnownMarketplaces": {
+    "openai-codex": {
+      "source": {
+        "source": "github",
+        "repo": "openai/codex-plugin-cc"
+      }
+    }
   },
   "alwaysThinkingEnabled": true,
-  "effortLevel": "medium",
+  "effortLevel": "high",
   "autoUpdatesChannel": "latest",
   "voiceEnabled": true,
   "feedbackSurveyState": {
@@ -133,8 +116,7 @@
       "command": "npx",
       "args": [
         "chrome-devtools-mcp@latest",
-        "--autoConnect",
-        "--channel=beta"
+        "--autoConnect"
       ]
     }
   }
