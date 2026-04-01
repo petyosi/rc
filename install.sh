@@ -42,6 +42,25 @@ ln -sfn "$PWD"/claude/skills ~/.claude/skills
 ln -sfn "$PWD"/claude/settings.json ~/.claude/settings.json
 ln -sfn "$PWD"/claude/statusline.sh ~/.claude/statusline.sh
 
+# Agent skills
+mkdir -p ~/.agents/skills
+for skill_path in "$PWD"/claude/skills/*; do
+  [ -e "$skill_path" ] || continue
+  [ -L "$skill_path" ] && continue
+  [ -d "$skill_path" ] || continue
+
+  skill_name=${skill_path##*/}
+  target="$HOME/.agents/skills/$skill_name"
+
+  # Don't overwrite existing managed skill directories in ~/.agents/skills.
+  if [ -e "$target" ] && [ ! -L "$target" ]; then
+    echo "Skipping existing agent skill directory: $target"
+    continue
+  fi
+
+  ln -sfn "$skill_path" "$target"
+done
+
 # Markdownlint
 ln -sfn "$PWD"/markdownlint.yaml ~/.markdownlint.yaml
 

@@ -4,7 +4,9 @@ This is an **RC (Run Commands) configuration repository**. Files in this project
 
 **Key points:**
 
-- Files in `claude/skills/` → will be linked to `~/.claude/skills/` (global skills)
+- `claude/skills/` is the portable source of truth for global skills in this repo
+- Files in `claude/skills/` → will be linked to `~/.claude/skills/` for Claude Code
+- Repo-owned skill directories in `claude/skills/` → will also be linked into `~/.agents/skills/` for profile-level agent discovery
 - Files in this repo are configuration templates, not project-specific implementations
 - All skills developed here are **global skills** available across all projects
 - Installation scripts handle the symlinking to home directory
