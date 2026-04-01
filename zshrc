@@ -43,6 +43,20 @@ esac
 
 [ -f ~/.llm-keys.sh ] && source ~/.llm-keys.sh
 
+_tmux_wrap() {
+  local name=$1; shift
+  if [ -n "$TMUX" ]; then
+    tmux rename-window "$name"
+    command "$name" "$@"
+    tmux set-option -w automatic-rename on
+  else
+    command "$name" "$@"
+  fi
+}
+claude() { _tmux_wrap claude "$@"; }
+codex() { _tmux_wrap codex "$@"; }
+opencode() { _tmux_wrap opencode "$@"; }
+
 export PRE_COMMIT_ALLOW_NO_CONFIG=1 
 
 # autosuggestions
