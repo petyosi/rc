@@ -93,8 +93,9 @@
     "plugin-dev@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true,
     "document-skills@anthropic-agent-skills": true,
-    "logfire-session-capture@pydantic-claude-code-logfire-plugin": false,
-    "codex@openai-codex": true
+    "logfire-session-capture@pydantic-claude-code-logfire-plugin": true,
+    "codex@openai-codex": true,
+    "figma@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "openai-codex": {
@@ -102,11 +103,19 @@
         "source": "github",
         "repo": "openai/codex-plugin-cc"
       }
+    },
+    "pydantic-claude-code-logfire-plugin": {
+      "source": {
+        "source": "github",
+        "repo": "pydantic/claude-code-logfire-plugin"
+      }
     }
   },
   "alwaysThinkingEnabled": true,
   "effortLevel": "high",
   "autoUpdatesChannel": "latest",
+  "tui": "fullscreen",
+  "editorMode": "normal",
   "voiceEnabled": true,
   "feedbackSurveyState": {
     "lastShownTime": 1755160633604
@@ -119,5 +128,6 @@
         "--autoConnect"
       ]
     }
-  }
+  },
+  "skipWorkflowUsageWarning": true
 }
