@@ -8,7 +8,7 @@ ZSH_THEME="robbyrussell"
 
 zstyle ':omz:plugins:eza' 'dirs-first' yes
 zstyle ':omz:plugins:eza' 'icons' yes
-plugins=(git vi-mode eza gh nodenv starship zsh-autosuggestions)
+plugins=(git vi-mode eza gh starship zsh-autosuggestions)
 
 #### pre sourcing the oh-my-zsh.sh 
 source $ZSH/oh-my-zsh.sh
@@ -27,41 +27,17 @@ alias gotovo='say -v "Daria" готов си'
 
 # uv
 compdef '_files -g "*.py"' uv\ run
-alias nbe='uv run nvim src/services/logfire-backend'
-alias ndb='uv run nvim src/packages/logfire-db'
-alias nfe='cd src/services/logfire-frontend && nvim .'
 eval "$(uv generate-shell-completion zsh)"
 # uv end
 
-# pnpm
-export PNPM_HOME="/Users/petyo/Library/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm end
-
 [ -f ~/.llm-keys.sh ] && source ~/.llm-keys.sh
-
-_tmux_wrap() {
-  local name=$1; shift
-  if [ -n "$TMUX" ]; then
-    tmux rename-window "$name"
-    command "$name" "$@"
-    tmux set-option -w automatic-rename on
-  else
-    command "$name" "$@"
-  fi
-}
-claude() { _tmux_wrap claude "$@"; }
-codex() { _tmux_wrap codex "$@"; }
-opencode() { _tmux_wrap opencode "$@"; }
 
 export PRE_COMMIT_ALLOW_NO_CONFIG=1 
 
 # autosuggestions
 bindkey '^ ' autosuggest-accept
 
-# fnm
-eval "$(fnm env --use-on-cd --version-file-strategy=recursive --resolve-engines --shell zsh)"
 export PATH="$HOME/.local/bin:$PATH"
+
+# Vite+ bin (https://viteplus.dev)
+. "$HOME/.vite-plus/env"
