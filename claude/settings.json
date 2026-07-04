@@ -68,6 +68,7 @@
     ],
     "defaultMode": "dontAsk"
   },
+  "model": "claude-fable-5[1m]",
   "hooks": {
     "Notification": [
       {
@@ -115,6 +116,7 @@
   "effortLevel": "high",
   "autoUpdatesChannel": "latest",
   "tui": "fullscreen",
+  "skipWorkflowUsageWarning": true,
   "editorMode": "normal",
   "voiceEnabled": true,
   "feedbackSurveyState": {
@@ -128,6 +130,5 @@
         "--autoConnect"
       ]
     }
-  },
-  "skipWorkflowUsageWarning": true
+  }
 }

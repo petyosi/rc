@@ -28,7 +28,7 @@ Generate a PRP from a feature request.
 
    **Agent #2 - External** (`subagent_type: "general-purpose"`): Use context7 MCP tools and web search for library documentation, version-specific APIs, best practices, and known gotchas. Return concrete details: correct API signatures, required config, version constraints.
 
-2. **Clarify with user** using AskUserQuestion for any decisions that emerged from research (patterns to follow, scope boundaries, integration approach)
+2. **Clarify with user** for any high-impact decisions that emerged from research (patterns to follow, scope boundaries, integration approach). Use the Mode 2 clarification style: one point at a time, with context, recommendation, and choices only where useful.
 
 3. **Generate PRP** using the template in [references/prp-template.md](references/prp-template.md)
 
@@ -50,29 +50,42 @@ Identify and resolve underspecified areas before implementation. Do this in the 
 
 2. **Analyze** the PRP against relevant taxonomy categories (skip categories that clearly don't apply to this feature's scale). Mark each relevant category as Clear / Partial / Missing. Prioritize gaps by (Impact x Uncertainty).
 
-3. **Present questions** to user via AskUserQuestion (up to 4 per call):
-   ```
-   AskUserQuestion({
-     questions: [
-       {
-         question: "Which authentication method should the system use?",
-         header: "Auth",
-         multiSelect: false,
-         options: [
-           { label: "OAuth 2.0 + JWT", description: "Stateless, scalable" },
-           { label: "Session cookies", description: "Traditional, requires storage" }
-         ]
-       }
-     ]
-   })
+3. **Present clarification points one by one.** Do not batch multiple unrelated questions unless the user explicitly asks for a compact list. For each point:
+   - Name the ambiguity and the taxonomy category it affects.
+   - Explain why it matters for implementation, test design, or UX.
+   - Cite or summarize the current PRP text that is underspecified.
+   - Give a concrete example of how different answers would change the implementation.
+   - Recommend a default answer with concise rationale.
+   - If the decision has discrete choices, list 2-4 options with tradeoffs and mark the recommended option first.
+   - Ask exactly one direct question, then wait for the user's answer before moving to the next point.
+
+   Example:
+
+   ```markdown
+   **Clarification 1: Host Crash Behavior**
+
+   The PRP says the terminal host should close sessions if it crashes, but it does not decide whether the gateway should restart the host immediately or wait until the next terminal open. This affects lifecycle code and tests.
+
+   Example: if the host crashes while a terminal is running `pnpm dev`, an immediate restart would bring the host back right away, but the old PTY is still gone either way. A lazy restart avoids restart loops and is simpler.
+
+   Recommendation: Lazy restart. Close active sessions, fail pending opens, and start a fresh host on the next `terminal.open`.
+
+   Choices:
+   - Lazy restart (recommended): simpler, avoids restart loops, good enough for local POC.
+   - Immediate restart: more available, but needs restart-loop protection.
+   - Gateway restart required: simplest, but poor local UX.
+
+   Should the PRP specify lazy restart?
    ```
 
-4. **Integrate answers** into PRP:
+   Use tool-based user input only if the current environment provides it and it supports this one-question flow. Otherwise ask in plain text.
+
+4. **Integrate each answer before asking the next clarification** when practical:
    - Add `## Clarifications` section with `### Session YYYY-MM-DD`
    - Record: `- Q: <question> -> A: <answer>`
    - Update relevant PRP sections per the integration table in the taxonomy reference
 
-5. **Report** coverage summary and recommend next step
+5. **Repeat** until the high-impact gaps are resolved, then report the coverage summary and recommend the next step.
 
 ### Early Exit
 - No critical gaps: proceed to execution
