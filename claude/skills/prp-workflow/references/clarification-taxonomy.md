@@ -15,10 +15,14 @@ Analyze the PRP against these categories. **Skip categories that don't apply to 
 - Identity and uniqueness rules
 - Lifecycle / state transitions
 
-### 3. UX Flow
-- Critical user journeys
-- Error / empty / loading states
-- Input validation rules
+### 3. Consumer Experience and Public Contract
+- Consumers, supported entry points, and prerequisites
+- Primary journeys and observable success
+- Error, empty, loading, retry, cancellation, and recovery behavior where applicable
+- Input validation and public error contracts
+- Compatibility, versioning, discoverability, documentation, and examples
+- Outside-in evidence surface for each `CX-N` scenario; proxy limitations when direct evidence is impractical
+- Subjective usability claims backed by actual user evidence rather than inferred from code
 
 ### 4. Non-Functional (if applicable)
 - Performance targets
@@ -39,6 +43,17 @@ Analyze the PRP against these categories. **Skip categories that don't apply to 
 - Technical constraints (language, hosting, compatibility)
 - Tradeoffs or rejected alternatives
 
+### 8. Empirical Evidence
+- Load-bearing assumptions that require observation rather than discussion
+- Spike result, decision rule, and representativeness limits
+- Inconclusive experiments or explicitly accepted empirical risk
+
+### 9. Roadmap Alignment (child PRPs only)
+- Parent step outcome and exclusion boundary
+- Satisfied dependency evidence
+- Inherited decisions and invariants
+- Contract or capability produced for downstream steps
+
 ## Prioritization
 
 Generate questions using **(Impact x Uncertainty)** heuristic:
@@ -50,7 +65,7 @@ Generate questions using **(Impact x Uncertainty)** heuristic:
 
 - Maximum 8 questions total, up to 4 per AskUserQuestion call
 - Prefer structured options via AskUserQuestion when choices are discrete
-- Only ask if the answer materially impacts architecture, data modeling, test design, or UX
+- Only ask if the answer materially impacts architecture, data modeling, public behavior, consumer experience, or test design
 
 ## PRP Integration Table
 
@@ -58,12 +73,15 @@ After each answer, update the appropriate PRP section:
 
 | Answer Type | Target PRP Section | Action |
 |---|---|---|
-| Functional scope | Success Criteria | Add/update capability |
-| User interaction | Tasks / Integration Points | Add workflow/constraint |
+| Functional scope | Success Criteria / Execution Contract | Add/update capability and explicit exclusions |
+| Consumer experience or public contract | Consumer Contract / Success Criteria / Validation | Add or revise consumer, boundary, observable promise, `CX-N` scenarios, and evidence surface |
 | Data model | Data Models | Add fields, types, relationships |
 | Edge case | Gotchas | Add scenario |
 | Non-functional | Success Criteria / Gotchas | Add measurable target |
-| Integration | Integration Points / Context | Add service details, failure modes |
+| Integration | Integration Points / Context / Expected Changes | Add service details, failure modes, and affected systems |
+| Constraints | Execution Contract / Unknowns & Risks | Add boundaries, scope-expansion rules, and pause conditions |
+| Empirical evidence | Research Summary / Blueprint / Validation | Add spike result, decision, limitations, and derived task gates |
+| Roadmap alignment | Roadmap Context / Execution Contract / Validation | Add parent linkage, dependencies, invariants, produced contracts, and independent validation boundary |
 
 ## Coverage Summary Template
 
@@ -71,10 +89,12 @@ After each answer, update the appropriate PRP section:
 |---|---|---|
 | Functional Scope | Clear/Partial/Missing | |
 | Data Model | ... | |
-| UX Flow | ... | |
+| Consumer Experience and Public Contract | ... | |
 | Non-Functional | ... | |
 | Integration | ... | |
 | Edge Cases | ... | |
 | Constraints | ... | |
+| Empirical Evidence | ... | |
+| Roadmap Alignment | ... | |
 
 **Status values**: Clear (sufficient), Partial (some gaps), Missing (not addressed), Deferred (low impact or better resolved during execution)

@@ -113,7 +113,7 @@
     }
   },
   "alwaysThinkingEnabled": true,
-  "effortLevel": "high",
+  "effortLevel": "xhigh",
   "autoUpdatesChannel": "latest",
   "tui": "fullscreen",
   "skipWorkflowUsageWarning": true,
