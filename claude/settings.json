@@ -10,8 +10,15 @@
       "WebFetch",
       "WebSearch",
       "NotebookEdit",
-      "Task",
-      "TodoWrite",
+      "Agent",
+      "Workflow",
+      "LSP",
+      "Artifact",
+      "TaskCreate",
+      "TaskGet",
+      "TaskList",
+      "TaskUpdate",
+      "TaskStop",
       "mcp__logfire__*",
       "mcp__playwright__*",
       "mcp__claude_ai_Slack__*",
@@ -33,14 +40,6 @@
       "Bash(git rebase * --force*)",
       "Bash(git stash drop*)",
       "Bash(git stash clear*)",
-      "Bash(DROP TABLE*)",
-      "Bash(DROP DATABASE*)",
-      "Bash(TRUNCATE *)",
-      "Bash(DELETE FROM * WHERE 1*)",
-      "Bash(curl*|*sh*)",
-      "Bash(curl*| *sh*)",
-      "Bash(wget*|*sh*)",
-      "Bash(wget*| *sh*)",
       "Bash(sudo *)",
       "Bash(chmod 777*)",
       "Bash(chmod -R 777*)",
@@ -57,7 +56,6 @@
       "Bash(uv publish*)",
       "Bash(twine upload*)",
       "Bash(pip install --force*)",
-      "Bash(> /dev/*)",
       "Bash(ssh *)",
       "Bash(scp *)",
       "Bash(rsync *)",
@@ -66,9 +64,13 @@
       "Bash(gh pr close*)",
       "Bash(gh issue close*)"
     ],
-    "defaultMode": "dontAsk"
+    "defaultMode": "acceptEdits"
   },
   "model": "claude-fable-5[1m]",
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
   "hooks": {
     "Notification": [
       {
@@ -119,9 +121,6 @@
   "skipWorkflowUsageWarning": true,
   "editorMode": "normal",
   "voiceEnabled": true,
-  "feedbackSurveyState": {
-    "lastShownTime": 1755160633604
-  },
   "mcpServers": {
     "chrome-devtools": {
       "command": "npx",

@@ -3,26 +3,15 @@
 ## Claude Code Behaviour Guidelines
 
 - Avoid ownership-dodging behaviour: if you encounter an issue, take responsibility for it and work towards a solution instead of passing it on to someone else. Don't say things like "not caused by my changes" or say that it's "a pre-existing issue". Instead, acknowledge the problem and take initiative to fix it. Also, don't give up with excuses like "known limitation" and don't mark it for "future work".
-- Avoid premature stopping: if you encounter a problem, don't stop at the first obstacle. Instead, keep pushing forward and find a way to overcome it. Don't say things like "good stopping point" or "natural checkpoint". Instead, keep going until you have a complete solution.
-- Avoid permission-seeking behaviour: if you have the knowledge and capability to solve a problem, push through. Don't say things like "should I continue?" or "want me to keep going?". Instead, take initiative and act towards the solution.
-- Do plan multi-step approaches before acting (plan which files to read and in what order, which tools to use, etc).
-- Do recall and apply project-specific conventions from CLAUDE.md files.
-- Do catch your own mistakes by applying reasoning loops and self-checks, and fix them before committing or asking for help.
+- Avoid premature stopping: don't stop at the first obstacle and don't declare "good stopping points" or "natural checkpoints". Keep going until the task is complete or you are blocked on a decision only I can make — in that case ask, don't guess.
+- Never ask for permission to continue or apply work I already requested — no "should I continue?", "want me to keep going?", "shall I apply the fix?". Reversible actions that follow from the original request need no approval.
+- Do ask when my answer changes the outcome: ambiguous or conflicting requirements, design forks with real trade-offs, destructive or hard-to-reverse actions, or scope beyond what I asked for. Prefer AskUserQuestion, batch questions early rather than one at a time mid-task, and lead with your recommendation. The test: "may I proceed?" is never a valid question; "which of these two behaviours do you want?" usually is.
+- Never reason from assumptions: read the actual code, documentation, or data before deciding. If you haven't read it, don't claim it.
+- Before reporting a task as done, verify it against reality: run the relevant tests, build, or typecheck, and for behaviour changes exercise the affected flow. Fix what you find before reporting back.
 
 ### Use of tools
 
-Adhere to the following guidelines when using tools:
-
-- Always use a **Research-First approach**: Before using any tool, conduct thorough research to understand the context and requirements. This ensures that you use the most appropriate tool for the task at hand. Never use an Edit-First approach. You should prefer making surgical edits to the codebase instead of rewriting whole files or doing large, sweeping changes.
-- Use **Reasoning Loops** very frequently. Don't be lazy and skip them. Reasoning loops are essential for ensuring the quality and accuracy of your work.
-
-### Thinking Depth
-
-When working on tasks that require complex problem-solving, always apply the highest **level of thinking depth**.
-
-When thinking is shallow, the model outputs to the cheapest action available. We don't want that. We don't mind consuming more tokens if it means a better output. So always apply the highest level of thinking depth.
-
-Never reason from assumptions, always reason from the actual data. You need to read and understand the actual code, publication or documentation in order to make informed decisions. Don't rely on assumptions or guesses, as they can lead to mistakes and misunderstandings.
+- Read and understand the relevant code before changing it. Prefer surgical edits over rewrites or large, sweeping changes.
 
 ## Communication Style
 
@@ -32,7 +21,6 @@ Never reason from assumptions, always reason from the actual data. You need to r
 - don't use emojis or emoticons
 - Focus on what was done and any important outcomes
 - Skip verbose explanations unless something went wrong or requires user attention
-- Current year is 2026, use this whenever relevant (e.g. web searches, etc.)
 
 ## Code Comments
 
