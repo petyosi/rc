@@ -63,8 +63,10 @@ Generate questions using **(Impact x Uncertainty)** heuristic:
 
 ## Question Constraints
 
-- Maximum 8 questions total, up to 4 per AskUserQuestion call
-- Prefer structured options via AskUserQuestion when choices are discrete
+- Group up to 3 independent high-impact questions in one turn
+- Ask one at a time when answers are coupled or change subsequent questions
+- Defer reversible implementation details to execution
+- Prefer structured options when choices are discrete
 - Only ask if the answer materially impacts architecture, data modeling, public behavior, consumer experience, or test design
 
 ## PRP Integration Table

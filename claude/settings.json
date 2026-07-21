@@ -1,4 +1,8 @@
 {
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
   "permissions": {
     "allow": [
       "Bash",
@@ -60,17 +64,11 @@
       "Bash(scp *)",
       "Bash(rsync *)",
       "Bash(mv /* *)",
-      "Bash(gh pr merge*)",
-      "Bash(gh pr close*)",
-      "Bash(gh issue close*)"
+      "Bash(gh pr merge*)"
     ],
     "defaultMode": "acceptEdits"
   },
   "model": "claude-fable-5[1m]",
-  "attribution": {
-    "commit": "",
-    "pr": ""
-  },
   "hooks": {
     "Notification": [
       {

@@ -35,9 +35,9 @@ Mark a step `READY FOR PRP` only when all conditions hold:
 - No other step claims ownership of the same primary result, and no completion criterion depends on an unowned implementation path.
 - It can be implemented without concurrently implementing another step.
 - It has an independently runnable validation strategy using repository surfaces or a named available external integration.
-- Its required consumer evidence surface, environment, data, credentials, versions, and permitted proxy are known.
+- Its required consumer evidence surface and the inputs needed for that child's validation are known.
 - No remaining question can change a public API, schema shape, persistence or concurrency semantics, security boundary, rollback guarantee, or roadmap decomposition.
-- Required external inputs such as deployment topology, operators, telemetry, credentials, representative data, and numeric rollout gates are available.
+- External inputs such as topology, operators, telemetry, credentials, representative data, and rollout gates are available when the child claims deployment or rollout validation that depends on them. Otherwise assign those inputs to the later validation/rollout step.
 - For migration or compatibility work, the rollback contract covers data created by the new path, not only migrated legacy rows.
 - The expected change set appears bounded enough for one implementation cycle.
 
@@ -67,6 +67,7 @@ For compatibility periods, model old and new readers and writers in both directi
 ## Status
 
 - **Roadmap status**: PLANNING | ACTIVE | BLOCKED | COMPLETE
+- **Assurance profile**: Standard / Deep — [rationale and Deep triggers, if any]
 - **Created at commit**: `[short commit]`
 - **Planning baseline**: [pre-artifact state: clean or pre-existing paths to preserve; exclude this newly created roadmap]
 - **Last updated**: YYYY-MM-DD

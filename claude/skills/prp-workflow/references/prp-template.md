@@ -5,6 +5,7 @@ Use this template when generating PRPs. Adapt sections to the feature — omit s
 ## Template Map
 
 - Goal, value, and success criteria
+- Assurance profile
 - Optional parent-roadmap contract
 - Consumer Contract and acceptance scenarios
 - Research evidence and decisions
@@ -13,6 +14,8 @@ Use this template when generating PRPs. Adapt sections to the feature — omit s
 - Risks, confidence, and execution notes
 
 Do not copy this map into the generated PRP.
+
+For Standard, normally target about 300 lines and 24 KiB. Treat 400 lines or 32 KiB as an exceptional ceiling, not a completeness gate; when approaching it, state the load-bearing reason in the Assurance rationale and consider whether the router should produce a roadmap. Define each observable promise once in `CX-N`; tasks and validation reference scenario IDs instead of repeating the behavior. Prefer compact citations over narrative repository tours.
 
 ---
 
@@ -30,6 +33,11 @@ Do not copy this map into the generated PRP.
 - [ ] [Specific measurable outcome 1]
 - [ ] [Specific measurable outcome 2]
 - [ ] [Specific measurable outcome 3]
+
+## Assurance
+
+- **Profile**: Quick / Standard / Deep
+- **Rationale**: [risk and blast-radius evidence; name any Deep trigger]
 
 ## Roadmap Context
 
@@ -59,16 +67,18 @@ Read [consumer-contract.md](consumer-contract.md) before completing this section
 
 Write observable Given/When/Then outcomes; do not use internal calls or implementation state as the `Then`. Include success plus material error, recovery, retry, cancellation, or compatibility behavior.
 
-| ID | Given | When | Then | Evidence surface | Required evidence |
+Keep the scenario set minimal: the primary success path plus only material error, recovery, or compatibility promises. Quick PRPs normally need 1-2 scenarios.
+
+| ID | Given | When | Then | Exact exercise and prerequisites | Required evidence |
 |---|---|---|---|---|---|
-| `CX-1` | [consumer-visible starting state] | [action through public boundary] | [observable result] | [browser/API/SDK/CLI/contract exercise] | DIRECT REQUIRED / PROXY ACCEPTABLE — [rationale] |
-| `CX-2` | [failure or edge state] | [public action] | [observable error and recovery] | [exercise] | [grade requirement and rationale] |
+| `CX-1` | [consumer-visible starting state] | [action through public boundary] | [observable result] | [browser/API/SDK/CLI procedure, environment, setup] | DIRECT REQUIRED / PROXY ACCEPTABLE — [rationale] |
+| `CX-2` | [material failure or compatibility state] | [public action] | [observable error/recovery] | [procedure and setup] | [grade requirement and rationale] |
 
 ## Research Summary
 
 ### Vetted Repository Findings
 
-List only facts the main agent confirmed. Include why each fact affects the PRP.
+List only load-bearing facts the main agent confirmed. Use compact records for Quick and Standard; add expanded evidence fields only for Deep or contested claims.
 
 - `path/to/file.ts:42` — [established behavior or pattern] — **PRP impact**: [scope/task/test/constraint]
 
@@ -159,6 +169,8 @@ List files relevant to this feature, with WHY each matters:
 
 ### Tasks
 
+Required consumer evidence must be deterministic. Do not qualify a `CX-N` exercise with "where practical", "if feasible", "as available", or similar language. Name the exact exercise, an explicit conditional gate, or the prerequisite whose absence makes the scenario `UNVERIFIED`.
+
 ```yaml
 Task 1: [Task Name]
   MODIFY/CREATE [file path]:
@@ -169,6 +181,8 @@ Task 1: [Task Name]
   VERIFY:
     - COMMAND: [Focused validation command]
     - EXPECTED: [Concrete success result, including relevant test count/output when useful]
+    - FAILURE-LOCAL: [For a composite gate, direct command or phase selector for each expensive phase; omit for a single-stage gate]
+    - PROCESS-LIFECYCLE: [For started services/browsers, success and failure terminal signals, progress signal, and cleanup owner; omit when no process is started]
 
 Task 2: [Task Name]
   ...
@@ -189,9 +203,13 @@ ROUTES/ENDPOINTS:
   - [router file] — [registration pattern]
 ```
 
+For a composite task or final gate, list one clean integrated command and the failure-local commands or phase selectors that avoid replaying already passing setup/build/install phases. If phase isolation is unsafe or impossible, state why and name the cheapest direct diagnosis path. Any gate that starts services or browsers must define both success and failure terminal states plus cleanup for process groups, ports, sessions, and scratch state.
+
 ## Validation
 
 List the project's final validation commands. Task-level gates belong in the blueprint; these commands validate the integrated result:
+
+Prefer commands relative to the current workspace. If an absolute workspace path is unavoidable, it must match the `repo` frontmatter and planning baseline exactly.
 
 ```bash
 # Lint / type check
@@ -204,21 +222,7 @@ List the project's final validation commands. Task-level gates belong in the blu
 [curl commands, CLI invocations, or manual steps]
 ```
 
-### Required Test Coverage
-
-- [ ] [Happy path scenario]
-- [ ] [Key edge case]
-- [ ] [Error handling scenario]
-
-### Consumer Verification Plan
-
-Exercise every acceptance scenario outside-in. Internal assertions may support diagnosis but do not satisfy a consumer outcome.
-
-| Scenario | Exercise | Expected observable evidence | Environment and prerequisites |
-|---|---|---|---|
-| `CX-1` | [exact public-boundary procedure] | [response, rendered state, output, side effect, or artifact] | [runtime, data, credentials, versions] |
-
-If direct evidence is unavailable during verification, record `UNVERIFIED`; do not silently substitute a proxy that the Consumer Contract did not permit.
+The `CX-N` table is the authoritative consumer verification plan. Tasks reference scenario IDs, while focused tests may cover internal edge cases that support those scenarios. Internal assertions do not replace the observable `Then`. If direct evidence is unavailable, record `UNVERIFIED`; do not silently substitute an unapproved proxy.
 
 ## Unknowns & Risks
 
@@ -231,7 +235,7 @@ Do not leave a high-impact empirical assumption unresolved unless the user expli
 
 ## Execution Notes
 
-Fill this section during execution. At generation, initialize each subsection with `- None yet.` and replace it when there is something to record.
+Omit this section during generation. Add it during execution only when at least one subsection has content.
 
 ### Scope Expansions
 
@@ -247,13 +251,13 @@ Fill this section during execution. At generation, initialize each subsection wi
 
 ## Verification Record
 
-Fill this section in Mode 4. Verification agents remain read-only; the main agent records final reproduced evidence.
+Omit this section until Mode 4. Verification agents remain read-only; the main agent appends final reproduced evidence.
 
 ### Consumer Acceptance
 
 | Scenario | Grade | Evidence | Limitations |
 |---|---|---|---|
-| `CX-1` | PENDING, then DIRECTLY VERIFIED / PROXY VERIFIED / FAILED / UNVERIFIED in Mode 4 | [command, observation, screenshot, response, or artifact] | [what the evidence cannot prove, or `None`] |
+| `CX-1` | DIRECTLY VERIFIED / PROXY VERIFIED / FAILED / UNVERIFIED | [command, observation, screenshot, response, or artifact] | [what the evidence cannot prove, or `None`] |
 
 ### Compliance and Engineering Review
 

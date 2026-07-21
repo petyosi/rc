@@ -18,7 +18,7 @@ Do not write internal assertions such as “the service method is called” as c
 
 ## Evidence Grades
 
-Use `PENDING` before Mode 4 to mean the scenario has not yet been exercised. Mode 4 must replace it with one final grade:
+Do not assign a grade before Mode 4. If an existing PRP already contains a scaffolded `PENDING` record, Mode 4 must replace it. Final grades are:
 
 - `DIRECTLY VERIFIED`: exercised through the real public boundary in a representative environment.
 - `PROXY VERIFIED`: exercised through a contract, integration harness, fake, or non-representative environment that the PRP explicitly allowed. State what the proxy cannot prove.
