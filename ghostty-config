@@ -12,7 +12,7 @@ font-size = 14
 #font-family = "GohuFont 14 Nerd Font Mono"
 #font-thicken = false
 
-background-opacity = 0.9
+background-opacity = 1
 mouse-hide-while-typing = true
 
 bell-features = system, attention
