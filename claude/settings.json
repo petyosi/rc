@@ -5,7 +5,6 @@
   },
   "permissions": {
     "allow": [
-      "Bash",
       "Read",
       "Edit",
       "Write",
@@ -14,7 +13,6 @@
       "WebFetch",
       "WebSearch",
       "NotebookEdit",
-      "Agent",
       "Workflow",
       "LSP",
       "Artifact",
@@ -33,17 +31,6 @@
     "deny": [
       "Bash(rm -rf *)",
       "Bash(shred *)",
-      "Bash(git push --force*)",
-      "Bash(git push -f*)",
-      "Bash(git push * --force*)",
-      "Bash(git push * -f*)",
-      "Bash(git reset --hard*)",
-      "Bash(git clean -f*)",
-      "Bash(git clean -d*)",
-      "Bash(git branch -D*)",
-      "Bash(git rebase * --force*)",
-      "Bash(git stash drop*)",
-      "Bash(git stash clear*)",
       "Bash(sudo *)",
       "Bash(chmod 777*)",
       "Bash(chmod -R 777*)",
@@ -53,20 +40,24 @@
       "Bash(dd if=*)",
       "Bash(mkfs*)",
       "Bash(fdisk*)",
-      "Bash(docker system prune*)",
-      "Bash(docker rm -f*)",
-      "Bash(docker rmi -f*)",
+      "Bash(mv /* *)"
+    ],
+    "ask": [
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(git push * --force*)",
+      "Bash(git push * -f*)",
+      "Bash(git reset --hard*)",
+      "Bash(git clean -f*)",
+      "Bash(git clean -d*)",
       "Bash(npm publish*)",
       "Bash(uv publish*)",
       "Bash(twine upload*)",
-      "Bash(pip install --force*)",
       "Bash(ssh *)",
       "Bash(scp *)",
-      "Bash(rsync *)",
-      "Bash(mv /* *)",
       "Bash(gh pr merge*)"
     ],
-    "defaultMode": "acceptEdits"
+    "defaultMode": "auto"
   },
   "model": "claude-fable-5[1m]",
   "hooks": {
@@ -87,16 +78,19 @@
   },
   "enabledPlugins": {
     "typescript-lsp@claude-plugins-official": true,
-    "context7@claude-plugins-official": true,
-    "code-review@claude-plugins-official": true,
+    "context7@claude-plugins-official": false,
+    "code-review@claude-plugins-official": false,
     "explanatory-output-style@claude-plugins-official": true,
     "feature-dev@claude-plugins-official": true,
-    "plugin-dev@claude-plugins-official": true,
+    "plugin-dev@claude-plugins-official": false,
     "pyright-lsp@claude-plugins-official": true,
-    "document-skills@anthropic-agent-skills": true,
+    "document-skills@anthropic-agent-skills": false,
     "logfire-session-capture@pydantic-claude-code-logfire-plugin": true,
     "codex@openai-codex": true,
-    "figma@claude-plugins-official": true
+    "figma@claude-plugins-official": false
+  },
+  "skillOverrides": {
+    "find-skills": "off"
   },
   "extraKnownMarketplaces": {
     "openai-codex": {
@@ -113,7 +107,7 @@
     }
   },
   "alwaysThinkingEnabled": true,
-  "effortLevel": "xhigh",
+  "effortLevel": "high",
   "autoUpdatesChannel": "latest",
   "tui": "fullscreen",
   "skipWorkflowUsageWarning": true,

@@ -39,7 +39,14 @@ ln -sf "$PWD"/ghostty-config ~/.config/ghostty/config
 mkdir -p ~/.claude
 ln -sfn "$PWD"/PROFILE_CLAUDE.md ~/.claude/CLAUDE.md
 ln -sfn "$PWD"/claude/skills ~/.claude/skills
-ln -sfn "$PWD"/claude/settings.json ~/.claude/settings.json
+# Claude Code rewrites settings.json atomically (rename-over), which destroys
+# symlinks — so seed it by copy on fresh machines and leave the live file alone.
+if [ ! -f "$HOME/.claude/settings.json" ] || [ -L "$HOME/.claude/settings.json" ]; then
+  rm -f "$HOME/.claude/settings.json"
+  cp "$PWD"/claude/settings.json ~/.claude/settings.json
+else
+  echo "~/.claude/settings.json already exists, not overwriting (template: claude/settings.json)"
+fi
 ln -sfn "$PWD"/claude/statusline.sh ~/.claude/statusline.sh
 
 # Codex
