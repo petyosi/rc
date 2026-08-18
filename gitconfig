@@ -42,10 +42,11 @@
   sync = "!git pull && git push"
   sub = submodule update --init
   pl = pull --rebase
-  cleanup-merged-branches = "!LC_ALL=en_GB git branch -vv | grep 'origin/.*: gone]' | awk '{print $1}' | xargs git branch -D && git prune"
+	cleanup-merged-branches = "!f() { git remote prune origin || return; git for-each-ref --format=\"%(refname:short) %(upstream)\" refs/heads | while read -r branch upstream; do test -n \"$upstream\" || continue; git show-ref --verify --quiet \"$upstream\" && continue; worktree=$(git for-each-ref --format=\"%(worktreepath)\" \"refs/heads/$branch\"); test -z \"$worktree\" || continue; git branch -D -- \"$branch\"; done; git worktree prune; }; f"
   wta = "!f() { git worktree add -b $1 ../$1; }; f"
   wtr = "!f() { git worktree remove ../$1; }; f"
   wtl = "!f() { git worktree list; }; f"
+	sweep-gone = !git-sweep-gone
 
 [branch]
   autosetuprebase = always
@@ -93,3 +94,5 @@
 
 [commit]
   gpgsign = true
+[fetch]
+	prune = true
