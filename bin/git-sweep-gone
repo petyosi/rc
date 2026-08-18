@@ -1,0 +1,259 @@
+#!/usr/bin/env bash
+
+set -u
+
+usage() {
+  cat <<'EOF'
+Usage: git sweep-gone [--apply]
+
+Remove clean worktrees and local branches whose upstream is gone and whose
+exact tip belongs to a merged GitHub pull request. The default is a dry run.
+
+Options:
+  --apply  Perform the reported removals.
+  -h  Show this help.
+EOF
+}
+
+apply=false
+case "${1:-}" in
+  "") ;;
+  --apply) apply=true ;;
+  -h|--help)
+    usage
+    exit 0
+    ;;
+  *)
+    usage >&2
+    exit 2
+    ;;
+esac
+
+if [ "$#" -gt 1 ]; then
+  usage >&2
+  exit 2
+fi
+
+repo_root=$(git rev-parse --show-toplevel 2>/dev/null) || {
+  echo "error: not inside a Git worktree" >&2
+  exit 1
+}
+common_dir=$(git rev-parse --path-format=absolute --git-common-dir)
+
+if ! command -v gh >/dev/null 2>&1; then
+  echo "error: gh is required to verify merged pull requests" >&2
+  exit 1
+fi
+
+origin_url=$(git remote get-url origin 2>/dev/null) || {
+  echo "error: cannot read the origin remote" >&2
+  exit 1
+}
+case "$origin_url" in
+  git@github.com:*) repo_slug=${origin_url#git@github.com:} ;;
+  https://github.com/*) repo_slug=${origin_url#https://github.com/} ;;
+  ssh://git@github.com/*) repo_slug=${origin_url#ssh://git@github.com/} ;;
+  git://github.com/*) repo_slug=${origin_url#git://github.com/} ;;
+  *)
+    echo "error: origin is not a supported GitHub remote: $origin_url" >&2
+    exit 1
+    ;;
+esac
+repo_slug=${repo_slug%.git}
+case "$repo_slug" in
+  */*) ;;
+  *)
+    echo "error: cannot derive owner/repository from origin: $origin_url" >&2
+    exit 1
+    ;;
+esac
+
+echo "Repository: $repo_slug"
+if [ "$apply" = true ]; then
+  echo "Mode: apply"
+else
+  echo "Mode: dry-run"
+fi
+
+echo "Fetching and pruning remotes..."
+git fetch --all --prune || {
+  echo "error: fetch failed; nothing was removed" >&2
+  exit 1
+}
+
+worktree_for_branch() {
+  target_branch=$1
+  current_path=
+  while IFS= read -r line; do
+    case "$line" in
+      "worktree "*) current_path=${line#worktree } ;;
+      "branch refs/heads/"*)
+        current_branch=${line#branch refs/heads/}
+        if [ "$current_branch" = "$target_branch" ]; then
+          printf '%s\n' "$current_path"
+          return 0
+        fi
+        ;;
+    esac
+  done < <(git worktree list --porcelain)
+  return 1
+}
+
+merged_pr_for_tip() {
+  branch=$1
+  oid=$2
+  attempt=1
+  while [ "$attempt" -le 3 ]; do
+    if result=$(gh pr list \
+      --repo "$repo_slug" \
+      --state merged \
+      --head "$branch" \
+      --limit 100 \
+      --json number,headRefOid,url \
+      --jq ".[] | select(.headRefOid == \"$oid\") | [.number, .url] | @tsv" \
+      2>/dev/null); then
+      printf '%s\n' "$result"
+      return 0
+    fi
+    attempt=$((attempt + 1))
+  done
+  return 1
+}
+
+echo
+echo "Gone-upstream branches:"
+branch_candidates=0
+while IFS=$'\t' read -r branch oid; do
+  [ -n "$branch" ] || continue
+  branch_candidates=$((branch_candidates + 1))
+
+  if ! pr_matches=$(merged_pr_for_tip "$branch" "$oid"); then
+    echo "SKIP branch $branch: GitHub PR lookup failed"
+    continue
+  fi
+  pr=$(printf '%s\n' "$pr_matches" | sed -n '1p')
+  if [ -z "$pr" ]; then
+    echo "SKIP branch $branch: tip does not exactly match a merged PR head"
+    continue
+  fi
+
+  pr_number=${pr%%$'\t'*}
+  pr_url=${pr#*$'\t'}
+  wt=$(worktree_for_branch "$branch" || true)
+
+  if [ -n "$wt" ]; then
+    if [ "$wt" = "$repo_root" ]; then
+      echo "SKIP branch $branch: checked out in the current worktree"
+      continue
+    fi
+    if [ -n "$(git -C "$wt" status --porcelain)" ]; then
+      echo "SKIP branch $branch: worktree is dirty: $wt"
+      continue
+    fi
+
+    if [ "$apply" = true ]; then
+      if git worktree remove "$wt"; then
+        echo "REMOVE worktree $wt: merged PR #$pr_number"
+      else
+        echo "SKIP branch $branch: worktree removal failed: $wt"
+        continue
+      fi
+    else
+      echo "WOULD REMOVE worktree $wt: merged PR #$pr_number"
+    fi
+  fi
+
+  if [ "$apply" = true ]; then
+    if git branch -D -- "$branch" >/dev/null; then
+      echo "REMOVE branch $branch: $pr_url"
+    else
+      echo "ERROR branch $branch: deletion failed" >&2
+    fi
+  else
+    echo "WOULD REMOVE branch $branch: $pr_url"
+  fi
+done < <(
+  git for-each-ref \
+    --sort=refname \
+    --format='%(refname:short)%09%(upstream:track)%09%(objectname)' \
+    refs/heads |
+    awk -F '\t' '$2 == "[gone]" { print $1 "\t" $3 }'
+)
+
+if [ "$branch_candidates" -eq 0 ]; then
+  echo "None"
+fi
+
+echo
+echo "Detached worktrees:"
+detached_candidates=0
+current_path=
+current_head=
+current_detached=false
+
+inspect_detached_worktree() {
+  wt=$1
+  head=$2
+  [ -n "$wt" ] || return 0
+  [ "$current_detached" = true ] || return 0
+
+  detached_candidates=$((detached_candidates + 1))
+  if [ "$wt" = "$repo_root" ]; then
+    echo "SKIP detached worktree $wt: current worktree"
+    return 0
+  fi
+  if [ -n "$(git -C "$wt" status --porcelain)" ]; then
+    echo "SKIP detached worktree $wt: dirty"
+    return 0
+  fi
+
+  containing_ref=$(git for-each-ref \
+    --contains="$head" \
+    --format='%(refname)' \
+    refs/heads refs/remotes | head -n 1)
+  if [ -z "$containing_ref" ]; then
+    echo "SKIP detached worktree $wt: $head is not reachable from a durable ref"
+    return 0
+  fi
+
+  if [ "$apply" = true ]; then
+    if git worktree remove "$wt"; then
+      echo "REMOVE detached worktree $wt: retained by $containing_ref"
+    else
+      echo "ERROR detached worktree $wt: removal failed" >&2
+    fi
+  else
+    echo "WOULD REMOVE detached worktree $wt: retained by $containing_ref"
+  fi
+}
+
+while IFS= read -r line; do
+  if [ -z "$line" ]; then
+    inspect_detached_worktree "$current_path" "$current_head"
+    current_path=
+    current_head=
+    current_detached=false
+    continue
+  fi
+
+  case "$line" in
+    "worktree "*) current_path=${line#worktree } ;;
+    "HEAD "*) current_head=${line#HEAD } ;;
+    detached) current_detached=true ;;
+  esac
+done < <(git worktree list --porcelain; printf '\n')
+
+if [ "$detached_candidates" -eq 0 ]; then
+  echo "None"
+fi
+
+if [ "$apply" = true ]; then
+  git --git-dir="$common_dir" worktree prune
+else
+  git --git-dir="$common_dir" worktree prune --dry-run
+fi
+
+if [ "$apply" = false ]; then
+  echo
+  echo "Dry run complete. Run 'git sweep-gone --apply' to perform these removals."
+fi

@@ -31,6 +31,13 @@ tic -x ./tmux.terminfo
 # Github
 ln -sf "$PWD"/gitconfig ~/.gitconfig
 
+# Executable scripts (gitconfig aliases depend on these)
+mkdir -p ~/.local/bin
+for script_path in "$PWD"/bin/*; do
+  [ -f "$script_path" ] || continue
+  ln -sf "$script_path" "$HOME/.local/bin/${script_path##*/}"
+done
+
 # Ghostty
 mkdir -p ~/.config/ghostty
 ln -sf "$PWD"/ghostty-config ~/.config/ghostty/config
