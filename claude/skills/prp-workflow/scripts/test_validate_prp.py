@@ -7,126 +7,100 @@ from pathlib import Path
 from validate_prp import validate
 
 
-def prp_text(repo: Path, *, exercise: str, task_detail: str = "Implement the behavior.") -> str:
+def lean_prp(repo: Path) -> str:
     return f"""---
 repo: {repo}
+status: planned
 ---
+
+# Ship behavior
 
 ## Goal
 
 Ship one bounded behavior.
 
-## Success Criteria
+## Scope
 
-- [ ] The public behavior works.
+- In: the supported command
+- Out: unrelated commands
 
-## Assurance
+## Acceptance
 
-- **Profile**: Standard
-- **Rationale**: One reversible public boundary with an established validation path.
+### CX-1: The result is visible
 
-## Consumer Contract
+- Given: a configured client
+- When: it invokes the command
+- Then: the result is visible
+- Evidence: run the focused test
 
-### Acceptance Scenarios
+## Plan
 
-| ID | Given | When | Then | Exact exercise and prerequisites | Required evidence |
-|---|---|---|---|---|---|
-| `CX-1` | A configured client | It invokes the command | The result is visible | {exercise} | DIRECT REQUIRED |
-
-## Execution Contract
-
-- **Planned at commit**: `abc123`
-- **Planning baseline**: clean
-
-## Implementation Blueprint
-
-```yaml
-Task 1: Implement behavior
-  MODIFY src/example.py:
-    - {task_detail}
-  ENABLES: CX-1
-  VERIFY:
-    - COMMAND: pytest tests/test_example.py
-    - EXPECTED: The focused test passes.
-```
+1. Implement the behavior in `src/example.py`.
+   - Covers: `CX-1`
 
 ## Validation
 
-```bash
-pytest tests/test_example.py
-```
+- Focused: `pytest tests/test_example.py`
+- Acceptance: `CX-1` through the command
 """
 
 
 class ValidatePrpTests(unittest.TestCase):
-    def run_validation(self, text: str, workspace: Path):
+    def validate_text(self, text: str, workspace: Path):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "plan.md"
-            path.write_text(text)
-            return validate(
-                path,
-                target_standard_lines=300,
-                target_standard_bytes=24 * 1024,
-                max_standard_lines=400,
-                max_standard_bytes=32 * 1024,
-                allow_legacy=False,
-                workspace=workspace,
-            )
+            path.write_text(text, encoding="utf-8")
+            return validate(path, workspace)
 
-    def test_accepts_matching_workspace_and_executable_evidence(self) -> None:
+    def test_accepts_lean_prp(self) -> None:
         workspace = Path.cwd().resolve()
-        report = self.run_validation(
-            prp_text(
-                workspace,
-                exercise="Run `pytest tests/test_example.py` from the configured workspace.",
-            ),
-            workspace,
-        )
+        report = self.validate_text(lean_prp(workspace), workspace)
 
         self.assertEqual(report.errors, [])
         self.assertEqual(report.warnings, [])
 
-    def test_rejects_stale_workspace_paths(self) -> None:
+    def test_requires_acceptance(self) -> None:
         workspace = Path.cwd().resolve()
-        stale = workspace.parent / "stale-checkout"
-        text = prp_text(
-            stale,
-            exercise="Run `pytest tests/test_example.py` from the configured workspace.",
-        ).replace(
-            "pytest tests/test_example.py\n```",
-            f"cd {stale}\npytest tests/test_example.py\n```",
-        )
-
-        report = self.run_validation(text, workspace)
-
-        self.assertTrue(any("frontmatter repo" in error for error in report.errors))
-        self.assertTrue(any("outside workspace" in error for error in report.errors))
-
-    def test_requires_repo_frontmatter_for_workspace_validation(self) -> None:
-        workspace = Path.cwd().resolve()
-        text = prp_text(
-            workspace,
-            exercise="Run `pytest tests/test_example.py` from the configured workspace.",
-        ).replace(f"repo: {workspace}\n", "")
-
-        report = self.run_validation(text, workspace)
-
-        self.assertTrue(any("requires `repo` frontmatter" in error for error in report.errors))
-
-    def test_warns_about_hedged_consumer_evidence(self) -> None:
-        workspace = Path.cwd().resolve()
-        report = self.run_validation(
-            prp_text(
-                workspace,
-                exercise="Run the browser fixture where practical and inspect the rendered result.",
-                task_detail="Seed compatibility fixtures where practical.",
-            ),
+        report = self.validate_text(
+            lean_prp(workspace).replace("## Acceptance", "## Behavior"),
             workspace,
         )
+
+        self.assertIn("missing `## Acceptance`", report.errors)
+
+    def test_rejects_uncovered_scenario(self) -> None:
+        workspace = Path.cwd().resolve()
+        report = self.validate_text(
+            lean_prp(workspace).replace("   - Covers: `CX-1`\n", ""),
+            workspace,
+        )
+
+        self.assertTrue(any("not referenced" in error for error in report.errors))
+
+    def test_rejects_undefined_plan_reference(self) -> None:
+        workspace = Path.cwd().resolve()
+        report = self.validate_text(
+            lean_prp(workspace).replace("`CX-1`\n\n## Validation", "`CX-1`, `CX-2`\n\n## Validation"),
+            workspace,
+        )
+
+        self.assertTrue(any("undefined scenarios" in error for error in report.errors))
+
+    def test_rejects_workspace_mismatch(self) -> None:
+        workspace = Path.cwd().resolve()
+        report = self.validate_text(lean_prp(workspace.parent / "other"), workspace)
+
+        self.assertTrue(any("does not match workspace" in error for error in report.errors))
+
+    def test_accepts_legacy_format(self) -> None:
+        workspace = Path.cwd().resolve()
+        text = lean_prp(workspace).replace("## Acceptance", "## Consumer Contract").replace(
+            "## Plan", "## Implementation Blueprint"
+        )
+        report = self.validate_text(text, workspace)
 
         self.assertEqual(report.errors, [])
-        self.assertTrue(any("CX-1 exact exercise" in warning for warning in report.warnings))
-        self.assertTrue(any("Task 1" in warning for warning in report.warnings))
+        self.assertEqual(report.warnings, ["legacy PRP format accepted; conversion is optional"])
 
 
 if __name__ == "__main__":
