@@ -42,6 +42,10 @@ ln -sfn "$PWD"/claude/skills ~/.claude/skills
 ln -sfn "$PWD"/claude/settings.json ~/.claude/settings.json
 ln -sfn "$PWD"/claude/statusline.sh ~/.claude/statusline.sh
 
+# Codex
+mkdir -p ~/.codex
+ln -sfn "$PWD"/PROFILE_CODEX.md ~/.codex/AGENTS.md
+
 # Agent skills
 mkdir -p ~/.agents/skills
 for skill_path in "$PWD"/claude/skills/*; do
