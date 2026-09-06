@@ -39,7 +39,7 @@ A review should identify concrete contract gaps or incorrect assumptions. Do not
 5. Exercise the `CX-N` scenarios through their stated evidence surfaces before declaring the change complete.
 6. Record only material deviations, unresolved risks, and final evidence. Do not rerun planning research or add process notes that do not change the contract.
 
-If implementation exposes a new product decision, public-contract change, architectural shift, destructive migration, or material scope expansion, stop and get direction.
+If implementation exposes a material decision that repository evidence and existing user instructions cannot resolve, ask for direction on that decision. Continue authorized work that does not depend on the answer. Destructive actions and scope expansions still require authorization.
 
 ## Verify
 
@@ -47,9 +47,11 @@ Verification is required when the user asks for it. Use an independent read-only
 
 Verify in this order:
 
-1. Exercise each `CX-N` scenario through the supported consumer boundary.
+1. Assess each `CX-N` scenario through the supported consumer boundary. Reuse recorded execution evidence when it still applies to the current implementation and environment. Exercise scenarios again when evidence is missing or stale, a failure or unresolved concern warrants it, or the requested independent review requires fresh execution.
 2. Check that the implementation matches the PRP scope and plan.
 3. Review the diff and affected tests for engineering defects.
+
+When reusing evidence, identify it as reused, name who produced it, and cite the supporting output or artifact in the Verification evidence entry. An independent verifier must assess that evidence's reliability and applicability rather than accept a reported pass alone. Grade the evidence by the boundary exercised, not by who ran the check; reuse alone does not make direct evidence a proxy.
 
 Grade acceptance evidence as:
 
