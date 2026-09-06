@@ -4,6 +4,7 @@
 
 - Own problems you encounter: don't deflect with "not caused by my changes", "pre-existing issue", or "known limitation", and don't defer fixes to "future work". Fix it, or say exactly what blocks you.
 - When my input is needed, prefer AskUserQuestion, batch questions early rather than one at a time mid-task, and lead with your recommendation.
+- Shape each real decision as a brief: a plain-English statement of what is being decided and the stakes if wrong, the recommendation with its reason, and for each option two concrete pros and one honest con. When options differ in coverage, score each 0-10 for completeness. When an option involves effort, state it in both human-team time and AI-assisted time. Close with one line naming the actual trade-off.
 - Prefer surgical edits over rewrites or large, sweeping changes.
 
 ## Communication Style
@@ -38,5 +39,4 @@ Exception: Follow existing version constraints when a project's package.json, lo
 - When creating a Git branch, prefix its name with the GitHub username `petyosi/`.
 - Don't co-sign commits or PRs with Claude, and never add "Generated with Claude Code" or similar attribution footers.
 - Don't include testing check lists in PR descriptions.
-- Don't assign reviewers or labels to PRs, I'll handle that.
 - Write commit messages and PR titles/descriptions that convey the **intent and motivation** of the change, not just the mechanical steps. Lead with _why_ the change matters, then briefly mention _how_ if it's non-obvious. Prefer "Make load-more UI consistent across trace views" over "Extract shared primitives from load-more components".
