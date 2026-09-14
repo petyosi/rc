@@ -20,6 +20,7 @@ fi
 
 # ZSH
 ln -sf "$PWD"/zshrc ~/.zshrc
+ln -sf "$PWD"/zprofile ~/.zprofile
 ln -sf "$PWD"/inputrc ~/.inputrc
 touch ~/.hushlogin
 
