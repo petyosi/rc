@@ -6,8 +6,11 @@ usage() {
   cat <<'EOF'
 Usage: git sweep-gone [--apply]
 
-Remove clean worktrees and local branches whose upstream is gone and whose
-exact tip belongs to a merged GitHub pull request. The default is a dry run.
+Remove clean worktrees and local branches fully contained in origin/main, or
+whose tip is contained in a GitHub PR head merged into origin/main.
+Find PRs by branch name and commit, including older local tips.
+Keep main, master, the origin default branch, and the current worktree.
+The default is a dry run.
 
 Options:
   --apply  Perform the reported removals.
@@ -100,45 +103,83 @@ worktree_for_branch() {
 }
 
 merged_pr_for_tip() {
-  branch=$1
-  oid=$2
-  attempt=1
+  local branch=$1 oid=$2 candidates associated number head merge url
+  local attempt=1
   while [ "$attempt" -le 3 ]; do
-    if result=$(gh pr list \
-      --repo "$repo_slug" \
-      --state merged \
-      --head "$branch" \
-      --limit 100 \
-      --json number,headRefOid,url \
-      --jq ".[] | select(.headRefOid == \"$oid\") | [.number, .url] | @tsv" \
+    if candidates=$(gh pr list \
+      --repo "$repo_slug" --state merged --head "$branch" --limit 100 \
+      --json number,headRefOid,mergeCommit,url \
+      --jq '.[] | select(.mergeCommit.oid != null) | [.number, .headRefOid, .mergeCommit.oid, .url] | @tsv' \
       2>/dev/null); then
-      printf '%s\n' "$result"
-      return 0
+      break
     fi
     attempt=$((attempt + 1))
   done
-  return 1
+  [ "$attempt" -le 3 ] || return 1
+
+  # Commit associations also find work published under a different branch name.
+  if associated=$(gh api --paginate "repos/$repo_slug/commits/$oid/pulls" \
+    --jq '.[] | select(.merged_at != null and .merge_commit_sha != null) | [.number, .head.sha, .merge_commit_sha, .html_url] | @tsv' \
+    2>/dev/null); then
+    candidates=$(printf '%s\n%s\n' "$candidates" "$associated" | sort -u)
+  elif [ -z "$candidates" ]; then
+    return 1
+  fi
+
+  while IFS=$'\t' read -r number head merge url; do
+    [ -n "$number" ] || continue
+    # A PR merged into an unmerged stack layer is not yet retained by main.
+    [ -n "$main_oid" ] || continue
+    git merge-base --is-ancestor "$merge" "$main_oid" 2>/dev/null || continue
+    if ! git cat-file -e "$head^{commit}" 2>/dev/null; then
+      git fetch --no-tags origin "refs/pull/$number/head" >&2 || continue
+      git cat-file -e "$head^{commit}" 2>/dev/null || continue
+    fi
+    if git merge-base --is-ancestor "$oid" "$head"; then
+      printf '%s\t%s\n' "$number" "$url"
+      return 0
+    fi
+  done <<< "$candidates"
+  return 0
 }
 
 echo
-echo "Gone-upstream branches:"
+echo "Branch cleanup candidates:"
+main_oid=$(git rev-parse --verify refs/remotes/origin/main^{commit} 2>/dev/null || true)
+default_branch=$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null || true)
+default_branch=${default_branch#origin/}
+if [ -z "$default_branch" ]; then
+  default_branch=$(gh repo view "$repo_slug" --json defaultBranchRef --jq '.defaultBranchRef.name' 2>/dev/null || true)
+fi
+if [ -z "$default_branch" ] || [ "$default_branch" = null ]; then
+  echo "error: cannot identify the origin default branch; nothing was removed" >&2
+  exit 1
+fi
 branch_candidates=0
 while IFS=$'\t' read -r branch oid; do
   [ -n "$branch" ] || continue
-  branch_candidates=$((branch_candidates + 1))
+  case "$branch" in
+    main|master) continue ;;
+  esac
+  [ "$branch" != "$default_branch" ] || continue
 
-  if ! pr_matches=$(merged_pr_for_tip "$branch" "$oid"); then
-    echo "SKIP branch $branch: GitHub PR lookup failed"
-    continue
-  fi
-  pr=$(printf '%s\n' "$pr_matches" | sed -n '1p')
-  if [ -z "$pr" ]; then
-    echo "SKIP branch $branch: tip does not exactly match a merged PR head"
-    continue
+  if [ -n "$main_oid" ] && git merge-base --is-ancestor "$oid" "$main_oid"; then
+    branch_candidates=$((branch_candidates + 1))
+    reason="fully contained in origin/main"
+  else
+    branch_candidates=$((branch_candidates + 1))
+    if ! pr_matches=$(merged_pr_for_tip "$branch" "$oid"); then
+      echo "SKIP branch $branch: could not verify a merged PR for this tip"
+      continue
+    fi
+    pr=$(printf '%s\n' "$pr_matches" | sed -n '1p')
+    if [ -z "$pr" ]; then
+      echo "SKIP branch $branch: tip is not contained in a verified merged PR head"
+      continue
+    fi
+    reason="contained in merged PR ${pr#*$'\t'}"
   fi
 
-  pr_number=${pr%%$'\t'*}
-  pr_url=${pr#*$'\t'}
   wt=$(worktree_for_branch "$branch" || true)
 
   if [ -n "$wt" ]; then
@@ -146,38 +187,41 @@ while IFS=$'\t' read -r branch oid; do
       echo "SKIP branch $branch: checked out in the current worktree"
       continue
     fi
-    if [ -n "$(git -C "$wt" status --porcelain)" ]; then
+    if ! wt_status=$(git -C "$wt" status --porcelain); then
+      echo "SKIP branch $branch: cannot inspect worktree: $wt"
+      continue
+    fi
+    if [ -n "$wt_status" ]; then
       echo "SKIP branch $branch: worktree is dirty: $wt"
       continue
     fi
 
     if [ "$apply" = true ]; then
       if git worktree remove "$wt"; then
-        echo "REMOVE worktree $wt: merged PR #$pr_number"
+        echo "REMOVE worktree $wt: $reason"
       else
         echo "SKIP branch $branch: worktree removal failed: $wt"
         continue
       fi
     else
-      echo "WOULD REMOVE worktree $wt: merged PR #$pr_number"
+      echo "WOULD REMOVE worktree $wt: $reason"
     fi
   fi
 
   if [ "$apply" = true ]; then
     if git branch -D -- "$branch" >/dev/null; then
-      echo "REMOVE branch $branch: $pr_url"
+      echo "REMOVE branch $branch: $reason"
     else
       echo "ERROR branch $branch: deletion failed" >&2
     fi
   else
-    echo "WOULD REMOVE branch $branch: $pr_url"
+    echo "WOULD REMOVE branch $branch: $reason"
   fi
 done < <(
   git for-each-ref \
     --sort=refname \
-    --format='%(refname:short)%09%(upstream:track)%09%(objectname)' \
-    refs/heads |
-    awk -F '\t' '$2 == "[gone]" { print $1 "\t" $3 }'
+    --format='%(refname:short)%09%(objectname)' \
+    refs/heads
 )
 
 if [ "$branch_candidates" -eq 0 ]; then
@@ -202,7 +246,11 @@ inspect_detached_worktree() {
     echo "SKIP detached worktree $wt: current worktree"
     return 0
   fi
-  if [ -n "$(git -C "$wt" status --porcelain)" ]; then
+  if ! wt_status=$(git -C "$wt" status --porcelain); then
+    echo "SKIP detached worktree $wt: cannot inspect worktree"
+    return 0
+  fi
+  if [ -n "$wt_status" ]; then
     echo "SKIP detached worktree $wt: dirty"
     return 0
   fi
