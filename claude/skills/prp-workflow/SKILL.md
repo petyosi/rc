@@ -15,6 +15,8 @@ A PRP is a concise implementation contract. It records the outcome, scope, obser
 
 Follow repository naming conventions. When none exist, use `plans/<date>-<slug>.md` for a PRP and `plans/roadmaps/<date>-<slug>.md` for a roadmap.
 
+PRP and roadmap artifacts are local working documents and MUST stay out of source control: never `git add` or commit them, keep them out of PR diffs and descriptions, and remove one from the branch if it slips in. They live as untracked files in the checkout for the duration of the work.
+
 Read [artifact-format.md](references/artifact-format.md) when creating or materially restructuring a PRP or roadmap. Existing valid artifacts do not need conversion before execution.
 
 ## Create or Review
