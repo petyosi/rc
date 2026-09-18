@@ -20,9 +20,26 @@ if command -v pnpm &>/dev/null; then
   echo
 fi
 
+if command -v npx &>/dev/null; then
+  echo "--- Playwright browsers ---"
+  echo "Close Playwright browsers and MCP sessions first."
+  if read -r -p "Uninstall all downloaded Playwright browsers? [y/N] " reply && [[ "$reply" =~ ^[Yy]$ ]]; then
+    npx --yes playwright@1.63.0 uninstall --all
+  fi
+  echo
+fi
+
 if command -v npm &>/dev/null; then
-  echo "--- npm cache ---"
+  echo "--- npm and npx caches ---"
   npm cache clean --force
+  npm cache npx rm --force
+  echo
+fi
+
+if command -v fnm &>/dev/null; then
+  echo "--- Installed fnm Node versions ---"
+  fnm list
+  echo "Remove unwanted versions manually with: fnm uninstall <version>"
   echo
 fi
 
