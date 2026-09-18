@@ -46,7 +46,6 @@ ln -sf "$PWD"/ghostty-config ~/.config/ghostty/config
 # Claude
 mkdir -p ~/.claude
 ln -sfn "$PWD"/PROFILE_CLAUDE.md ~/.claude/CLAUDE.md
-ln -sfn "$PWD"/claude/skills ~/.claude/skills
 # Claude Code rewrites settings.json atomically (rename-over), which destroys
 # symlinks — so seed it by copy on fresh machines and leave the live file alone.
 if [ ! -f "$HOME/.claude/settings.json" ] || [ -L "$HOME/.claude/settings.json" ]; then
@@ -62,23 +61,7 @@ mkdir -p ~/.codex
 ln -sfn "$PWD"/PROFILE_CODEX.md ~/.codex/AGENTS.md
 
 # Agent skills
-mkdir -p ~/.agents/skills
-for skill_path in "$PWD"/claude/skills/*; do
-  [ -e "$skill_path" ] || continue
-  [ -L "$skill_path" ] && continue
-  [ -d "$skill_path" ] || continue
-
-  skill_name=${skill_path##*/}
-  target="$HOME/.agents/skills/$skill_name"
-
-  # Don't overwrite existing managed skill directories in ~/.agents/skills.
-  if [ -e "$target" ] && [ ! -L "$target" ]; then
-    echo "Skipping existing agent skill directory: $target"
-    continue
-  fi
-
-  ln -sfn "$skill_path" "$target"
-done
+python3 "$PWD/scripts/install-skills.py" || exit 1
 
 # Markdownlint
 ln -sfn "$PWD"/markdownlint.yaml ~/.markdownlint.yaml

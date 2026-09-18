@@ -1,0 +1,4 @@
+interface:
+  display_name: "CodeSandbox Demo"
+  short_description: "Create verified public CodeSandbox demos"
+  default_prompt: "Use $codesandbox-demo to create and verify a public CodeSandbox example."

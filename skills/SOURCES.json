@@ -1,0 +1,144 @@
+{
+  "importedOn": "2026-09-18",
+  "skills": {
+    "find-skills": {
+      "source": "https://github.com/vercel-labs/skills.git",
+      "path": "skills/find-skills/SKILL.md",
+      "importedFolderHash": "c2f31172b6f256272305a5e6e7228b258446899f"
+    },
+    "logfire-query": {
+      "source": "https://github.com/pydantic/skills.git",
+      "path": "skills/logfire-query/SKILL.md",
+      "importedFolderHash": "56de0a5f2c0cc1159b1d73d54b578d9ea26d8af6"
+    },
+    "ux-heuristics": {
+      "source": "https://github.com/wondelai/skills.git",
+      "path": "ux-heuristics/SKILL.md",
+      "importedFolderHash": "34ff01b4ba04bf3e25abbaad5482ad46978c1447"
+    },
+    "design-everyday-things": {
+      "source": "https://github.com/wondelai/skills.git",
+      "path": "design-everyday-things/SKILL.md",
+      "importedFolderHash": "d57a6443e73786fb35b4d169e964773c0686e0d4"
+    },
+    "open-source-strategy": {
+      "source": "https://github.com/kostja94/marketing-skills.git",
+      "path": "skills/strategies/commercial/open-source/SKILL.md",
+      "importedFolderHash": "3ec800a5a157b9fb9214b65532e8a60c19f1fe47"
+    },
+    "cold-start-problem": {
+      "source": "https://github.com/wondelai/skills.git",
+      "path": "cold-start-problem/SKILL.md",
+      "importedFolderHash": "6c082a9ad955360888fc641f07ed775beb5ee24d"
+    },
+    "crossing-the-chasm": {
+      "source": "https://github.com/wondelai/skills.git",
+      "path": "crossing-the-chasm/SKILL.md",
+      "importedFolderHash": "4c7bad93edc1dbab70fb89f05c0ca9a165a8690f"
+    },
+    "good-strategy-bad-strategy": {
+      "source": "https://github.com/wondelai/skills.git",
+      "path": "good-strategy-bad-strategy/SKILL.md",
+      "importedFolderHash": "b7f17b17662f65cb1677b221724f4f1faa627522"
+    },
+    "jobs-to-be-done": {
+      "source": "https://github.com/wondelai/skills.git",
+      "path": "jobs-to-be-done/SKILL.md",
+      "importedFolderHash": "bb5f5b44a82e3f80d180573908d9c34879b4eca1"
+    },
+    "mom-test": {
+      "source": "https://github.com/wondelai/skills.git",
+      "path": "mom-test/SKILL.md",
+      "importedFolderHash": "99fc8b988a466f1fcf5f7d3dc42d4aac97b11732"
+    },
+    "monetizing-innovation": {
+      "source": "https://github.com/wondelai/skills.git",
+      "path": "monetizing-innovation/SKILL.md",
+      "importedFolderHash": "44c9b77db5b0c8df8806cacefd5aac489b13e017"
+    },
+    "obviously-awesome": {
+      "source": "https://github.com/wondelai/skills.git",
+      "path": "obviously-awesome/SKILL.md",
+      "importedFolderHash": "110e54d4d60c38056a470190b8af490866616a37"
+    },
+    "thinking-model-router": {
+      "source": "https://github.com/tjboudreaux/cc-thinking-skills.git",
+      "path": "skills/thinking-model-router/SKILL.md",
+      "importedFolderHash": "a6a2a73cb7896ca1c670031f32774734eb7d6462"
+    },
+    "thinking-opportunity-cost": {
+      "source": "https://github.com/tjboudreaux/cc-thinking-skills.git",
+      "path": "skills/thinking-opportunity-cost/SKILL.md",
+      "importedFolderHash": "d1fbb06f52b0bfd901418f65d18e2ce3e8277e7f"
+    },
+    "thinking-pre-mortem": {
+      "source": "https://github.com/tjboudreaux/cc-thinking-skills.git",
+      "path": "skills/thinking-pre-mortem/SKILL.md",
+      "importedFolderHash": "c0cc1ef4a6cd71d97ea11242fb9c55640748e6c8"
+    },
+    "thinking-reversibility": {
+      "source": "https://github.com/tjboudreaux/cc-thinking-skills.git",
+      "path": "skills/thinking-reversibility/SKILL.md",
+      "importedFolderHash": "af77d91494f69984b9337908ec442347bbf4826f"
+    },
+    "thinking-second-order": {
+      "source": "https://github.com/tjboudreaux/cc-thinking-skills.git",
+      "path": "skills/thinking-second-order/SKILL.md",
+      "importedFolderHash": "82cc0d26cf65b833ea38b7332ccc3243ad7978f6"
+    },
+    "thinking-steel-manning": {
+      "source": "https://github.com/tjboudreaux/cc-thinking-skills.git",
+      "path": "skills/thinking-steel-manning/SKILL.md",
+      "importedFolderHash": "dc002464f14abd38643e2f5d5927905a137152f5"
+    },
+    "thinking-via-negativa": {
+      "source": "https://github.com/tjboudreaux/cc-thinking-skills.git",
+      "path": "skills/thinking-via-negativa/SKILL.md",
+      "importedFolderHash": "4ead55d3ac553da32864f9357e2b50bae2eb250c"
+    },
+    "assumption-audit": {
+      "source": "https://github.com/Natan-Mohart/24-strategy-skills-for-claude.git",
+      "path": "skills/assumption-audit/SKILL.md",
+      "importedFolderHash": "c5f84c8f20f5bcce3e6359acfa58b9e4f3e8c7b4"
+    },
+    "pricing-strategy": {
+      "source": "https://github.com/Natan-Mohart/24-strategy-skills-for-claude.git",
+      "path": "skills/pricing-strategy/SKILL.md",
+      "importedFolderHash": "e8f7baf411af07886998867c9f81642cd3cc8b37"
+    },
+    "strategic-options": {
+      "source": "https://github.com/Natan-Mohart/24-strategy-skills-for-claude.git",
+      "path": "skills/strategic-options/SKILL.md",
+      "importedFolderHash": "dd54d5492ae36d1ed1056ee2a41a00cbe0968269"
+    },
+    "war-gaming": {
+      "source": "https://github.com/Natan-Mohart/24-strategy-skills-for-claude.git",
+      "path": "skills/war-gaming/SKILL.md",
+      "importedFolderHash": "065676c8236e0eb049e77f73712fda08369b5e69"
+    },
+    "code-review": {
+      "source": "personal",
+      "note": "Imported from existing local skill; maintained in this repository."
+    },
+    "prp-workflow": {
+      "source": "personal",
+      "note": "Imported from existing local skill; maintained in this repository."
+    },
+    "codex-cold-review": {
+      "source": "personal",
+      "note": "Imported from existing local skill; maintained in this repository."
+    },
+    "claude-cold-review": {
+      "source": "personal",
+      "note": "Imported from existing local skill; maintained in this repository."
+    },
+    "codesandbox-demo": {
+      "source": "personal",
+      "note": "Imported from existing local skill; maintained in this repository."
+    },
+    "reactive-engine": {
+      "source": "personal",
+      "note": "Imported from existing local skill; maintained in this repository."
+    }
+  }
+}

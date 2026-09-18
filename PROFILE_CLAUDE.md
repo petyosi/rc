@@ -34,6 +34,13 @@ When installing new npm packages, use `npm info <package> version` or `pnpm info
 
 Exception: Follow existing version constraints when a project's package.json, lockfile, or peer dependencies require specific versions.
 
+## User Skills
+
+- Personal and selected third-party skills are versioned in the rc repository's `skills/` directory. Resolve an installed skill's symlink to find that checkout.
+- Add or update skills in the repo, retain upstream licenses and source records, and run `python3 scripts/install-skills.py` from the repo to install the links.
+- Do not install or update these live user skill directories with skills.sh. Use it only for discovery or downloads into a temporary directory.
+- Leave built-in, plugin, and Claude-synced skills managed by their application.
+
 ## Commit and PR Guidelines
 
 - When creating a Git branch, prefix its name with the GitHub username `petyosi/`.

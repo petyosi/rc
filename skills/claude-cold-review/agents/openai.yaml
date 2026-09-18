@@ -1,0 +1,4 @@
+interface:
+  display_name: "Cold Review"
+  short_description: "Independent review; Claude only on explicit request"
+  default_prompt: "Use $claude-cold-review to cold-review my current changes and summarize the findings."
