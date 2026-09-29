@@ -36,10 +36,12 @@ if command -v npm &>/dev/null; then
   echo
 fi
 
-if command -v fnm &>/dev/null; then
-  echo "--- Installed fnm Node versions ---"
-  fnm list
-  echo "Remove unwanted versions manually with: fnm uninstall <version>"
+if command -v vp &>/dev/null; then
+  echo "--- Vite+ Node versions ---"
+  vp env list
+  if read -r -p "Remove unused Vite+ runtimes and package manager caches? [y/N] " reply && [[ "$reply" =~ ^[Yy]$ ]]; then
+    vp env clean
+  fi
   echo
 fi
 
