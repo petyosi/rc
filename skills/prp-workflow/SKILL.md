@@ -19,6 +19,14 @@ PRP and roadmap artifacts are local working documents and MUST stay out of sourc
 
 Read [artifact-format.md](references/artifact-format.md) when creating or materially restructuring a PRP or roadmap. Existing valid artifacts do not need conversion before execution.
 
+## Critical Audit
+
+Check the artifact or implementation for faulty logic, hidden assumptions, contradictions, and relevant edge cases or failure modes, including gaps in the acceptance scenarios. For each suspected problem, require a concrete, plausible failure scenario. Trace its consequences by asking “then what?” until the user-visible, operational, or validation impact is clear.
+
+Report each confirmed defect with supporting evidence, its impact, and a recommended correction. Label material concerns that remain unverified and state what evidence would resolve them. Omit generic risks and harmless deviations. Prefer leaving correct artifacts and code unchanged.
+
+For a review-only request, do not edit the PRP or implementation. If there are confirmed problems, ask which corrections the user wants implemented.
+
 ## Create or Review
 
 1. Inspect the request and the relevant repository paths.
@@ -26,7 +34,8 @@ Read [artifact-format.md](references/artifact-format.md) when creating or materi
 3. For a bug, regression, or unexplained behavior, reproduce the symptom and establish the causal chain before planning the fix. Do not plan from the report's assumed cause, and do not present an unproven cause as an implementation task; an unresolved diagnosis is an Open Decision.
 4. Use a short empirical spike only when its result can materially change the plan. Before building, record the hypothesis, the observations that would disprove it, and the verdict boundaries; do not revise them after seeing results. A disproven spike is a successful spike. Keep spike code outside the implementation diff.
 5. Write the smallest artifact that makes implementation unambiguous. Cite load-bearing evidence, not the discovery trail.
-6. Run the validator:
+6. Apply the Critical Audit to the PRP or roadmap before handing it off.
+7. Run the validator:
 
    `python3 <skill-directory>/scripts/validate_prp.py --workspace <workspace> <prp>`
 
@@ -39,7 +48,8 @@ A review should identify concrete contract gaps or incorrect assumptions. Do not
 3. Implement normally using the repository's existing engineering instructions.
 4. Run focused validation while iterating, then one appropriate integrated gate after the implementation stabilizes.
 5. Exercise the `CX-N` scenarios through their stated evidence surfaces before declaring the change complete.
-6. Record only material deviations, unresolved risks, and final evidence. Do not rerun planning research or add process notes that do not change the contract.
+6. Apply the Critical Audit to the implementation and affected tests before declaring completion. Fix confirmed defects within the authorized scope and rerun the affected validation after corrections.
+7. Record only material deviations, unresolved risks, and final evidence. Do not rerun planning research or add process notes that do not change the contract.
 
 If implementation exposes a material decision that repository evidence and existing user instructions cannot resolve, ask for direction on that decision. Continue authorized work that does not depend on the answer. Destructive actions and scope expansions still require authorization.
 
@@ -51,7 +61,7 @@ Verify in this order:
 
 1. Assess each `CX-N` scenario through the supported consumer boundary. Reuse recorded execution evidence when it still applies to the current implementation and environment. Exercise scenarios again when evidence is missing or stale, a failure or unresolved concern warrants it, or the requested independent review requires fresh execution.
 2. Check that the implementation matches the PRP scope and plan.
-3. Review the diff and affected tests for engineering defects.
+3. Apply the Critical Audit to the diff and affected tests for engineering defects and acceptance gaps.
 
 When reusing evidence, identify it as reused, name who produced it, and cite the supporting output or artifact in the Verification evidence entry. An independent verifier must assess that evidence's reliability and applicability rather than accept a reported pass alone. Grade the evidence by the boundary exercised, not by who ran the check; reuse alone does not make direct evidence a proxy.
 
