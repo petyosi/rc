@@ -33,7 +33,10 @@ def install(repo: Path, user_home: Path, dry_run: bool = False) -> None:
         directory = user_home / relative
         if directory.is_symlink():
             print(f"MATERIALIZE {directory}")
-            if not dry_run:
+            if not dry_run and not directory.exists():
+                # The old install.sh linked ~/.claude/skills to claude/skills, which the repo no longer has.
+                backup(directory)
+            elif not dry_run:
                 source = directory.resolve(strict=True)
                 target = backup_path(directory)
                 # Preserve the contents, not a link that may point at the old checkout layout.

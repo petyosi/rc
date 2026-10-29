@@ -61,7 +61,7 @@ mkdir -p ~/.codex
 ln -sfn "$PWD"/PROFILE_CODEX.md ~/.codex/AGENTS.md
 
 # Agent skills
-python3 "$PWD/scripts/install-skills.py" || exit 1
+python3 "$PWD/scripts/install-skills.py"
 
 # Markdownlint
 ln -sfn "$PWD"/markdownlint.yaml ~/.markdownlint.yaml

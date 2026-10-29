@@ -70,6 +70,20 @@ class InstallSkillsTests(unittest.TestCase):
         self.install()
         self.assertEqual(len(list(backup.parent.iterdir())), 1)
 
+    def test_migration_replaces_dangling_root_link(self):
+        claude = self.user_home / ".claude"
+        claude.mkdir(parents=True)
+        removed = self.root / "old checkout/claude/skills"
+        (claude / "skills").symlink_to(removed)
+        self.install(dry_run=True)
+        self.assertTrue((claude / "skills").is_symlink())
+        self.install()
+        self.assertFalse((claude / "skills").is_symlink())
+        skill = self.repo / "skills/code-review"
+        self.assertEqual((claude / "skills/code-review").resolve(), skill)
+        backup = next((self.user_home / ".local/state/rc/skill-backups").iterdir())
+        self.assertEqual((backup / ".claude/skills").readlink(), removed)
+
 
 if __name__ == "__main__":
     unittest.main()
