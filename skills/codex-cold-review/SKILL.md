@@ -39,7 +39,7 @@ Execute:
 
 Add `--output /absolute/path/report.md` only when the user requests a durable report. Otherwise, let the runner create a temporary report.
 
-The runner must use Codex `gpt-5.6-sol` (Sol) with `medium` effort by default. Do not weaken this setting without explicit user approval; pass `--model` or `--effort` only when the user asks for a different one. It invokes a non-persistent (`--ephemeral`) session with a `read-only` sandbox and hands Codex the sibling `code-review` global skill as the review contract, so both reviewers follow the same rubric.
+The runner always uses Codex `gpt-6-astra` (Astra) in Fast mode (`service_tier="priority"`). It has no option to select another model or tier. If the user asks for a different model, tell them that this skill uses only Astra. Effort defaults to `high`. Pass `--effort` only when the user asks for a different level. It invokes a non-persistent (`--ephemeral`) session with a `read-only` sandbox and hands Codex the sibling `code-review` global skill as the review contract, so both reviewers follow the same rubric.
 
 If execution fails because Codex is not installed or authenticated, report the exact failure and the required setup. Do not substitute an internal Claude review without saying so.
 
@@ -49,7 +49,7 @@ If execution fails because Codex is not installed or authenticated, report the e
 2. Verify each finding against the local diff and cited code before presenting it as confirmed.
 3. Separate confirmed findings from findings that are uncertain or false positives.
 4. Preserve file and line references. Use clickable `file:line` references in the final response.
-5. State the reviewed target and the actual reviewer: Codex Sol at medium effort, a fresh subagent, or the main agent.
+5. State the reviewed target and the actual reviewer: Codex Astra (Fast) with the effort used, a fresh subagent, or the main agent.
 6. Do not modify code unless the user also asks for fixes.
 
 Keep the handoff concise. Lead with confirmed findings in severity order. If none survive verification, state that the cold review found no confirmed issues and mention any important residual test or scope limits.

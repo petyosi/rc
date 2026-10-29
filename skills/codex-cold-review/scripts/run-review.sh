@@ -2,14 +2,15 @@
 set -euo pipefail
 
 usage() {
-  printf '%s\n' 'Usage: run-review.sh [--target DESCRIPTION] [--output FILE] [--model MODEL] [--effort LEVEL]'
+  printf '%s\n' 'Usage: run-review.sh [--target DESCRIPTION] [--output FILE] [--effort LEVEL]'
 }
 
 target='current worktree, including committed, staged, unstaged, and untracked changes'
 output=''
-# Sol at medium effort is the required reviewer; override only with explicit user approval.
-model='gpt-5.6-sol'
-effort='medium'
+# Astra in Fast mode is the only permitted reviewer configuration, so no flag can override it.
+readonly model='gpt-6-astra'
+readonly service_tier='priority'
+effort='high'
 
 while (($#)); do
   case "$1" in
@@ -21,11 +22,6 @@ while (($#)); do
     --output)
       [[ $# -ge 2 ]] || { usage >&2; exit 2; }
       output=$2
-      shift 2
-      ;;
-    --model)
-      [[ $# -ge 2 ]] || { usage >&2; exit 2; }
-      model=$2
       shift 2
       ;;
     --effort)
@@ -93,7 +89,8 @@ printf '%s\n' \
   '- Return only the final review report as your last message. Include actionable file:line references and confidence scores.' \
   >"$prompt_file"
 
-model_args=(--model "$model" -c "model_reasoning_effort=\"$effort\"")
+# Set the tier explicitly so the review does not inherit whatever the user's config selects.
+model_args=(--model "$model" -c "model_reasoning_effort=\"$effort\"" -c "service_tier=\"$service_tier\"")
 
 (
   cd "$repo"
