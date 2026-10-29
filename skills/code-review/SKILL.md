@@ -47,10 +47,11 @@ Use a Haiku agent to:
 1. Run `git diff origin/main...HEAD` (or appropriate base branch)
 2. Run `git log --oneline $(git merge-base HEAD origin/main)..HEAD`
 3. Return a summary of what these changes do
+4. Return the stated intent: each claim in the commit messages and PR description about what the change fixes, keeps, prevents, or adds
 
-### Step 4: Launch 7 Parallel Review Agents (Sonnet)
+### Step 4: Launch 8 Parallel Review Agents (Sonnet)
 
-Launch 7 parallel Sonnet agents to independently review the changes. Each returns a list of issues with reasons:
+Launch 8 parallel Sonnet agents to independently review the changes. Each returns a list of issues with reasons:
 
 **Agent #1: CLAUDE.md Compliance Audit**
 
@@ -115,13 +116,21 @@ Read the full content of every changed file (not just the diff). Scan for bugs a
 - For edge cases in the code: Is there a corresponding test case?
 - For parsing/regex: Are all input format variations tested?
 
+**Agent #8: Intent and Completeness**
+
+Use the stated intent from Step 3 and the user's view of the feature as the specification. A reviewer that only describes what the code does will accept a wrong result as the expected one.
+
+- **Claims**: For each claim, trace every path that reaches the affected behavior: other callers, other editor or component instances, focus or selection changes while async work is pending, and repeated or overlapping calls. Flag any path where the claim does not hold.
+- **Incomplete fixes**: When the change fixes a failure, check whether a sibling path still reaches the same failure. Flag it even when that path predates the change, because the change claims to fix it.
+- **User expectations**: Where the behavior has an obvious user expectation, such as a cancelled operation leaving no trace, a retry not duplicating work, or a saved setting surviving a reload, derive the expected result from that expectation and compare. Flag a mismatch even when the commit message describes the mismatched behavior as intended.
+
 ### Step 5: Confidence Scoring (Parallel Haiku Agents)
 
 For each issue found in Step 4, launch a parallel Haiku agent to score confidence (0-100):
 
 **Scoring Rubric (give to agents verbatim):**
 
-- **0**: Not confident at all. False positive that doesn't stand up to light scrutiny, or pre-existing issue.
+- **0**: Not confident at all. False positive that doesn't stand up to light scrutiny, or pre-existing issue. A path that the change claims to fix but leaves open is not pre-existing.
 - **25**: Somewhat confident. Might be real, but may be false positive. Couldn't verify it's real. Stylistic issues not explicitly in CLAUDE.md.
 - **50**: Moderately confident. Verified as real issue, but might be nitpick or rare in practice. Not very important relative to rest of changes.
 - **75**: Highly confident. Double-checked and verified as likely real issue that will be hit in practice. Current approach is insufficient. Very important or directly mentioned in CLAUDE.md.
@@ -183,6 +192,7 @@ No significant issues found. Checked for:
 - Test coverage gaps
 - Historical context violations
 - Code comment compliance
+- Stated intent, incomplete fixes, and user expectations
 
 ---
 
@@ -190,13 +200,13 @@ No significant issues found. Checked for:
 
 These should NOT be flagged (give to review agents):
 
-- Pre-existing issues not introduced in this branch
+- Pre-existing issues not introduced in this branch, except a path that the change claims to fix but leaves open
 - Something that looks like a bug but isn't
 - Issues linters/typecheckers/compilers catch (formatting, types, imports)
 - General code quality issues unless explicitly in CLAUDE.md
 - Issues called out in CLAUDE.md but silenced with lint ignore comments
-- Intentional functionality changes related to the broader change
-- Real issues on lines not modified in this branch
+- Intentional functionality changes related to the broader change, unless they contradict an obvious user expectation (Agent #8)
+- Real issues on lines not modified in this branch, except an incomplete fix (Agent #8)
 - Pure style nitpicks unrelated to correctness
 
 ## Issues to Flag Even If They Seem Minor
