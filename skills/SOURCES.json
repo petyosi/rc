@@ -143,6 +143,10 @@
     "pr-interrogate": {
       "source": "personal",
       "note": "Created in this repository; method adapted from https://dev.to/lightman_miao_fcd6ce02a1c/dont-review-agent-code-interrogate-it-25pd."
+    },
+    "close-out": {
+      "source": "personal",
+      "note": "Created in this repository."
     }
   }
 }
