@@ -1,13 +1,13 @@
 ---
 name: close-out
-description: Close out a coding session after its work is done, typically after the pull request is merged. Inventories what is still pending (uncommitted work, unpushed commits, open review threads, failing checks, running side sessions, deferred items), then routes each follow-up to a new session when it is ready or to a Google Calendar event when it waits on something. Use when the user says to close out, wrap up, or finish the session, asks what is left or pending, or says the PR is merged and wants to move on.
+description: Close out a coding session after its work is done, typically after the pull request is merged. Inventories what is still pending (uncommitted work, unpushed commits, open review threads, failing checks, running side sessions, deferred items), then routes each follow-up to a new session when it is ready or to a dated row in the Notion "Scheduled tasks" database when it waits on something. Use when the user says to close out, wrap up, or finish the session, asks what is left or pending, or says the PR is merged and wants to move on.
 ---
 
 # Session Close-Out
 
 A session ends with loose threads: work that was deferred, review comments marked for later, checks that need a re-run after a release. If nothing records them, they are lost when the session is archived. This skill finds each thread, decides where it goes, and gets the user's approval before anything happens.
 
-Steps 1 to 3 are read-only. Do not change files, git state, pull requests, sessions, or calendars before the user approves in step 4.
+Steps 1 to 3 are read-only. Do not change files, git state, pull requests, sessions, or Notion rows before the user approves in step 4.
 
 ## 1. Inventory the session
 
@@ -38,7 +38,7 @@ Collect state from each source that applies. Skip a source that does not exist; 
 **The environment**, when the tools exist:
 
 - Sessions started from this one (the desktop app's `list_sessions` with `linked: true`): running sessions, and finished sessions whose branches are not merged.
-- Background tasks, dev servers, scheduled tasks, and cron jobs that this session started.
+- Background tasks, dev servers, scheduled agents, and cron jobs that this session started.
 
 ## 2. Classify each item
 
@@ -69,7 +69,7 @@ Show the report:
 ### Ready → new session
 - **{title}** — {one-line scope}
 
-### Not ready → calendar
+### Not ready → scheduled task
 - **{title}** — waits on {blocker} — proposed {date}
 
 ### Drop
@@ -80,7 +80,7 @@ Show the report:
 
 ---
 
-Then ask in one batch, with AskUserQuestion when it is available. Use multi-select questions so the user can approve each item: which pending actions to take, which sessions to start, which calendar events to create and on which dates, and which cleanup actions to run. Put your recommendation first. Move an item between classes when the user says so.
+Then ask in one batch, with AskUserQuestion when it is available. Use multi-select questions so the user can approve each item: which pending actions to take, which sessions to start, which scheduled tasks to create or update and on which dates, and which cleanup actions to run. Put your recommendation first. Move an item between classes when the user says so.
 
 If there is nothing in any class, say that the session can close, and offer to archive it.
 
@@ -99,17 +99,10 @@ Do the approved actions in this order, because later steps depend on earlier one
 
 Each session gets its own worktree when it ends in its own branch or PR. If `start_session` is not available, for example in Codex or the CLI, print each brief as a paste-ready prompt and tell the user that no session was started.
 
-**Not ready → calendar.** Create one event for each approved item with the Google Calendar connector's `create_event` tool, on the user's primary calendar:
-
-- `summary`: `Follow-up: {title}`.
-- `startTime` and `endTime`: a 30-minute block at 10:00 on the approved date, unless the user gave a time. Give local time with no offset, and leave `timeZone` unset unless the user named one.
-- `description`: the blocker, how to check that it has cleared, and the same complete brief as for a new session. The user must be able to start the follow-up by pasting the description into a new session.
-- No attendees. An attendee receives an invitation, which sends a message on the user's behalf.
-
-If the Google Calendar connector is not available, do not use another calendar or a scheduled agent instead. Tell the user, and print each event's title, date, and description so they can add it.
+**Not ready → scheduled task.** Add each approved item to the user's Notion "Scheduled tasks" database with the `schedule-task` skill. If the skill is not loaded, read `../schedule-task/SKILL.md` next to this file. The skill finds an open row for the same check and updates it instead of adding a second one. Give it the approved date, the blocker, the main PR or issue URL, how to check that the blocker has cleared, and the same complete brief as for a new session. The user must be able to start the follow-up by pasting the row's body into a new session. The approval in step 3 covers these rows, so do not ask again.
 
 **Cleanup.** Run the approved actions. Delete a local branch only after you confirm that it is merged. Remove a worktree only after you confirm that it has no uncommitted work. Archive the session last, and only when the user approved it, because archiving ends this session.
 
 ## 5. Summarize
 
-List what was done, with links: commits pushed, sessions started, calendar events created, and cleanup done. List each approved item that failed, with the reason. Keep it short.
+List what was done, with links: commits pushed, sessions started, scheduled tasks created or updated, and cleanup done. List each approved item that failed, with the reason. Keep it short.

@@ -147,6 +147,14 @@
     "close-out": {
       "source": "personal",
       "note": "Created in this repository."
+    },
+    "schedule-task": {
+      "source": "personal",
+      "note": "Created in this repository."
+    },
+    "start-today": {
+      "source": "personal",
+      "note": "Created in this repository."
     }
   }
 }
