@@ -34,6 +34,10 @@ When installing new npm packages, use `npm info <package> version` or `pnpm info
 
 Exception: Follow existing version constraints when a project's package.json, lockfile, or peer dependencies require specific versions.
 
+## Browser Automation
+
+- When a Claude in Chrome task is done, close every tab you created with `tabs_close_mcp`, so no "Claude" tab group remains. Keep a tab open only if I ask for it.
+
 ## User Skills
 
 - Personal and selected third-party skills are versioned in the rc repository's `skills/` directory. Resolve an installed skill's symlink to find that checkout.
