@@ -155,6 +155,10 @@
     "start-today": {
       "source": "personal",
       "note": "Created in this repository."
+    },
+    "plain-speak": {
+      "source": "personal",
+      "note": "Created in this repository; idea from https://github.com/luchasarie/bro-skill, rules written from the user's own session transcripts. No upstream text copied."
     }
   }
 }
