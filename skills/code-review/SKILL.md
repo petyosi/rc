@@ -1,271 +1,92 @@
 ---
 name: code-review
-description: Pre-PR code review for branch changes. Use when user wants to review changes before opening a PR, asks to check their branch for issues, or mentions code review. Analyzes diff against base branch for code quality, bugs, security vulnerabilities, logical fallacies, and style/convention violations. Provides detailed analysis with file:line references and improvement suggestions.
+description: Pre-PR code review for branch changes. Use when user wants to review changes before opening a PR, asks to check their branch for issues, or mentions code review. Finds bugs, regressions, security problems, and violations of repository guidance in the diff against the base branch, and reports each finding with file:line references, a failure scenario, severity, and confidence.
 ---
 
-# Code Review Skill
+# Code Review
 
-Review code changes on a local branch before opening a PR. Uses multiple specialized agents with confidence-based scoring to catch real bugs while minimizing false positives.
+Review the changes before a PR is opened. Find defects that the changes introduce or fail to fix. Do not review style or scope; `pr-interrogate` covers scope.
 
-**Philosophy**: It's better to flag a potential issue that turns out to be fine than to miss a real bug. Err on the side of caution for error handling, edge cases, and failure modes.
+This contract works for any agent (Claude Code, Codex, or another). The cold-review runners in `claude-cold-review` and `codex-cold-review` hand it to their reviewer as-is.
 
-## When to Use
+## Scope
 
-Activate when user:
+- Review the target the user names. By default, review the current branch against its base, plus staged, unstaged, and untracked changes. Do not ask for a commit first.
+- Find the base with `git symbolic-ref refs/remotes/origin/HEAD`; fall back to `main` or `master`. Use the merge base (`git diff <base>...HEAD`) for committed changes and `git diff HEAD` plus `git status` for the rest.
+- For a pull request, use read-only `gh pr view` and `gh pr diff` when local data is not sufficient.
+- Stay read-only. Do not edit files, change git state, post comments, or update the PR. Do not run builds, type checks, formatters, or broad test suites; CI covers them.
 
-- Asks to review changes before opening a PR
-- Wants a code review of their current branch
-- Says things like "review my changes", "check my code", "ready for PR"
+## Prepare
 
-## Review Process
+1. Read the repository guidance that applies to the changed files: `CLAUDE.md` and `AGENTS.md` at the root and in the changed directories.
+2. Read the complete diff, the commit messages, and the PR description when there is one. Write down the **stated intent**: each claim about what the change fixes, keeps, prevents, or adds. This is the specification. Do not accept the code's current behavior as the expected behavior.
+3. Scale the depth to the change. For a small, local change, read the diff and its direct callers and callees. For a refactor, a concurrency change, or a parser, read the full changed files, follow callers across files, and check `git log` and `git blame` where earlier behavior matters.
 
-Follow these steps precisely:
+## What to look for
 
-### Step 1: Eligibility Check (Haiku Agent)
+Check the general things (logic errors, wrong conditions, unhandled failures, security problems, resource leaks). Give extra attention to these, which reviews often miss:
 
-Use a Haiku agent to check if the branch is eligible for review:
+- **Claims that do not hold everywhere.** For each claim in the stated intent, trace every path that reaches the affected behavior: other callers, other component or editor instances, focus or selection changes while async work is pending, and repeated or overlapping calls.
+- **Incomplete fixes.** When the change fixes a failure, check whether a sibling path still reaches the same failure. Report it even when that path is older than the change, because the change claims to fix it.
+- **User expectations.** Where a behavior has an obvious user expectation (a cancelled operation leaves no trace, a retry does not duplicate work, a saved setting survives a reload), compare the result with that expectation. Report a mismatch even when the commit message calls it intended.
+- **Ignored signals.** A caller ignores a `false`, `null`, or error return. A promise is not awaited or its rejection is not handled. State that a callee sets asynchronously is read before it is ready. An event is emitted with no listener.
+- **Partial coverage of an input space.** Code handles some variants but not all: single quotes but not double quotes, 4xx but not 5xx, two of three union members.
+- **Guards that do not match the language.** `typeof x === 'object'` passes for `null` and arrays. `!value` rejects `0` and `""`. `x == null` matches both `null` and `undefined`.
+- **Refactoring regressions.** After a split, an extraction, or a moved call site, check that explicit non-default values (props, options, timeouts, limits, thresholds) are still present.
+- **Wrong execution scope.** Module-level code that opens connections or starts work for every importer. Subscriptions or timers without cleanup. Code that assumes it runs once but runs repeatedly.
+- **Guidance violations.** A change that breaks a specific rule in `CLAUDE.md`, `AGENTS.md`, or an existing code comment. Cite the rule.
 
-- Is the branch the same as the base branch (nothing to review)?
-- Are there any uncommitted changes that should be committed first?
-- Are there any changes at all?
+## What counts as a finding
 
-If not eligible, explain why and stop.
+Report an issue only when you can give one of these:
 
-### Step 2: Gather CLAUDE.md Files (Haiku Agent)
+- a concrete, reachable failure scenario: the input or sequence of events, and the wrong result, or
+- a specific written repository requirement that the change violates.
 
-Use a Haiku agent to find relevant CLAUDE.md files:
+Judge an issue by whether the change causes it, not by which lines the diff touches. A changed caller that makes an old failure reachable is a finding. An old bug that the change does not affect and does not claim to fix is not.
 
-- The root CLAUDE.md file (if one exists)
-- Any CLAUDE.md files in directories whose files were modified
+Do not report:
 
-These files contain project-specific guidelines that should inform the review.
+- issues that linters, type checkers, or compilers catch
+- style preferences and general quality remarks that no repository guidance requires
+- a missing test on its own. Mention a test gap only as part of a finding, when the gap leaves that specific failure unprotected.
+- speculation that you could not trace to a failure scenario
 
-### Step 3: Summarize Changes (Haiku Agent)
+If a possible issue is real but you could not confirm it, report it with low confidence. Do not drop it, and do not raise its confidence.
 
-Use a Haiku agent to:
+## Optional delegation
 
-1. Run `git diff origin/main...HEAD` (or appropriate base branch)
-2. Run `git log --oneline $(git merge-base HEAD origin/main)..HEAD`
-3. Return a summary of what these changes do
-4. Return the stated intent: each claim in the commit messages and PR description about what the change fixes, keeps, prevents, or adds
+Delegation is optional. Use it only when it adds independent coverage that a single pass would miss, for example a fresh-context agent that checks one high-risk path, or an agent that tries to disprove a finding. Use the session's current model; do not move review work to a weaker model. A small change needs no subagents.
 
-### Step 4: Launch 8 Parallel Review Agents (Sonnet)
+## Report
 
-Launch 8 parallel Sonnet agents to independently review the changes. Each returns a list of issues with reasons:
+Rate each finding on two separate scales:
 
-**Agent #1: CLAUDE.md Compliance Audit**
+- **Severity**: `high` (data loss, security, crash, or a broken main flow), `medium` (wrong behavior in a real but narrower case), `low` (minor or rare impact).
+- **Confidence**: `confirmed` (traced or reproduced), `likely` (strong evidence, one step not verified), `possible` (plausible, not verified).
 
-- Audit changes to ensure they comply with CLAUDE.md guidelines
-- Note: CLAUDE.md is guidance for writing code, so not all instructions apply during review
+A rare but confirmed failure is `low` or `medium` severity with `confirmed` confidence. Keep it.
 
-**Agent #2: Multi-Depth Bug Scan**
+Use this format, with findings sorted by severity:
 
-Read the full content of every changed file (not just the diff). Scan for bugs at multiple depths:
-- **Surface level**: Typos, wrong variable names, missing returns, copy-paste errors
-- **Logic level**: Trace through conditionals and loops with concrete example inputs
-- **Failure level**: For each operation, ask "what if this fails?" - null returns, exceptions, promise rejections
-- **Edge case level**: Empty inputs, boundary values, malformed data, single-item collections
-- **Cross-function level**: When a changed function calls another function in the same file or in a directly changed file, read that callee's implementation to verify: (a) the return value / error contract is handled by the caller; (b) async functions that return `false`/`null` on failure are not silently ignored; (c) any state the callee sets internally is not assumed to have propagated by the time the caller continues.
-
-**Invisible communication channels**: Look for cases where one piece of code signals a result and the receiving side ignores it. Ask: does this function return a value that conveys success/failure? Is it checked? Does this async operation set state that a caller then reads immediately (before awaiting)? Are there event emitters with no listeners, or promises created but not awaited?
-
-**Incomplete coverage of a known input space**: When code handles a set of variants (regex patterns, switch/if-else chains, union type branches, event type handlers, HTTP status ranges), ask: what is the *complete* set of possible inputs at runtime, and does this code handle all of them? Common gaps: a text-processing regex that handles single-quoted strings but not double-quoted; a status-code handler that covers 4xx but not 5xx; a type union handler that handles two of three variants.
-
-**Guard correctness for the actual type space**: When you see a conditional guard, ask whether it correctly excludes every case the author intends to exclude, given how the language actually works. Common wrong assumptions: `typeof x === 'object'` also passes for `null` and arrays; `!value` rejects `0` and `""` as well as `null`/`undefined`; `x == null` catches both `null` and `undefined` (which can be intentional or a bug depending on context).
-
-**Refactoring regressions**: When code is structurally reorganized (component split, function extracted, call site changed), verify that specific non-default values — props with explicit values, config options set to non-defaults, thresholds, timeouts, limits — that were present in the old version still appear in the new version, or their absence is clearly intentional. The structural change is easy to verify correct; the dropped detail is easy to miss.
-
-**Agent #3: Historical Context Analysis**
-
-- Read git blame and history of modified code
-- Identify bugs in light of historical context
-- Check what patterns existed before and if changes break them
-
-**Agent #4: Related Code Review**
-
-- Read related files that might be affected by changes
-- Check for patterns in sibling files that should be followed
-- Look for inconsistencies with existing code
-
-**Agent #5: Code Comment Compliance**
-
-- Read code comments in modified files
-- Ensure changes comply with guidance in existing comments
-- Check TODOs, FIXMEs, and documentation comments
-
-**Agent #6: Failure Mode and Execution Scope Analysis**
-
-- For async operations: Is rejection/error handled? Could this cause unhandled promise rejection?
-- For external calls/APIs: What happens on timeout, network failure, or unexpected response?
-- For parsing code: What happens with malformed, truncated, or unexpected input?
-- For resource acquisition: Are resources properly released on error paths?
-- Ask: "If I were trying to break this code, what input would I use?"
-
-**Execution scope mismatch**: Ask "where does this code actually run?" for anything that looks like it might execute at a broader or earlier scope than intended:
-- Module-level code (outside functions/classes): does it instantiate workers, open connections, register globals, or make network requests? These fire for every importer unconditionally.
-- Code in component render bodies that should be inside `useMemo`/`useCallback` (recomputed every render).
-- Subscriptions or timers set up outside `useEffect` (no cleanup, run during SSR, etc.).
-- Constructors or class field initializers that perform I/O or expensive work that should be deferred to an explicit `init()` call.
-- Code that assumes it runs once but is placed where it can run multiple times (e.g. inside a loop or a callback that fires repeatedly).
-
-**Agent #7: Test Coverage Gaps**
-
-- For new code paths: Is there a test that exercises this specific path?
-- For conditional branches: Are both/all branches tested?
-- For error handling code: Are error paths tested, not just happy paths?
-- For edge cases in the code: Is there a corresponding test case?
-- For parsing/regex: Are all input format variations tested?
-
-**Agent #8: Intent and Completeness**
-
-Use the stated intent from Step 3 and the user's view of the feature as the specification. A reviewer that only describes what the code does will accept a wrong result as the expected one.
-
-- **Claims**: For each claim, trace every path that reaches the affected behavior: other callers, other editor or component instances, focus or selection changes while async work is pending, and repeated or overlapping calls. Flag any path where the claim does not hold.
-- **Incomplete fixes**: When the change fixes a failure, check whether a sibling path still reaches the same failure. Flag it even when that path predates the change, because the change claims to fix it.
-- **User expectations**: Where the behavior has an obvious user expectation, such as a cancelled operation leaving no trace, a retry not duplicating work, or a saved setting surviving a reload, derive the expected result from that expectation and compare. Flag a mismatch even when the commit message describes the mismatched behavior as intended.
-
-### Step 5: Confidence Scoring (Parallel Haiku Agents)
-
-For each issue found in Step 4, launch a parallel Haiku agent to score confidence (0-100):
-
-**Scoring Rubric (give to agents verbatim):**
-
-- **0**: Not confident at all. False positive that doesn't stand up to light scrutiny, or pre-existing issue. A path that the change claims to fix but leaves open is not pre-existing.
-- **25**: Somewhat confident. Might be real, but may be false positive. Couldn't verify it's real. Stylistic issues not explicitly in CLAUDE.md.
-- **50**: Moderately confident. Verified as real issue, but might be nitpick or rare in practice. Not very important relative to rest of changes.
-- **75**: Highly confident. Double-checked and verified as likely real issue that will be hit in practice. Current approach is insufficient. Very important or directly mentioned in CLAUDE.md.
-- **100**: Absolutely certain. Double-checked and confirmed as definitely real issue that will happen frequently. Evidence directly confirms this.
-
-For CLAUDE.md issues, the scoring agent must double-check that the CLAUDE.md actually calls out that issue specifically.
-
-### Step 6: Filter by Confidence
-
-Remove any issues with score < 70. If no issues meet this threshold, report that no significant issues were found.
-
-### Step 7: Generate Report
-
-Output the review in this format:
-
----
-
+```markdown
 ## Code Review
 
-**Branch:** `{branch}` -> `{base}`
-**Files Changed:** {count} files (+{added}/-{removed} lines)
+**Target:** `{branch}` -> `{base}` (plus uncommitted changes, if any)
+**Files changed:** {count} (+{added}/-{removed})
 
-### Issues Found
+### Findings
 
-{For each issue with score >= 70:}
+**1. {One-line statement of the defect}** — severity: {high|medium|low}, confidence: {confirmed|likely|possible}
 
-**{N}. {Brief description}** (Score: {score})
+- **Location:** `{file}:{line}`
+- **Failure scenario:** {input or sequence} -> {wrong result}
+- **Evidence:** {the code path, the guidance rule, or the stated-intent claim it breaks}
+- **Fix:** {short direction; add a code snippet only when the fix is not obvious}
 
-- **Location:** `{file}:{line_start}-{line_end}`
-- **Reason:** {CLAUDE.md says "..." / Bug due to ... / Historical context shows ...}
-- **Details:** {Explanation of the issue}
+### Limits
 
-```{language}
-{Relevant code snippet}
+{What you did not check and why, for example files too large to trace fully or a PR with no description. Omit when there are none.}
 ```
 
-**Suggested Fix:**
-
-```{language}
-{Improved code}
-```
-
----
-
-Or if no issues found:
-
----
-
-## Code Review
-
-**Branch:** `{branch}` -> `{base}`
-**Files Changed:** {count} files
-
-No significant issues found. Checked for:
-
-- CLAUDE.md compliance
-- Logic bugs and edge cases
-- Failure modes (error handling, async rejections)
-- Test coverage gaps
-- Historical context violations
-- Code comment compliance
-- Stated intent, incomplete fixes, and user expectations
-
----
-
-## False Positives to Ignore
-
-These should NOT be flagged (give to review agents):
-
-- Pre-existing issues not introduced in this branch, except a path that the change claims to fix but leaves open
-- Something that looks like a bug but isn't
-- Issues linters/typecheckers/compilers catch (formatting, types, imports)
-- General code quality issues unless explicitly in CLAUDE.md
-- Issues called out in CLAUDE.md but silenced with lint ignore comments
-- Intentional functionality changes related to the broader change, unless they contradict an obvious user expectation (Agent #8)
-- Real issues on lines not modified in this branch, except an incomplete fix (Agent #8)
-- Pure style nitpicks unrelated to correctness
-
-## Issues to Flag Even If They Seem Minor
-
-These SHOULD be flagged even if they might seem like nitpicks:
-
-- Missing error handling for async operations (unhandled promise rejections can crash Node.js)
-- Missing edge case handling in parsing/validation code
-- Incorrect capture group usage in regex
-- Test coverage gaps for new code paths
-- Potential null/undefined access without guards
-- Resource leaks on error paths
-
-## Notes
-
-- Do not check build signal or attempt to build/typecheck - assume CI handles this
-- Use git commands to examine changes, not GitHub API
-- Make a todo list first
-- Cite and link each issue (if referring to CLAUDE.md, reference it)
-- Focus on actionable issues that genuinely improve code quality
-- For complex logic (regex, parsers, state machines): DO perform deep semantic analysis
-- When in doubt about error handling or edge cases, flag it - false positives are acceptable
-- Reference: [Google's Code Review Guidelines](https://google.github.io/eng-practices/review/reviewer/looking-for.html)
-
-## Git Commands Reference
-
-```bash
-# Get current branch
-git branch --show-current
-
-# Get base branch
-git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@' || echo "main"
-
-# Get diff against base
-git diff origin/main...HEAD
-
-# Get changed files
-git diff --name-only origin/main...HEAD
-
-# Get diff stats
-git diff --stat origin/main...HEAD
-
-# Get commit log for branch
-git log --oneline $(git merge-base HEAD origin/main)..HEAD
-
-# Get git blame for a file
-git blame {file}
-
-# Get history for a file
-git log --oneline -10 -- {file}
-```
-
-## Invocation Examples
-
-This skill activates for:
-
-- "Review my changes"
-- "Code review before PR"
-- "Check my branch for issues"
-- "Review this before I open a PR"
-- "Pre-PR review"
-- "/pre-pr-code-review"
+When there are no findings, say "No actionable issues found", then give the **Limits** section.
