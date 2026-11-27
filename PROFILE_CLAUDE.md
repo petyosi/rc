@@ -51,3 +51,8 @@ Exception: Follow existing version constraints when a project's package.json, lo
 - Don't co-sign commits or PRs with Claude, and never add "Generated with Claude Code" or similar attribution footers.
 - Don't include testing check lists in PR descriptions.
 - Write commit messages and PR titles/descriptions that convey the **intent and motivation** of the change, not just the mechanical steps. Lead with _why_ the change matters, then briefly mention _how_ if it's non-obvious. Prefer "Make load-more UI consistent across trace views" over "Extract shared primitives from load-more components".
+
+## Landing PRs
+
+- When I ask to land a PR (`/land-pr`, "land this", "queue it") in a repository that queues with Mergify, do not wait for me to report checks or approvals. After each settled push with no open **Ask** item, start the `mergify-land-watch` skill's watcher as a background command, with the reviewed head SHA. Take the repository arguments from the project memory. This instruction overrides a land skill's rule against background polling in the desktop app.
+- Keep the app PR monitor (Auto-fix) on beside the watcher. When the watcher exits with `attention`, handle each reason and start it again. When it exits with `merged`, check the merge commit on the base branch and report it.
